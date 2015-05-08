@@ -1,15 +1,15 @@
 /**
  * Created by Owner on 1/17/15.
  */
-define(['models/app','models/palabra'],
-    function (app, PalabraParseObject) {
+define(['models/palabra'],
+    function (PalabraParseObject) {
         var self;
 
         var Categories = Backbone.Collection.extend({
 
             initialize: function() {
                 self = this;
-                this.sync();
+                // this.sync();
             },
 
             sync: function() {
@@ -23,7 +23,7 @@ define(['models/app','models/palabra'],
                 var newItemsDate = new Date(currentDate.getTime() - (twoWeeks));
 
                 var modelNewWords = this.add({
-                    "category": "Palabros nuevos",
+                    "category": "Palabras nuevas",
                     "count": 0
                 });
 
@@ -57,5 +57,5 @@ define(['models/app','models/palabra'],
 
         });
 
-        return new Categories();
+        return Categories;
     });
