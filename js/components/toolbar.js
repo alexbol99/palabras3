@@ -10,7 +10,7 @@ define([],
                 var ListGroupItem = ReactBootstrap.ListGroupItem;
                 var list = this.props.data.map(function (item) {
                     return (
-                        <ListGroupItem bsStyle='success'>
+                        <ListGroupItem bsStyle='success' key={item.get('category')}>
                             {item.get('category')}
                             <ReactBootstrap.Badge>{item.get('count')}</ReactBootstrap.Badge>
                         </ListGroupItem>
@@ -32,14 +32,14 @@ define([],
                 var ListGroupItem = ReactBootstrap.ListGroupItem;
                 var options = this.props.data.map(function (item) {
                     return (
-                        <option bsStyle='success' value={item.get('category')}>
+                        <option bsStyle='success' value={item.get('category')} key={item.get('category')}>
                             {item.get('category') + " (" + item.get('count') + ')'}
                         </option>
                     )
                 });
                 const selectInstance = (
                     <form>
-                        <ReactBootstrap.Input type='select' placeholder='select' onChange={this.categoryChanged}>
+                        <ReactBootstrap.Input type='select' placeholder='select' onChange={this.props.onCategorySelected}>
                             {options}
                         </ReactBootstrap.Input>
                     </form>
@@ -48,68 +48,70 @@ define([],
             }
         });
 
-        var ABCD = React.createClass({
+        var Toolbar = React.createClass({
+            categoryChanged: function(event) {
+                console.log(event.target.value)
+            },
             getInitialState: function () {
                 return {
                     data: []
                 }
             },
-            sort: function (event) {
-                console.log(event.target);
-                var newData = this.state.data.sort();
-                this.setState({data: newData});
-            },
-            reorder: function (event) {
-                console.log(event.target);
-                var newData = this.shuffle(this.state.data);
-                this.setState({data: newData});
-            },
             render: function () {
                 var ButtonToolbar = ReactBootstrap.ButtonToolbar;
                 var Button = ReactBootstrap.Button;
+
                 const myselectInstance = (
-                    <MySelect data={this.props.categories} ref="categories" />
+                    <MySelect data={this.props.categories} ref="categories"
+                        onCategorySelected = {this.props.onCategorySelected}
+                    />
                 );
-                var catButton = myselectInstance.props.data[0].get("category");
-                console.log(myselectInstance);
-                const abcdInstance = (
-                    <div>
-                        <ReactBootstrap.ButtonToolbar justified>
-                            <ReactBootstrap.Button bsStyle='default' bsSize='small'>
-                                {catButton}
-                            </ReactBootstrap.Button>
-                            <Button bsStyle='primary' bsSize='small' onClick={this.sort}>
-                                A<ReactBootstrap.Glyphicon glyph='sort-by-alphabet' />
-                            </Button>
-                            <Button bsStyle='primary' bsSize='small' onClick={this.reorder}>
-                                B<ReactBootstrap.Glyphicon glyph='random' />
-                            </Button>
-                        </ReactBootstrap.ButtonToolbar>
-                    </div>
-                );
-                return abcdInstance;
-            },
-            // http://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript
-            shuffle: function (array) {
-                var counter = array.length, temp, index;
-
-                // While there are elements in the array
-                while (counter > 0) {
-                    // Pick a random index
-                    index = Math.floor(Math.random() * counter);
-
-                    // Decrease counter by 1
-                    counter--;
-
-                    // And swap the last element with it
-                    temp = array[counter];
-                    array[counter] = array[index];
-                    array[index] = temp;
+                var catButton = "";
+                if (this.props.selectedCategory.get) {
+                    var catButton = this.props.selectedCategory.get("category") +
+                        ' (' + this.props.selectedCategory.get("count") + ')';
                 }
 
-                return array;
+                var glyphSound = (this.props.sound == "on" ? "volume-up" : "volume-off");
+                /*
+                <ReactBootstrap.ButtonGroup>
+                    <Button bsStyle='default' bsSize='medium'>
+                                    {catButton}
+                    </Button>
+                </ReactBootstrap.ButtonGroup>
+                */
+                const toolbarInstance = (
+                    <div>
+                        <ReactBootstrap.ButtonGroup justified>
+
+                            <ReactBootstrap.ButtonGroup>
+                                <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+                                    <ReactBootstrap.Glyphicon glyph='filter' />
+                                </Button>
+                            </ReactBootstrap.ButtonGroup>
+                            <ReactBootstrap.ButtonGroup>
+                                <Button bsStyle='primary' bsSize='medium' onClick={this.props.onClickSoundButton}>
+                                    <ReactBootstrap.Glyphicon glyph={glyphSound} />
+                                </Button>
+                            </ReactBootstrap.ButtonGroup>
+                            <ReactBootstrap.ButtonGroup>
+                                <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+                                    <ReactBootstrap.Glyphicon glyph='refresh' />
+                                </Button>
+                            </ReactBootstrap.ButtonGroup>
+                            <ReactBootstrap.ButtonGroup>
+                                <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+                                    <ReactBootstrap.Glyphicon glyph='info-sign' />
+                                </Button>
+                            </ReactBootstrap.ButtonGroup>
+
+                        </ReactBootstrap.ButtonGroup>
+                        {myselectInstance}
+                    </div>
+                );
+                return toolbarInstance;
             }
         });
 
-        return ABCD;
+        return Toolbar;
     });

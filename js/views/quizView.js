@@ -3,9 +3,68 @@
  */
 
 define(['models/quiz',
-        'views/selectCategory', 'views/textbox', 'views/addItemForm', '../components/toolbar'],
-    function (quiz, SelectCategoryView, Textbox, addItemForm, Toolbar) {
+        'views/selectCategory', 'views/textbox', 'views/addItemForm',
+        'components/toolbar', 'components/matchingQuiz'],
+    function (quiz, SelectCategoryView, Textbox, addItemForm, Toolbar, MatchingQuiz) {
         var self;
+
+        var QuizComponent = React.createClass({
+            getInitialState: function () {
+                return {
+                    categories: [],
+                    sound: "on",
+                    selectedCategory: "",
+                    quizItems: []
+                }
+            },
+            componentDidMount: function() {
+                var selectedCategoryName = quiz.get("selectedCategory");
+                this.setState({
+                    categories: quiz.get("categories").models,
+                    selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName}),
+                    quizItems: quiz.get("quizItems")
+                });
+                quiz.off("ready");
+                quiz.on("ready", function() {
+                    console.log("ready to play");
+                    this.setState({
+                        quizItems: quiz.get("quizItems")
+                    });
+                }, this);
+            },
+            render: function () {
+                var toolbarInstance = (
+                    <Toolbar categories={this.state.categories}
+                        selectedCategory={this.state.selectedCategory}
+                        sound={this.state.sound}
+                        onCategorySelected = {this.categorySelected}
+                        onClickSoundButton = {this.toggleSound}
+                    />
+                );
+                var matchingQuizInstance = (
+                    <MatchingQuiz items = {this.state.quizItems}
+                    />
+                );
+
+                return (
+                    <div>
+                        {toolbarInstance}
+                        {matchingQuizInstance}
+                    </div>
+                );
+            },
+            toggleSound: function(event) {
+                this.setState({ "sound": (this.state.sound == "on" ? "off" : "on") });
+            },
+            categorySelected: function(event) {
+                var selectedCategoryName = event.target.value
+                quiz.set("selectedCategory", selectedCategoryName);
+                // console.log(event.target.value);
+                this.setState({
+                    selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName}),
+                });
+            }
+        });
 
         var Quiz = Backbone.View.extend({
 
@@ -23,7 +82,7 @@ define(['models/quiz',
                 quiz.on("match", this.match, this);
                 quiz.on("ready", this.render, this);
 
-                this.selectCategoryView = new SelectCategoryView();
+                //this.selectCategoryView = new SelectCategoryView();
             },
 
             events: {
@@ -35,10 +94,11 @@ define(['models/quiz',
 
             render: function() {
                 console.log("ready to start!");
-                var toolbarInstance = (
-                    <Toolbar categories={quiz.get("categories").models} />
+
+                var guizComponentInstance = (
+                    <QuizComponent />
                 )
-                React.render(toolbarInstance, document.body);
+                React.render(guizComponentInstance, document.body);
             },
             // Render view and start the game
             jrender: function() {
@@ -150,6 +210,7 @@ define(['models/quiz',
 
             toggleSound: function(event) {
                 var button = event.currentTarget;
+                console.log(button);
                 if (quiz.get("sound")) {
                     $(button).removeClass('ui-icon-audio');
                 }
