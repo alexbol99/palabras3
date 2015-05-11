@@ -38,6 +38,7 @@ define(['models/quiz',
                         selectedCategory={this.state.selectedCategory}
                         sound={this.state.sound}
                         onCategorySelected = {this.categorySelected}
+                        onClickFilterButton = {this.itemsFilterPopup}
                         onClickSoundButton = {this.toggleSound}
                     />
                 );

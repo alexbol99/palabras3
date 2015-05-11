@@ -2,8 +2,8 @@
  * Created by Owner on 5/8/15.
  */
 
-define([],
-    function () {
+define(['components/itemsFilterPopup'],
+    function (ItemsFilterPopup) {
         var MyList = React.createClass({
             render: function () {
                 var ListGroup = ReactBootstrap.ListGroup;
@@ -85,9 +85,11 @@ define([],
                         <ReactBootstrap.ButtonGroup justified>
 
                             <ReactBootstrap.ButtonGroup>
-                                <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
-                                    <ReactBootstrap.Glyphicon glyph='filter' />
-                                </Button>
+                                <ReactBootstrap.ModalTrigger modal={<ItemsFilterPopup />}>
+                                    <Button bsStyle='primary' bsSize='medium' onClick={this.props.onClickFilterButton}>
+                                        <ReactBootstrap.Glyphicon glyph='filter' />
+                                    </Button>
+                                </ReactBootstrap.ModalTrigger>
                             </ReactBootstrap.ButtonGroup>
                             <ReactBootstrap.ButtonGroup>
                                 <Button bsStyle='primary' bsSize='medium' onClick={this.props.onClickSoundButton}>
