@@ -2,8 +2,8 @@
  * Created by Owner on 5/8/15.
  */
 
-define(['components/itemsFilterPopup'],
-    function (ItemsFilterPopup) {
+define(['components/itemsFilterPopup', 'components/infoPopup'],
+    function (ItemsFilterPopup, InfoPopup) {
         var MyList = React.createClass({
             render: function () {
                 var ListGroup = ReactBootstrap.ListGroup;
@@ -91,20 +91,25 @@ define(['components/itemsFilterPopup'],
                                     </Button>
                                 </ReactBootstrap.ModalTrigger>
                             </ReactBootstrap.ButtonGroup>
+
                             <ReactBootstrap.ButtonGroup>
                                 <Button bsStyle='primary' bsSize='medium' onClick={this.props.onClickSoundButton}>
                                     <ReactBootstrap.Glyphicon glyph={glyphSound} />
                                 </Button>
                             </ReactBootstrap.ButtonGroup>
+
                             <ReactBootstrap.ButtonGroup>
                                 <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
                                     <ReactBootstrap.Glyphicon glyph='refresh' />
                                 </Button>
                             </ReactBootstrap.ButtonGroup>
+
                             <ReactBootstrap.ButtonGroup>
-                                <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
-                                    <ReactBootstrap.Glyphicon glyph='info-sign' />
-                                </Button>
+                                <ReactBootstrap.ModalTrigger modal={<InfoPopup />}>
+                                    <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+                                        <ReactBootstrap.Glyphicon glyph='info-sign' />
+                                    </Button>
+                                </ReactBootstrap.ModalTrigger>
                             </ReactBootstrap.ButtonGroup>
 
                         </ReactBootstrap.ButtonGroup>
