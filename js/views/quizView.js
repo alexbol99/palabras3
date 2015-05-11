@@ -50,7 +50,9 @@ define(['models/quiz',
                 return (
                     <div>
                         {toolbarInstance}
-                        {matchingQuizInstance}
+                        <div style={{height:'800', overflow:'auto'}}>
+                            {matchingQuizInstance}
+                        </div>
                     </div>
                 );
             },

@@ -37,7 +37,7 @@ define([],
                 );
 
                 return (
-                    <ReactBootstrap.Modal {...this.props} bsStyle='primary' title='Filter dictionary' animation={false}>
+                    <ReactBootstrap.Modal {...this.props} bsStyle='primary' title='Filter dictionary' animation={true}>
                         <div className='modal-body'>
                             <h4>Text in a modal</h4>
 
