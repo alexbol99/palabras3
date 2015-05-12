@@ -37,6 +37,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                 const itemsFilterPopupInstance = (
                     <ItemsFilterPopup
                         categories = {this.props.categories}
+                        selectedCategory = {this.props.selectedCategory}
                         onCategorySelected = {this.props.onCategorySelected}
                     />
                 );
@@ -47,27 +48,27 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                             <ReactBootstrap.ButtonGroup>
                                 <ReactBootstrap.ModalTrigger modal={itemsFilterPopupInstance}>
-                                    <Button bsStyle='primary' bsSize='medium' onClick={this.props.onClickFilterButton}>
+                                    <Button bsStyle='primary' bsSize='large' onClick={this.props.onClickFilterButton}>
                                         <ReactBootstrap.Glyphicon glyph='filter' />
                                     </Button>
                                 </ReactBootstrap.ModalTrigger>
                             </ReactBootstrap.ButtonGroup>
 
                             <ReactBootstrap.ButtonGroup>
-                                <Button bsStyle='primary' bsSize='medium' onClick={this.props.onClickSoundButton}>
+                                <Button bsStyle='primary' bsSize='large' onClick={this.props.onClickSoundButton}>
                                     <ReactBootstrap.Glyphicon glyph={glyphSound} />
                                 </Button>
                             </ReactBootstrap.ButtonGroup>
 
                             <ReactBootstrap.ButtonGroup>
-                                <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+                                <Button bsStyle='primary' bsSize='large' onClick={this.sort}>
                                     <ReactBootstrap.Glyphicon glyph='refresh' />
                                 </Button>
                             </ReactBootstrap.ButtonGroup>
 
                             <ReactBootstrap.ButtonGroup>
                                 <ReactBootstrap.ModalTrigger modal={<InfoPopup />}>
-                                    <Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+                                    <Button bsStyle='primary' bsSize='large' onClick={this.sort}>
                                         <ReactBootstrap.Glyphicon glyph='info-sign' />
                                     </Button>
                                 </ReactBootstrap.ModalTrigger>

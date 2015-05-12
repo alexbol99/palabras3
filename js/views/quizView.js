@@ -4,8 +4,8 @@
 
 define(['models/quiz',
         'views/selectCategory', 'views/textbox', 'views/addItemForm',
-        'components/toolbar', 'components/matchingQuiz'],
-    function (quiz, SelectCategoryView, Textbox, addItemForm, Toolbar, MatchingQuiz) {
+        'components/toolbar', '../components/itemsList', '../components/mainPanel'],
+    function (quiz, SelectCategoryView, Textbox, addItemForm, Toolbar, ItemsList, MainPanel) {
         var self;
 
         var QuizComponent = React.createClass({
@@ -42,17 +42,19 @@ define(['models/quiz',
                         onClickSoundButton = {this.toggleSound}
                     />
                 );
-                var matchingQuizInstance = (
-                    <MatchingQuiz items = {this.state.quizItems}
+                var itemsListInstance = (
+                    <ItemsList items = {this.state.quizItems}
                     />
                 );
 
                 return (
                     <div>
                         {toolbarInstance}
-                        <div style={{height:'800', overflow:'auto'}}>
-                            {matchingQuizInstance}
-                        </div>
+                        <MainPanel  selectedCategory={this.state.selectedCategory}>
+                            <div style={{height:'800', overflow:'auto'}}>
+                                {itemsListInstance}
+                            </div>
+                        </MainPanel>
                     </div>
                 );
             },
@@ -60,11 +62,10 @@ define(['models/quiz',
                 this.setState({ "sound": (this.state.sound == "on" ? "off" : "on") });
             },
             categorySelected: function(event) {
-                var selectedCategoryName = event.target.value
+                var selectedCategoryName = event.target.value;
                 quiz.set("selectedCategory", selectedCategoryName);
-                // console.log(event.target.value);
                 this.setState({
-                    selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName}),
+                    selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName})
                 });
             }
         });

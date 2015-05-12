@@ -4,7 +4,7 @@
 
 define([],
     function () {
-        var ListItems = React.createClass({
+        var ItemsList = React.createClass({
             render: function() {
                 var langLeft = "spanish";
                 var langRight = "russian";
@@ -37,16 +37,5 @@ define([],
             }
         });
 
-        var MatchingQuiz = React.createClass({
-            render: function () {
-                var ListGroup = ReactBootstrap.ListGroup;
-                var ListGroupItem = ReactBootstrap.ListGroupItem;
-                const listgroupInstance = (
-                    <ListItems items = {this.props.items} />
-                );
-                return listgroupInstance;
-            }
-        });
-
-        return MatchingQuiz;
+        return ItemsList;
     });

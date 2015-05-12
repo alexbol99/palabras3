@@ -14,7 +14,8 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 selectedCategory: "",
                 mode: "",
                 forceRefresh: false,
-                sound: true
+                sound: true,
+                numWeeksBefore: 8
             },
             initialize: function() {
                 self = this;
@@ -43,11 +44,12 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
             retrieveItems: function() {
                 var category = this.get("selectedCategory");
                 var mode = this.get("mode");
+                var numWeeksBefore = this.get("numWeeksBefore");
                 this.get("quizItems").off();
                 this.get("quizItems").on("sync", function() {
                     self.trigger("ready");
                 });
-                this.get("quizItems").sync(category, mode);
+                this.get("quizItems").sync(category, mode, numWeeksBefore);
             },
             // called when item added or item changed and we want to refresh view
             forceRefresh: function() {

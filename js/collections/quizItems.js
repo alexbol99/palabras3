@@ -13,12 +13,12 @@ define(['models/palabra'],
                 this.query = new Parse.Query(PalabraParseObject);
             },
 
-            sync: function(category, mode) {
+            sync: function(category, mode, numWeeksBefore) {
                 if (category) {
                     if (category == "Palabras nuevas") {
-                        var twoWeeks = (14 * 24 * 3600 * 1000);
+                        var numTiksBefore = (numWeeksBefore * 7 * 24 * 3600 * 1000);
                         var currentDate = new Date();
-                        var newItemsDate = new Date(currentDate.getTime() - (twoWeeks));
+                        var newItemsDate = new Date(currentDate.getTime() - (numTiksBefore));
 
                         this.query.greaterThanOrEqualTo( "createdAt", newItemsDate );
                         if (this.query._where.category) {
