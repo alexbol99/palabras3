@@ -16,11 +16,11 @@ define([],
                                 <ReactBootstrap.Row className='show-grid'>
 
                                     <ReactBootstrap.Col xs={6} md={6}>
-                                        <h2>{item.get(langLeft)}</h2>
+                                        <h4>{item.get(langLeft)}</h4>
                                     </ReactBootstrap.Col>
 
                                     <ReactBootstrap.Col xs={6} md={6}>
-                                        <h2>{item.get(langRight)}</h2>
+                                        <h4>{item.get(langRight)}</h4>
                                     </ReactBootstrap.Col>
 
                                 </ReactBootstrap.Row>
