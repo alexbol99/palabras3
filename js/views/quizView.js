@@ -2,10 +2,9 @@
  * Created by alexbol on 1/8/2015.
  */
 
-define(['models/quiz',
-        'views/selectCategory', 'views/textbox', 'views/addItemForm',
+define(['models/quiz', 'views/textbox', 'views/addItemForm',
         'components/toolbar', '../components/itemsList', '../components/mainPanel'],
-    function (quiz, SelectCategoryView, Textbox, addItemForm, Toolbar, ItemsList, MainPanel) {
+    function (quiz, Textbox, addItemForm, Toolbar, ItemsList, MainPanel) {
         var self;
 
         var QuizComponent = React.createClass({
@@ -14,7 +13,8 @@ define(['models/quiz',
                     categories: [],
                     sound: "on",
                     selectedCategory: "",
-                    quizItems: []
+                    quizItems: [],
+                    numWeeksBefore: 2
                 }
             },
             componentDidMount: function() {
@@ -22,6 +22,7 @@ define(['models/quiz',
                 this.setState({
                     categories: quiz.get("categories").models,
                     selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName}),
+                    numWeeksBefore: quiz.get("numWeeksBefore"),
                     quizItems: quiz.get("quizItems")
                 });
                 quiz.off("ready");
@@ -37,7 +38,9 @@ define(['models/quiz',
                     <Toolbar categories={this.state.categories}
                         selectedCategory={this.state.selectedCategory}
                         sound={this.state.sound}
+                        numWeeksBefore={this.state.numWeeksBefore}
                         onCategorySelected = {this.categorySelected}
+                        onNumWeeksBeforeChanged = {this.NumWeeksBeforeChanged}
                         onClickFilterButton = {this.itemsFilterPopup}
                         onClickSoundButton = {this.toggleSound}
                     />
@@ -67,6 +70,13 @@ define(['models/quiz',
                 this.setState({
                     selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName})
                 });
+            },
+            NumWeeksBeforeChanged: function(event) {
+                var numWeeksBefore = event.target.value;
+                quiz.set("numWeeksBefore", numWeeksBefore);
+                this.setState({
+                    numWeeksBefore: numWeeksBefore
+                })
             }
         });
 

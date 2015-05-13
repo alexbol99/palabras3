@@ -15,12 +15,13 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 mode: "",
                 forceRefresh: false,
                 sound: true,
-                numWeeksBefore: 8
+                numWeeksBefore: 2
             },
             initialize: function() {
                 self = this;
                 app.on("change:currentDictionary", this.start, this);
                 this.on("change:selectedCategory", this.retrieveItems, this);
+                this.on("change:numWeeksBefore", this.retrieveItems, this);
                 this.on("change:forceRefresh", this.forceRefresh, this);
             },
             // on quiz selected start to create stuff
@@ -47,8 +48,15 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 var numWeeksBefore = this.get("numWeeksBefore");
                 this.get("quizItems").off();
                 this.get("quizItems").on("sync", function() {
+
+                    // Update category counter here ?
+                    var selectedCategoryName = this.get("selectedCategory");
+                    var selectedCategory = this.get("categories").findWhere({"category": selectedCategoryName});
+                    console.log(selectedCategory);
+                    selectedCategory.set("count", this.get("quizItems").length);
+
                     self.trigger("ready");
-                });
+                }, this);
                 this.get("quizItems").sync(category, mode, numWeeksBefore);
             },
             // called when item added or item changed and we want to refresh view

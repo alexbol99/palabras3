@@ -6,7 +6,7 @@ require.config({
 });
 require(['models/app','models/quiz','models/palabra',
         'collections/categories','collections/quizItems',
-        'views/textbox','jsx!views/quizView','views/selectCategory',
+        'views/textbox','jsx!views/quizView',
         'views/addItemForm', 'views/editItemForm',
         'jsx!components/toolbar', 'jsx!components/itemsList',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',

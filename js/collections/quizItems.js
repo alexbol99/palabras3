@@ -15,7 +15,7 @@ define(['models/palabra'],
 
             sync: function(category, mode, numWeeksBefore) {
                 if (category) {
-                    if (category == "Palabras nuevas") {
+                    if (category == "All") {
                         var numTiksBefore = (numWeeksBefore * 7 * 24 * 3600 * 1000);
                         var currentDate = new Date();
                         var newItemsDate = new Date(currentDate.getTime() - (numTiksBefore));

@@ -23,7 +23,7 @@ define(['models/palabra'],
                 var newItemsDate = new Date(currentDate.getTime() - (twoWeeks));
 
                 var modelNewWords = this.add({
-                    "category": "Palabras nuevas",
+                    "category": "All",
                     "count": 0
                 });
 
