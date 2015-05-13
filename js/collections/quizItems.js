@@ -24,6 +24,7 @@ define(['models/palabra'],
                         if (this.query._where.category) {
                             delete this.query._where.category;
                         }
+                        this.query.limit(1000); // limit to at most 1000 results
                     }
                     else {
                         this.query.equalTo("category", category);
