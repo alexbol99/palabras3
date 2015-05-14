@@ -9,6 +9,12 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!--<link href="./css/jquery.mobile-1.4.5.css" rel="stylesheet" type="text/css"/>-->
     <style>
+        html, body {
+            height: 100%;
+            margin: 0; padding: 0;  /* to avoid scrollbars */
+            overflow: hidden;
+
+        }
         body {
             overflow-y: hidden;
         }
@@ -50,6 +56,11 @@
             background-image: url("css/images/fb_login.png");
             background-repeat: no-repeat;
             background-position: center;
+        }
+
+        /* Overwrite bootstrap styling */
+        .panel-body {
+            padding: 0px;
         }
     </style>
 </head>

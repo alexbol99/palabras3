@@ -54,7 +54,7 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     <div>
                         {toolbarInstance}
                         <MainPanel  selectedCategory={this.state.selectedCategory}>
-                            <div style={{height:'800', overflow:'auto'}}>
+                            <div style={{height:'80vh', overflowY:'auto', overflowX:'hidden'}}>
                                 {itemsListInstance}
                             </div>
                         </MainPanel>
