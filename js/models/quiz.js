@@ -19,6 +19,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
             },
             initialize: function() {
                 self = this;
+                this.restoreState();
                 app.on("change:currentDictionary", this.start, this);
                 this.on("change:selectedCategory", this.retrieveItems, this);
                 this.on("change:numWeeksBefore", this.retrieveItems, this);
@@ -30,16 +31,36 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 this.set("categories", new Categories());
                 this.set("quizItems", new QuizItems());
                 this.get("categories").on("ready", this.setSelectedCategory, this);
-                this.get("categories").sync();
+
+                this.get("categories").sync(this.get("numWeeksBefore"));
 
                 this.set("mode", "Play");
+            },
+            saveState: function() {
+                if (window.localStorage) {
+                    localStorage.currentDictionary = this.get("currentDictionary");
+                    localStorage.selectedCategory = this.get("selectedCategory");
+                    localStorage.numWeeksBefore = this.get("numWeeksBefore");
+                    localStorage.sound = this.get("sound");
+                }
+            },
+            restoreState: function() {
+                if (window.localStorage) {
+                    this.set("numWeeksBefore", localStorage.numWeeksBefore || this.get("numWeeksBefore"));
+                    this.set("sound", localStorage.sound || this.get("sound"));
+                }
             },
             // on categories sync'ed, set first category as selected category
             // it will trigger retrieveItems
             setSelectedCategory: function() {
-                var model = this.get("categories").at(0);
-                var category = model.get("category");
-                this.set("selectedCategory", category);
+                if (window.localStorage && localStorage.selectedCategory) {
+                    this.set("selectedCategory", localStorage.selectedCategory);
+                }
+                else {
+                    var firstCategory = this.get("categories").at(0);
+                    var selectedCategoryName = firstCategory.get("category");
+                    this.set("selectedCategory", selectedCategoryName);
+                }
             },
             // fetch items, then trigger ready to start QuizView
             retrieveItems: function() {
@@ -52,7 +73,6 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                     // Update category counter here ?
                     var selectedCategoryName = this.get("selectedCategory");
                     var selectedCategory = this.get("categories").findWhere({"category": selectedCategoryName});
-                    console.log(selectedCategory);
                     selectedCategory.set("count", this.get("quizItems").length);
 
                     self.trigger("ready");

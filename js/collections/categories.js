@@ -12,15 +12,15 @@ define(['models/palabra'],
                 // this.sync();
             },
 
-            sync: function() {
+            sync: function(numWeeksBefore) {
                 var categories;
                 var query = new Parse.Query(PalabraParseObject)
                     .select("category")
                     .limit(1000);
 
-                var twoWeeks = (14 * 24 * 3600 * 1000);
+                var numTiksBefore = (numWeeksBefore * 7 * 24 * 3600 * 1000);
                 var currentDate = new Date();
-                var newItemsDate = new Date(currentDate.getTime() - (twoWeeks));
+                var newItemsDate = new Date(currentDate.getTime() - (numTiksBefore));
 
                 var modelNewWords = this.add({
                     "category": "All",

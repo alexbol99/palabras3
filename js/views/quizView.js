@@ -3,8 +3,9 @@
  */
 
 define(['models/quiz', 'views/textbox', 'views/addItemForm',
-        'components/toolbar', '../components/itemsList', '../components/mainPanel'],
-    function (quiz, Textbox, addItemForm, Toolbar, ItemsList, MainPanel) {
+        'components/toolbar', '../components/itemsList', '../components/mainPanel',
+        'components/menu'],
+    function (quiz, Textbox, addItemForm, Toolbar, ItemsList, MainPanel, Menu) {
         var self;
 
         var QuizComponent = React.createClass({
@@ -14,7 +15,8 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     sound: "on",
                     selectedCategory: "",
                     quizItems: [],
-                    numWeeksBefore: 2
+                    numWeeksBefore: 2,
+                    mode: "Learn"
                 }
             },
             componentDidMount: function() {
@@ -33,10 +35,14 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     });
                 }, this);
             },
+            componentDidUpdate: function() {
+                quiz.saveState();    // when DOM updated save current state in localStorage
+            },
             render: function () {
                 var toolbarInstance = (
                     <Toolbar categories={this.state.categories}
                         selectedCategory={this.state.selectedCategory}
+                        mode={this.state.mode}
                         sound={this.state.sound}
                         numWeeksBefore={this.state.numWeeksBefore}
                         onCategorySelected = {this.categorySelected}
@@ -46,22 +52,43 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     />
                 );
                 var itemsListInstance = (
-                    <ItemsList items = {this.state.quizItems}
+                    <ItemsList
+                        mode = {this.state.mode}
+                        items = {this.state.quizItems}
+                    />
+                );
+
+                var mainPanelInstance = (
+                    <MainPanel
+                        mode={this.state.mode}
+                        selectedCategory={this.state.selectedCategory}
+                        numWeeksBefore={this.state.numWeeksBefore}>
+
+                        <div style={{height:'78vh', overflowY:'auto', overflowX:'hidden'}}>
+                                {itemsListInstance}
+                        </div>
+
+                    </MainPanel>
+                );
+
+                var menuInstance = (
+                    <Menu onMenuButtonClicked={this.setQuizMode}
                     />
                 );
 
                 return (
                     <div>
                         {toolbarInstance}
-                        <MainPanel  selectedCategory={this.state.selectedCategory}>
-                            <div style={{height:'80vh', overflowY:'auto', overflowX:'hidden'}}>
-                                {itemsListInstance}
-                            </div>
-                        </MainPanel>
+                        {mainPanelInstance}
+                        {menuInstance}
                     </div>
                 );
             },
+            setQuizMode: function(event) {
+                this.setState({mode: event.target.innerHTML});
+            },
             toggleSound: function(event) {
+                quiz.set("sound", this.state.sound == "on" ? false : true);
                 this.setState({ "sound": (this.state.sound == "on" ? "off" : "on") });
             },
             categorySelected: function(event) {
@@ -107,8 +134,6 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
             },
 
             render: function() {
-                console.log("ready to start!");
-
                 var guizComponentInstance = (
                     <QuizComponent />
                 )

@@ -1,8 +1,8 @@
 /**
  * Created by alexbol on 5/12/2015.
  */
-define([],
-    function () {
+define(['components/menu'],
+    function (Menu) {
         var MainPanel = React.createClass({
             render: function () {
                 var selectedCategoryName = "";
@@ -12,15 +12,34 @@ define([],
                     selectedCategoryCount = this.props.selectedCategory.get("count");
                 }
 
+                var selectedTitle = selectedCategoryName == "All" ?
+                    "All new words in last " + this.props.numWeeksBefore + " weeks" :
+                    selectedCategoryName;
+
                 var header = (
                     <div>
-                        {selectedCategoryName}  <ReactBootstrap.Badge>{selectedCategoryCount}</ReactBootstrap.Badge>
+                        {selectedTitle}   <ReactBootstrap.Badge>{selectedCategoryCount}</ReactBootstrap.Badge>
                     </div>
+                );
+
+                var buttonAddVisible = false; // this.props.mode == "Edit";
+
+                var buttonAdd = buttonAddVisible ? (
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+                            <ReactBootstrap.Glyphicon glyph='plus' />
+                        </ReactBootstrap.Button>
+                ) : null;
+
+                var footer = (
+                    <Menu />
                 )
 
                 const panelInstance = (
                     <ReactBootstrap.Panel header={header} bsStyle='warning'>
                         {this.props.children}
+
+                        {buttonAdd}
+
                     </ReactBootstrap.Panel>
                 );
                 return panelInstance;
@@ -29,4 +48,11 @@ define([],
 
         return MainPanel;
     });
-
+/*
+<div className="text-right" >
+    <ReactBootstrap.Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
+        <ReactBootstrap.Glyphicon glyph='plus' />
+    </ReactBootstrap.Button>
+</div>
+*/
+/*style={{position:'relative',top:'-10vh',marginRight:'5vh'}}*/

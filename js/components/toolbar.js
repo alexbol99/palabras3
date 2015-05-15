@@ -20,40 +20,50 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                     />
                 );
 
+                const buttonFilter = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.ModalTrigger modal={itemsFilterPopupInstance}>
+                            <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickFilterButton}>
+                                <ReactBootstrap.Glyphicon glyph='filter' />
+                            </ReactBootstrap.Button>
+                        </ReactBootstrap.ModalTrigger>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
+                const buttonSound = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickSoundButton}>
+                            <ReactBootstrap.Glyphicon glyph={glyphSound} />
+                        </ReactBootstrap.Button>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
+                const buttonShuffle = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.sort}>
+                            <ReactBootstrap.Glyphicon glyph='refresh' />
+                        </ReactBootstrap.Button>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
+                const buttonInfo = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.ModalTrigger modal={<InfoPopup />}>
+                            <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.sort}>
+                                <ReactBootstrap.Glyphicon glyph='info-sign' />
+                            </ReactBootstrap.Button>
+                        </ReactBootstrap.ModalTrigger>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
                 const toolbarInstance = (
                     <div>
                         <ReactBootstrap.ButtonGroup justified>
-
-                            <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.ModalTrigger modal={itemsFilterPopupInstance}>
-                                    <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickFilterButton}>
-                                        <ReactBootstrap.Glyphicon glyph='filter' />
-                                    </ReactBootstrap.Button>
-                                </ReactBootstrap.ModalTrigger>
-                            </ReactBootstrap.ButtonGroup>
-
-                            <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickSoundButton}>
-                                    <ReactBootstrap.Glyphicon glyph={glyphSound} />
-                                </ReactBootstrap.Button>
-                            </ReactBootstrap.ButtonGroup>
-
-                            <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.sort}>
-                                    <ReactBootstrap.Glyphicon glyph='refresh' />
-                                </ReactBootstrap.Button>
-                            </ReactBootstrap.ButtonGroup>
-
-                            <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.ModalTrigger modal={<InfoPopup />}>
-                                    <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.sort}>
-                                        <ReactBootstrap.Glyphicon glyph='info-sign' />
-                                    </ReactBootstrap.Button>
-                                </ReactBootstrap.ModalTrigger>
-                            </ReactBootstrap.ButtonGroup>
-
+                            {buttonFilter}
+                            {buttonSound}
+                            {buttonShuffle}
+                            {buttonInfo}
                         </ReactBootstrap.ButtonGroup>
-
                     </div>
                 );
                 return toolbarInstance;

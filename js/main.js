@@ -10,7 +10,7 @@ require(['models/app','models/quiz','models/palabra',
         'views/addItemForm', 'views/editItemForm',
         'jsx!components/toolbar', 'jsx!components/itemsList',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
-        'jsx!components/mainPanel'],
+        'jsx!components/mainPanel', 'jsx!components/menu'],
     function (app) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
