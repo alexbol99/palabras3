@@ -16,7 +16,8 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     selectedCategory: "",
                     quizItems: [],
                     numWeeksBefore: 2,
-                    mode: "Learn"
+                    mode: "Learn",
+                    action: ""
                 }
             },
             componentDidMount: function() {
@@ -45,16 +46,20 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                         mode={this.state.mode}
                         sound={this.state.sound}
                         numWeeksBefore={this.state.numWeeksBefore}
-                        onCategorySelected = {this.categorySelected}
-                        onNumWeeksBeforeChanged = {this.NumWeeksBeforeChanged}
-                        onClickFilterButton = {this.itemsFilterPopup}
+                        onCategorySelected = {this.setSelectedCategory}
+                        onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
                         onClickSoundButton = {this.toggleSound}
+                        onClickAddButton = {this.setActionAdd}
                     />
                 );
                 var itemsListInstance = (
                     <ItemsList
                         mode = {this.state.mode}
+                        action = {this.state.action}
+                        categories={this.state.categories}
                         items = {this.state.quizItems}
+                        onItemChanged = {this.itemChanged}
+                        onCategorySelected = {this.itemChanged}
                     />
                 );
 
@@ -64,7 +69,7 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                         selectedCategory={this.state.selectedCategory}
                         numWeeksBefore={this.state.numWeeksBefore}>
 
-                        <div style={{height:'78vh', overflowY:'auto', overflowX:'hidden'}}>
+                        <div style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
                                 {itemsListInstance}
                         </div>
 
@@ -91,19 +96,30 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                 quiz.set("sound", this.state.sound == "on" ? false : true);
                 this.setState({ "sound": (this.state.sound == "on" ? "off" : "on") });
             },
-            categorySelected: function(event) {
+            setSelectedCategory: function(event) {
                 var selectedCategoryName = event.target.value;
                 quiz.set("selectedCategory", selectedCategoryName);
                 this.setState({
                     selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName})
                 });
             },
-            NumWeeksBeforeChanged: function(event) {
+            setNumWeeksBefore: function(event) {
                 var numWeeksBefore = event.target.value;
                 quiz.set("numWeeksBefore", numWeeksBefore);
                 this.setState({
                     numWeeksBefore: numWeeksBefore
                 })
+            },
+            setActionAdd: function(event) {
+                this.setState({
+                    action: "add"
+                })
+            },
+            itemChanged: function(event) {
+                var id = event.target.id;
+                var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
+                item.set(event.target.name, event.target.value);
+                item.updateParse();
             }
         });
 

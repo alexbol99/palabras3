@@ -49,7 +49,6 @@ define(['collections/categories','models/palabra'],
                 palabra.set("category", this.category);
                 palabra.set("spanish", spanish);
                 palabra.set("russian", russian);
-                palabra.set("hebrew", hebrew);
 
                 palabra.on("added", this.resetForm);
 

@@ -24,8 +24,8 @@ define(['models/quiz'],
                 var self = this;
                 this.save( null, {
                         success: function (palabra) {
-                            alert("Word '" + palabra.get("spanish") + "' was successfully updated");
-                            quiz.set("forceRefresh", true);
+                            // alert("Word '" + palabra.get("spanish") + "' was successfully updated");
+                            // quiz.set("forceRefresh", true);
                             // self.trigger("added");
                         },
                         error: function (palabra, error) {

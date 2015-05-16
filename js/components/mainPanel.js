@@ -22,14 +22,6 @@ define(['components/menu'],
                     </div>
                 );
 
-                var buttonAddVisible = false; // this.props.mode == "Edit";
-
-                var buttonAdd = buttonAddVisible ? (
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='medium' onClick={this.sort}>
-                            <ReactBootstrap.Glyphicon glyph='plus' />
-                        </ReactBootstrap.Button>
-                ) : null;
-
                 var footer = (
                     <Menu />
                 )
@@ -37,9 +29,6 @@ define(['components/menu'],
                 const panelInstance = (
                     <ReactBootstrap.Panel header={header} bsStyle='warning'>
                         {this.props.children}
-
-                        {buttonAdd}
-
                     </ReactBootstrap.Panel>
                 );
                 return panelInstance;

@@ -15,6 +15,9 @@ require(['models/app','models/quiz','models/palabra',
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
 
+        // Configure React's event system to handle touch events on mobile devices.
+        React.initializeTouchEvents(true);
+
         app.start();
     });
 
