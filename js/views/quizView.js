@@ -60,6 +60,7 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                         items = {this.state.quizItems}
                         onItemChanged = {this.itemChanged}
                         onCategorySelected = {this.itemChanged}
+                        onClickSayItButton = {this.sayIt}
                     />
                 );
 
@@ -120,6 +121,11 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                 var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
                 item.set(event.target.name, event.target.value);
                 item.updateParse();
+            },
+            sayIt: function(event) {
+                var id = event.currentTarget.id;
+                var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
+                item.sayIt();
             }
         });
 
