@@ -26,7 +26,8 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     categories: quiz.get("categories").models,
                     selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName}),
                     numWeeksBefore: quiz.get("numWeeksBefore"),
-                    quizItems: quiz.get("quizItems")
+                    quizItems: quiz.get("quizItems"),
+                    sound: quiz.get("sound")
                 });
                 quiz.off("ready");
                 quiz.on("ready", function() {
@@ -96,7 +97,7 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                 this.setState({mode: event.target.innerHTML});
             },
             toggleSound: function(event) {
-                quiz.set("sound", this.state.sound == "on" ? false : true);
+                quiz.set("sound", this.state.sound == "on" ? "off" : "on");
                 this.setState({ "sound": (this.state.sound == "on" ? "off" : "on") });
             },
             setSelectedCategory: function(event) {

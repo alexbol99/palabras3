@@ -14,7 +14,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 selectedCategory: "",
                 mode: "",
                 forceRefresh: false,
-                sound: true,
+                sound: "on",
                 numWeeksBefore: 2
             },
             initialize: function() {
