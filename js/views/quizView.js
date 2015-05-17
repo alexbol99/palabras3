@@ -56,11 +56,13 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     <ItemsList
                         mode = {this.state.mode}
                         action = {this.state.action}
+                        sound = {this.state.sound}
                         categories={this.state.categories}
                         items = {this.state.quizItems}
                         onItemChanged = {this.itemChanged}
                         onCategorySelected = {this.itemChanged}
                         onClickSayItButton = {this.sayIt}
+                        onClickGlobeButton = {this.redirectToSpanishdict}
                     />
                 );
 
@@ -123,9 +125,20 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                 item.updateParse();
             },
             sayIt: function(event) {
+                if (this.state.sound == "on") {
+                    var id = event.currentTarget.id;
+                    var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
+                    item.sayIt();
+                }
+            },
+            redirectToSpanishdict: function(event) {
                 var id = event.currentTarget.id;
-                var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
-                item.sayIt();
+                var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
+                var link = "http://www.spanishdict.com/translate/" + item.get("spanish");
+                // similar behavior as an HTTP redirect
+                // window.location.replace(link);
+                // similar behavior as clicking on a link
+                window.location.href = link;
             }
         });
 

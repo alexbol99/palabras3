@@ -56,17 +56,16 @@ define([],
 
                     var buttonSayItInstance = (
                         <ReactBootstrap.Col xs={1} md={1}>
-                            <ReactBootstrap.Button bsStyle='info' bsSize='small' id={item.id} onClick={this.props.onClickSayItButton}>
+                            <span bsStyle='info' bsSize='small' id={item.id} onClick={this.props.onClickSayItButton}>
                                 <ReactBootstrap.Glyphicon glyph='volume-up' />
-                            </ReactBootstrap.Button>
+                            </span>
                         </ReactBootstrap.Col>
                     );
                     var buttonGlobeInstance = (
                         <ReactBootstrap.Col xs={1} md={1}>
-                            <ReactBootstrap.Button bsStyle='info' bsSize='small' id={item.id}
-                                href={"http://www.spanishdict.com/translate/" + item.get("spanish")}>
+                            <span bsStyle='info' bsSize='small' id={item.id} onClick={this.props.onClickGlobeButton}>
                                 <ReactBootstrap.Glyphicon glyph='globe' />
-                            </ReactBootstrap.Button>
+                            </span>
                         </ReactBootstrap.Col>
                     );
 
