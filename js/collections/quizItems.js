@@ -84,6 +84,20 @@ define(['models/palabra'],
                 }
 
                 return array;
+            },
+
+            // Augment item with "editable" flag
+            dropEditable: function() {
+                return this.forEach(function(item) {
+                    item.set("editable", false);
+                })
+            },
+
+            // Set flag "editable" for selected item, drop for all others
+            setEditable: function(itemForEdit) {
+                this.forEach(function(item) {
+                    item === itemForEdit ? item.set("editable", true) : item.set("editable", false);
+                })
             }
         });
 

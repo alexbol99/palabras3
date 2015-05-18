@@ -60,6 +60,7 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                         sound = {this.state.sound}
                         categories={this.state.categories}
                         items = {this.state.quizItems}
+                        onItemClick = {this.itemSetEditable}
                         onItemChanged = {this.itemChanged}
                         onCategorySelected = {this.itemChanged}
                         onClickSayItButton = {this.sayIt}
@@ -119,6 +120,18 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     action: "add"
                 })
             },
+            // Open item for editing, substitute clicked Grid element by Input elements
+            itemSetEditable: function(event) {
+                if (this.state.mode == "Edit") {
+                    var id = event.currentTarget.id;
+                    var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
+                    quiz.get("quizItems").setEditable(item);
+                    // quizItems is Backbone's mutable object, when it changes state is not changed
+                    // so call force update for DOM modification
+                    // see http://stackoverflow.com/questions/21709905/can-i-avoid-forceupdate-when-using-react-with-backbone
+                    this.forceUpdate();
+                }
+            },
             itemChanged: function(event) {
                 var id = event.target.id;
                 var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
@@ -170,9 +183,13 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
             },
 
             render: function() {
+                var items = quiz.get("quizItems");
+                // Augment item with "editable" flag, setting to "false"
+                items.dropEditable();
+
                 var guizComponentInstance = (
                     <QuizComponent />
-                )
+                );
                 React.render(guizComponentInstance, document.body);
             },
             // Render view and start the game
