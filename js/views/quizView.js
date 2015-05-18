@@ -16,8 +16,7 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     selectedCategory: "",
                     quizItems: [],
                     numWeeksBefore: 2,
-                    mode: "Learn",
-                    action: ""
+                    mode: "Learn"
                 }
             },
             componentDidMount: function() {
@@ -50,20 +49,21 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                         onCategorySelected = {this.setSelectedCategory}
                         onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
                         onClickSoundButton = {this.toggleSound}
-                        onClickAddButton = {this.setActionAdd}
+                        onClickAddButton = {this.addEmptyItem}
+                        onClickDeleteButton = {this.deleteCheckedItems}
                     />
                 );
                 var itemsListInstance = (
                     <ItemsList
                         mode = {this.state.mode}
-                        action = {this.state.action}
                         sound = {this.state.sound}
                         categories={this.state.categories}
                         items = {this.state.quizItems}
+                        onCheckboxChanged = {this.itemTriggerChecked}
                         onItemClick = {this.itemSetEditable}
-                        onItemChanged = {this.itemChanged}
-                        onCategorySelected = {this.itemChanged}
-                        onClickSayItButton = {this.sayIt}
+                        onItemChanged = {this.itemChange}
+                        onCategorySelected = {this.itemChange}
+                        onClickSayItButton = {this.itemSayIt}
                         onClickGlobeButton = {this.redirectToSpanishdict}
                     />
                 );
@@ -115,10 +115,15 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     numWeeksBefore: numWeeksBefore
                 })
             },
-            setActionAdd: function(event) {
-                this.setState({
-                    action: "add"
-                })
+            addEmptyItem: function(event) {
+                if (this.state.mode == "Edit") {
+                    quiz.addEmptyItem();
+                }
+            },
+            deleteCheckedItems: function(event) {
+                if (this.state.mode == "Edit") {
+                    quiz.deleteCheckedItems();
+                }
             },
             // Open item for editing, substitute clicked Grid element by Input elements
             itemSetEditable: function(event) {
@@ -132,13 +137,13 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                     this.forceUpdate();
                 }
             },
-            itemChanged: function(event) {
+            itemChange: function(event) {
                 var id = event.target.id;
                 var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
                 item.set(event.target.name, event.target.value);
                 item.updateParse();
             },
-            sayIt: function(event) {
+            itemSayIt: function(event) {
                 if (this.state.sound == "on") {
                     var id = event.currentTarget.id;
                     var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
@@ -153,6 +158,11 @@ define(['models/quiz', 'views/textbox', 'views/addItemForm',
                 // window.location.replace(link);
                 // similar behavior as clicking on a link
                 window.location.href = link;
+            },
+            itemTriggerChecked: function(event) {
+                var id = event.currentTarget.id;
+                var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
+                item.set("checked", event.target.checked);
             }
         });
 

@@ -71,9 +71,10 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 this.get("quizItems").on("sync", function() {
 
                     // Update category counter here ?
-                    var selectedCategoryName = this.get("selectedCategory");
-                    var selectedCategory = this.get("categories").findWhere({"category": selectedCategoryName});
-                    selectedCategory.set("count", this.get("quizItems").length);
+                    this.updateCategoriesCounter();
+                    //var selectedCategoryName = this.get("selectedCategory");
+                    //var selectedCategory = this.get("categories").findWhere({"category": selectedCategoryName});
+                    //selectedCategory.set("count", this.get("quizItems").length);
 
                     self.trigger("ready");
                 }, this);
@@ -86,6 +87,53 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
             },
             triggerMatch: function() {
                 this.trigger("match");
+            },
+            addEmptyItem: function() {
+                var item = new Palabra();
+
+                if (this.get("selectedCategory") != "All") {
+                    item.set("category", this.get("selectedCategory"));
+                }
+
+                item.on("added", function(item) {
+                    // augment item with "editable" flag
+                    item.set("editable", true);
+
+                    // add empty item to the list of quiz items
+                    var quizItems = self.get("quizItems");
+                    quizItems.add(item, {at: 0});
+
+                    // update counter
+                    this.updateCategoriesCounter();
+
+                    // this should cause view rendering ?
+                    self.trigger("ready");
+                }, this);
+
+                item.addToParse();       // save to cloud and trigger event "added" on success
+            },
+            deleteCheckedItems: function() {
+                var quizItems = this.get("quizItems");
+                quizItems.models.forEach(function(item) {
+                    if (item.get("checked")) {
+                        item.on("destroyed", function (item) {
+                            var quizItems = self.get("quizItems");
+                            quizItems.remove(item);
+
+                            self.updateCategoriesCounter();
+
+                            // this should cause view rendering ?
+                            self.trigger("ready");
+                        }, this);
+
+                        item.deleteFromParse();
+                    }
+                });
+            },
+            updateCategoriesCounter: function() {
+                var selectedCategoryName = this.get("selectedCategory");
+                var selectedCategory = this.get("categories").findWhere({"category": selectedCategoryName});
+                selectedCategory.set("count", this.get("quizItems").length);
             }
         });
         return new Quiz();

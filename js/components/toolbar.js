@@ -58,7 +58,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                 var buttonAdd = (
                     <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.sort}>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickAddButton}>
                             <ReactBootstrap.Glyphicon glyph='plus' />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
@@ -66,7 +66,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                 var buttonDelete = (
                     <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.sort}>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickDeleteButton}>
                             <ReactBootstrap.Glyphicon glyph='remove' />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>

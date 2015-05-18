@@ -10,9 +10,9 @@ define(['models/quiz'],
                 var self = this;
                 this.save( null, {
                         success: function (palabra) {
-                            alert('New word added: ' + palabra.get("spanish"));
-                            quiz.set("forceRefresh", true);
-                            // self.trigger("added");
+                            // alert('New word added: ' + palabra.get("spanish"));
+                            // quiz.set("forceRefresh", true);
+                            self.trigger("added", palabra);
                         },
                         error: function (palabra, error) {
                             alert('Failed to create new object, with error code: ' + error.message);
@@ -33,6 +33,19 @@ define(['models/quiz'],
                         }
                     }
                 );
+            },
+            deleteFromParse: function() {
+                var self = this;
+                this.destroy({
+                    success: function(palabra) {
+                        // The object was deleted from the Parse Cloud.
+                        self.trigger("destroyed", palabra);
+                    },
+                    error: function(palabra, error) {
+                        // The delete failed.
+                        alert('Failed to update object, with error code: ' + error.message);
+                    }
+                });
             },
             sayIt: function() {
                 if ('speechSynthesis' in window) {

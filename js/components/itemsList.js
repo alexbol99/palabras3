@@ -25,7 +25,7 @@ define([],
 
                     var chekboxInstance = mode == "Edit" ? (
                         <ReactBootstrap.Col xs={1} md={1}>
-                            <ReactBootstrap.Input type='checkbox' />
+                            <ReactBootstrap.Input type='checkbox' id={item.id} onChange={this.props.onCheckboxChanged} />
                         </ReactBootstrap.Col>
                     ) : null;
 
