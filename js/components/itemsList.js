@@ -72,17 +72,23 @@ define([],
                         </ReactBootstrap.Col>
                     );
 
-                    var gridColumns = mode == "Edit" ? [
-                        {chekboxInstance},
-                        {itemLeftInstance},
-                        {itemRightInstance},
-                        {categorySelectInstance}
-                    ] : [
-                        {itemLeftInstance},
-                        {itemRightInstance},
-                        {buttonSayItInstance},
-                        {buttonGlobeInstance}
-                    ];
+                    var gridColumns;
+                    if (mode == "Edit") {
+                        gridColumns = React.addons.createFragment({
+                            checkboxInstance: chekboxInstance,
+                            itemLeftInstance: itemLeftInstance,
+                            itemRightInstance: itemRightInstance,
+                            categorySelectInstance: categorySelectInstance
+                        });
+                    }
+                    else {
+                        gridColumns = React.addons.createFragment({
+                            itemLeftInstance: itemLeftInstance,
+                            itemRightInstance: itemRightInstance,
+                            buttonSayItInstance: buttonSayItInstance,
+                            buttonGlobeInstance: buttonGlobeInstance,
+                        });
+                    }
 
                     return (
                         <ReactBootstrap.ListGroupItem bsStyle='info' key={item.cid}>
