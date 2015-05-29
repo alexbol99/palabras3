@@ -12,12 +12,6 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                             <ReactBootstrap.ButtonGroup>
                                 <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onMenuButtonClicked}>
-                                    Learn
-                                </ReactBootstrap.Button>
-                            </ReactBootstrap.ButtonGroup>
-
-                            <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onMenuButtonClicked}>
                                     Edit
                                 </ReactBootstrap.Button>
                             </ReactBootstrap.ButtonGroup>
@@ -38,3 +32,11 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
         return Menu;
     });
+
+/*
+ <ReactBootstrap.ButtonGroup>
+ <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onMenuButtonClicked}>
+ Learn
+ </ReactBootstrap.Button>
+ </ReactBootstrap.ButtonGroup>
+ */

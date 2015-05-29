@@ -17,7 +17,9 @@ define(['models/quiz',
                     selectedCategoryCount: 0,
                     quizItems: [],
                     numWeeksBefore: 2,
-                    mode: "Learn"
+                    mode: "Edit",
+                    selectedItemId: undefined,
+                    editSelectedItem: false
                 }
             },
             componentDidMount: function() {
@@ -31,7 +33,7 @@ define(['models/quiz',
                 });
                 quiz.off("ready");
                 quiz.on("ready", function() {
-                    console.log("ready to play");
+                    // console.log("ready to play");
                     this.setState({
                         quizItems: quiz.get("quizItems"),
                         selectedCategoryCount: quiz.get("quizItems").length
@@ -49,11 +51,13 @@ define(['models/quiz',
                         mode={this.state.mode}
                         sound={this.state.sound}
                         numWeeksBefore={this.state.numWeeksBefore}
+                        selectedItemId = {this.state.selectedItemId}
                         onCategorySelected = {this.setSelectedCategory}
                         onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
                         onClickSoundButton = {this.toggleSound}
                         onClickAddButton = {this.addEmptyItem}
-                        onClickDeleteButton = {this.deleteCheckedItems}
+                        onClickEditButton = {this.toggleEditItem}
+                        onClickDeleteButton = {this.deleteSelectedItem}
                     />
                 );
                 var itemsListInstance = (
@@ -62,10 +66,11 @@ define(['models/quiz',
                         sound = {this.state.sound}
                         categories={this.state.categories}
                         items = {this.state.quizItems}
-                        onCheckboxChanged = {this.itemTriggerChecked}
-                        onItemClick = {this.itemSetEditable}
+                        selectedItemId = {this.state.selectedItemId}
+                        editSelectedItem = {this.state.editSelectedItem}
+                        onItemClick = {this.toggleSelectedItemId}
                         onItemChanged = {this.itemChange}
-                        onCategorySelected = {this.itemChange}
+                        onCategoryChanged = {this.itemChangeCategory}
                         onClickSayItButton = {this.itemSayIt}
                         onClickGlobeButton = {this.redirectToSpanishdict}
                     />
@@ -122,14 +127,50 @@ define(['models/quiz',
             addEmptyItem: function(event) {
                 if (this.state.mode == "Edit") {
                     quiz.addEmptyItem();
+                    this.setState({
+                        editSelectedItem: true
+                    });
                 }
             },
-            deleteCheckedItems: function(event) {
-                if (this.state.mode == "Edit") {
-                    quiz.deleteCheckedItems();
+            toggleEditItem: function() {
+                this.setState({
+                    editSelectedItem: this.state.editSelectedItem ? false : true
+                });
+                quiz.sortItems();
+            },
+            deleteSelectedItem: function(event) {
+                if (this.state.mode == "Edit" && this.state.selectedItemId != undefined) {
+                    var item = _.findWhere(quiz.get("quizItems").models, {"id": this.state.selectedItemId});
+                    quiz.deleteItem(item);
                 }
+            },
+            itemChange: function(event) {
+                var id = event.target.id;
+                var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
+                item.set(event.target.name, event.target.value);
+                item.updateParse();
+            },
+            itemChangeCategory: function(event) {
+                if (this.state.mode == "Edit") {
+                    var id = event.target.id;
+                    var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
+                    var oldCategory = item.get("category");
+                    var newCategory = event.target.value;
+                    quiz.itemUpdateCategory(item, oldCategory, newCategory);
+                    this.setState({
+                        selectedItemId: undefined
+                    });
+                }
+            },
+            toggleSelectedItemId: function(event) {
+                var id = event.currentTarget.id;
+                this.setState({
+                    selectedItemId:
+                        (this.state.selectedItemId != undefined && this.state.selectedItemId == id && !this.state.editSelectedItem) ? undefined : id
+                });
             },
             // Open item for editing, substitute clicked Grid element by Input elements
+            /*
             itemSetEditable: function(event) {
                 if (this.state.mode == "Edit") {
                     var id = event.currentTarget.id;
@@ -141,12 +182,7 @@ define(['models/quiz',
                     this.forceUpdate();
                 }
             },
-            itemChange: function(event) {
-                var id = event.target.id;
-                var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
-                item.set(event.target.name, event.target.value);
-                item.updateParse();
-            },
+            */
             itemSayIt: function(event) {
                 if (this.state.sound == "on") {
                     var id = event.currentTarget.id;
@@ -162,11 +198,6 @@ define(['models/quiz',
                 // window.location.replace(link);
                 // similar behavior as clicking on a link
                 window.location.href = link;
-            },
-            itemTriggerChecked: function(event) {
-                var id = event.currentTarget.id;
-                var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
-                item.set("checked", event.target.checked);
             }
         });
 

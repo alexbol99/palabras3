@@ -130,45 +130,70 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 }
 
                 item.on("added", function(item) {
-                    // augment item with "editable" flag
-                    item.set("editable", true);
-
                     // add empty item to the list of quiz items
                     var quizItems = self.get("quizItems");
                     quizItems.add(item, {at: 0});
-
                     // update counter
                     this.updateSelectedCategoryCounter();
-
-                    // this should cause view rendering ?
+                    // this cause view rendering
                     self.trigger("ready");
                 }, this);
 
                 item.addToParse();       // save to cloud and trigger event "added" on success
             },
-            deleteCheckedItems: function() {
-                var quizItems = this.get("quizItems");
-                quizItems.models.forEach(function(item) {
-                    if (item.get("checked")) {
-                        item.on("destroyed", function (item) {
-                            var quizItems = self.get("quizItems");
+            deleteItem: function(item) {
+                if (item != undefined) {
+                    var quizItems = this.get("quizItems");
+                    item.on("destroyed", function (item) {
+                        quizItems.remove(item);
+                        self.updateSelectedCategoryCounter();
+                        // this cause view rendering
+                        self.trigger("ready");
+                    }, this);
+                    item.deleteFromParse();
+                }
+            },
+            itemUpdateCategory: function(item, oldCategory, newCategory) {
+                if (item != undefined) {
+                    var quizItems = this.get("quizItems");
+
+                    item.on("updated", function(item) {
+                        if (self.get("selectedCategory") == "All") {
+                            self.updateOtherCategoryCounter(oldCategory, -1);
+                            self.updateOtherCategoryCounter(newCategory, 1);
+                        }
+                        else {
                             quizItems.remove(item);
-
                             self.updateSelectedCategoryCounter();
+                        }
 
-                            // this should cause view rendering ?
-                            self.trigger("ready");
-                        }, this);
+                        // this cause view rendering
+                        self.trigger("ready");
+                    }, this);
 
-                        item.deleteFromParse();
-                    }
-                });
+                    item.set('category', newCategory);
+                    item.updateParse();
+                }
+            },
+            sortItems: function() {
+                // update comparator function
+                this.get("quizItems").comparator = function(model) {
+                    return model.get('spanish');
+                };
+                // call the sort method
+                this.get("quizItems").sort();
             },
             updateSelectedCategoryCounter: function() {
                 var selectedCategoryName = this.get("selectedCategory");
                 var selectedCategory = this.get("categories").findWhere({"category": selectedCategoryName});
                 if (selectedCategory) {
                     selectedCategory.set("count", this.get("quizItems").length);
+                }
+            },
+            updateOtherCategoryCounter: function( categoryName, delta) {
+                var category = this.get("categories").findWhere({"category": categoryName});
+                if (category) {
+                    category.set("count", category.get("count") + delta);
                 }
             }
         });

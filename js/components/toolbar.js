@@ -65,18 +65,27 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                     </ReactBootstrap.ButtonGroup>
                 );
 
-                var buttonDelete = (
+                var buttonEdit = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickEditButton}>
+                            <ReactBootstrap.Glyphicon glyph='pencil' />
+                        </ReactBootstrap.Button>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
+                var buttonDelete = this.props.mode == "Edit" && this.props.selectedItemId != undefined ? (
                     <ReactBootstrap.ButtonGroup>
                         <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickDeleteButton}>
                             <ReactBootstrap.Glyphicon glyph='remove' />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
-                );
+                ) : null;
 
                 var button1 = buttonFilter;
                 var button2 = buttonSound;
                 var button3 = this.props.mode == "Edit" ? buttonAdd : buttonShuffle;
-                var button4 = this.props.mode == "Edit" ? buttonDelete : buttonInfo;
+                var button4 = this.props.mode == "Edit" ? buttonEdit : buttonInfo;
+                var button5 = buttonDelete;
 
                 const toolbarInstance = (
                     <div>
@@ -85,6 +94,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                             {button2}
                             {button3}
                             {button4}
+                            {button5}
                         </ReactBootstrap.ButtonGroup>
                     </div>
                 );

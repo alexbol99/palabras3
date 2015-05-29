@@ -26,7 +26,7 @@ define(['models/quiz'],
                         success: function (palabra) {
                             // alert("Word '" + palabra.get("spanish") + "' was successfully updated");
                             // quiz.set("forceRefresh", true);
-                            // self.trigger("added");
+                            self.trigger("updated", palabra);
                         },
                         error: function (palabra, error) {
                             alert('Failed to update object, with error code: ' + error.message);

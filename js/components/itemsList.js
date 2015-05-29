@@ -23,13 +23,7 @@ define([],
 
                 var list = this.props.items.map(function (item) {
 
-                    var chekboxInstance = mode == "Edit" ? (
-                        <ReactBootstrap.Col xs={1} md={1}>
-                            <ReactBootstrap.Input type='checkbox' id={item.id} onChange={this.props.onCheckboxChanged} />
-                        </ReactBootstrap.Col>
-                    ) : null;
-
-                    var itemLeftInstance = (mode == "Edit" && item.get("editable") == true) ? (
+                    var itemLeftInstance = (mode == "Edit" && item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
                             <ReactBootstrap.Input bsSize="small"  type="text" defaultValue={item.get(langLeft)}  name={langLeft} id={item.id} onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
@@ -39,7 +33,7 @@ define([],
                         </ReactBootstrap.Col>
                     );
 
-                    var itemRightInstance = (mode == "Edit" && item.get("editable") == true) ? (
+                    var itemRightInstance = (mode == "Edit" && item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
                             <ReactBootstrap.Input bsSize="small" type="text" defaultValue={item.get(langRight)}  name={langRight} id={item.id} onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
@@ -49,9 +43,9 @@ define([],
                         </ReactBootstrap.Col>
                     );
 
-                    var categorySelectInstance = (mode == "Edit" && item.get("editable") == true) ? (
+                    var categorySelectInstance = (mode == "Edit" && item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={2} md={2}>
-                        <ReactBootstrap.Input type='select' bsSize="small" defaultValue={item.get("category")}  ref={item.id} id={item.id} onChange={this.props.onCategorySelected}>
+                        <ReactBootstrap.Input type='select' bsSize="small" defaultValue={item.get("category")}  ref={item.id} id={item.id} onChange={this.props.onCategoryChanged}>
                             {options}
                         </ReactBootstrap.Input>
                         </ReactBootstrap.Col>
@@ -75,10 +69,11 @@ define([],
                     var gridColumns;
                     if (mode == "Edit") {
                         gridColumns = React.addons.createFragment({
-                            checkboxInstance: chekboxInstance,
                             itemLeftInstance: itemLeftInstance,
                             itemRightInstance: itemRightInstance,
-                            categorySelectInstance: categorySelectInstance
+                            categorySelectInstance: categorySelectInstance,
+                            buttonSayItInstance: buttonSayItInstance,
+                            buttonGlobeInstance: buttonGlobeInstance
                         });
                     }
                     else {
@@ -86,15 +81,17 @@ define([],
                             itemLeftInstance: itemLeftInstance,
                             itemRightInstance: itemRightInstance,
                             buttonSayItInstance: buttonSayItInstance,
-                            buttonGlobeInstance: buttonGlobeInstance,
+                            buttonGlobeInstance: buttonGlobeInstance
                         });
                     }
 
+                    var bsStyle = item.id == this.props.selectedItemId ? 'success' : 'info';
+
                     return (
-                        <ReactBootstrap.ListGroupItem bsStyle='info' key={item.cid}>
+                        <ReactBootstrap.ListGroupItem bsStyle={bsStyle} key={item.cid}>
 
                             <ReactBootstrap.Grid>
-                                <ReactBootstrap.Row bsStyle="warning" className='show-grid' id={item.id} onClick={this.props.onItemClick}>
+                                <ReactBootstrap.Row className='show-grid' id={item.id} onClick={this.props.onItemClick}>
                                     {gridColumns}
                                 </ReactBootstrap.Row>
                             </ReactBootstrap.Grid>
