@@ -12,7 +12,8 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                 const itemsFilterPopupInstance = (
                     <ItemsFilterPopup
                         categories = {this.props.categories}
-                        selectedCategory = {this.props.selectedCategory}
+                        selectedCategoryName = {this.props.selectedCategoryName}
+                        selectedCategoryCount = {this.props.selectedCategoryCount}
                         numWeeksBefore = {this.props.numWeeksBefore}
                         numItems = {this.props.numItems}
                         onCategorySelected = {this.props.onCategorySelected}

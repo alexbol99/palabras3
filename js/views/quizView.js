@@ -13,17 +13,18 @@ define(['models/quiz',
                 return {
                     categories: [],
                     sound: "on",
-                    selectedCategory: "",
+                    selectedCategoryName: "",
+                    selectedCategoryCount: 0,
                     quizItems: [],
                     numWeeksBefore: 2,
                     mode: "Learn"
                 }
             },
             componentDidMount: function() {
-                var selectedCategoryName = quiz.get("selectedCategory");
                 this.setState({
                     categories: quiz.get("categories").models,
-                    selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName}),
+                    selectedCategoryName: quiz.get("selectedCategory"),
+                    selectedCategoryCount: quiz.get("quizItems").length,
                     numWeeksBefore: quiz.get("numWeeksBefore"),
                     quizItems: quiz.get("quizItems"),
                     sound: quiz.get("sound")
@@ -32,7 +33,8 @@ define(['models/quiz',
                 quiz.on("ready", function() {
                     console.log("ready to play");
                     this.setState({
-                        quizItems: quiz.get("quizItems")
+                        quizItems: quiz.get("quizItems"),
+                        selectedCategoryCount: quiz.get("quizItems").length
                     });
                 }, this);
             },
@@ -42,7 +44,8 @@ define(['models/quiz',
             render: function () {
                 var toolbarInstance = (
                     <Toolbar categories={this.state.categories}
-                        selectedCategory={this.state.selectedCategory}
+                        selectedCategoryName={this.state.selectedCategoryName}
+                        selectedCategoryCount={this.state.selectedCategoryCount}
                         mode={this.state.mode}
                         sound={this.state.sound}
                         numWeeksBefore={this.state.numWeeksBefore}
@@ -71,7 +74,8 @@ define(['models/quiz',
                 var mainPanelInstance = (
                     <MainPanel
                         mode={this.state.mode}
-                        selectedCategory={this.state.selectedCategory}
+                        selectedCategoryName={this.state.selectedCategoryName}
+                        selectedCategoryCount={this.state.selectedCategoryCount}
                         numWeeksBefore={this.state.numWeeksBefore}>
 
                         <div style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
@@ -105,7 +109,7 @@ define(['models/quiz',
                 var selectedCategoryName = event.target.value;
                 quiz.set("selectedCategory", selectedCategoryName);
                 this.setState({
-                    selectedCategory: quiz.get("categories").findWhere({"category": selectedCategoryName})
+                    selectedCategoryName: selectedCategoryName
                 });
             },
             setNumWeeksBefore: function(event) {

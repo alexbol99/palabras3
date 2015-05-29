@@ -5,26 +5,15 @@ define(['components/menu'],
     function (Menu) {
         var MainPanel = React.createClass({
             render: function () {
-                var selectedCategoryName = "";
-                var selectedCategoryCount = 0;
-                if (this.props.selectedCategory) {
-                    selectedCategoryName = this.props.selectedCategory.get("category");
-                    selectedCategoryCount = this.props.selectedCategory.get("count");
-                }
-
-                var selectedTitle = selectedCategoryName == "All" ?
+                var selectedTitle = this.props.selectedCategoryName == "All" ?
                     "All new words in last " + this.props.numWeeksBefore + " weeks" :
-                    selectedCategoryName;
+                    this.props.selectedCategoryName;
 
                 var header = (
                     <div>
-                        {selectedTitle}   <ReactBootstrap.Badge>{selectedCategoryCount}</ReactBootstrap.Badge>
+                        {selectedTitle}   <ReactBootstrap.Badge>{this.props.selectedCategoryCount}</ReactBootstrap.Badge>
                     </div>
                 );
-
-                var footer = (
-                    <Menu />
-                )
 
                 const panelInstance = (
                     <ReactBootstrap.Panel header={header} bsStyle='warning'>

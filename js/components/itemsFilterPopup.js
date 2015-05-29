@@ -10,10 +10,7 @@ define([],
             render: function () {
                 var Input = ReactBootstrap.Input;
                 var ListGroupItem = ReactBootstrap.ListGroupItem;
-                var selectedCategoryName = "";
-                if (this.props.selectedCategory) {
-                    selectedCategoryName = this.props.selectedCategory.get("category");
-                }
+                var selectedCategoryName = this.props.selectedCategoryName;
                 var label = 'Select only new words added in the last ' + this.props.numWeeksBefore + ' weeks';
                 var numWeeksBeforeDisabled = selectedCategoryName != "All";
                 var options = this.props.data.map(function (item) {
@@ -40,7 +37,7 @@ define([],
             render: function() {
                 const myselectInstance = (
                     <MySelect data={this.props.categories} ref="categories"
-                        selectedCategory = {this.props.selectedCategory}
+                        selectedCategoryName = {this.props.selectedCategoryName}
                         numWeeksBefore = {this.props.numWeeksBefore}
                         onCategorySelected = {this.props.onCategorySelected}
                         onNumWeeksBeforeChanged = {this.props.onNumWeeksBeforeChanged}

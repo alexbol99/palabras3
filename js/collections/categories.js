@@ -22,6 +22,8 @@ define(['models/palabra'],
                 var currentDate = new Date();
                 var newItemsDate = new Date(currentDate.getTime() - (numTiksBefore));
 
+                this.reset();
+
                 var modelNewWords = this.add({
                     "category": "All",
                     "count": 0
