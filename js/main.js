@@ -7,7 +7,7 @@ require.config({
 require(['models/app','models/quiz','models/palabra',
         'collections/categories','collections/quizItems',
         'jsx!views/quizView',
-        'jsx!components/toolbar', 'jsx!components/itemsList',
+        'jsx!components/toolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
         'jsx!components/mainPanel', 'jsx!components/menu'],
     function (app, quiz) {

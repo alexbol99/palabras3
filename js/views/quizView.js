@@ -3,9 +3,11 @@
  */
 
 define(['models/quiz',
-        'components/toolbar', '../components/itemsList', '../components/mainPanel',
+        'components/toolbar',
+        '../components/itemsListEdit', '../components/itemsListPlay',
+        '../components/mainPanel',
         'components/menu'],
-    function (quiz, Toolbar, ItemsList, MainPanel, Menu) {
+    function (quiz, Toolbar, ItemsListEdit, ItemsListPlay, MainPanel, Menu) {
         var self;
 
         var QuizComponent = React.createClass({
@@ -16,6 +18,8 @@ define(['models/quiz',
                     selectedCategoryName: "",
                     selectedCategoryCount: 0,
                     quizItems: [],
+                    quizItemsLeft: [],
+                    quizItemsRight: [],
                     numWeeksBefore: 2,
                     mode: "Edit",
                     selectedItemId: undefined,
@@ -29,14 +33,23 @@ define(['models/quiz',
                     selectedCategoryCount: quiz.get("quizItems").length,
                     numWeeksBefore: quiz.get("numWeeksBefore"),
                     quizItems: quiz.get("quizItems"),
-                    sound: quiz.get("sound")
+                    sound: quiz.get("sound"),
+                    mode: quiz.get("mode")
                 });
+
+                // Observe changes of the quiz model
+                // ---------------------------------
                 quiz.off("ready");
                 quiz.on("ready", function() {
                     // console.log("ready to play");
+                    var quizItems = quiz.get("quizItems");
+                    var quizItemsLeft = quiz.get("quizItems").getRandom(8);
+                    var quizItemsRight = quizItemsLeft.shuffle();
                     this.setState({
-                        quizItems: quiz.get("quizItems"),
-                        selectedCategoryCount: quiz.get("quizItems").length
+                        quizItems: quizItems,
+                        quizItemsLeft: quizItemsLeft,
+                        quizItemsRight: quizItemsRight,
+                        selectedCategoryCount: quizItems.length
                     });
                 }, this);
             },
@@ -58,12 +71,11 @@ define(['models/quiz',
                         onClickAddButton = {this.addEmptyItem}
                         onClickEditButton = {this.toggleEditItem}
                         onClickDeleteButton = {this.deleteSelectedItem}
+                        onClickShuffleButton = {this.shuffleItems}
                     />
                 );
-                var itemsListInstance = (
-                    <ItemsList
-                        mode = {this.state.mode}
-                        sound = {this.state.sound}
+                var itemsListEditInstance = (
+                    <ItemsListEdit
                         categories={this.state.categories}
                         items = {this.state.quizItems}
                         selectedItemId = {this.state.selectedItemId}
@@ -75,6 +87,18 @@ define(['models/quiz',
                         onClickGlobeButton = {this.redirectToSpanishdict}
                     />
                 );
+
+                var itemsListPlayInstance = (
+                    <ItemsListPlay
+                        itemsLeft = {this.state.quizItemsLeft}
+                        itemsRight = {this.state.quizItemsRight}
+                        selectedItemId = {this.state.selectedItemId}
+                        editSelectedItem = {this.state.editSelectedItem}
+                        onItemClick = {this.toggleSelectedItemId}
+                    />
+                );
+
+                var itemsListInstance = (this.state.mode == "Edit" ? itemsListEditInstance : itemsListPlayInstance);
 
                 var mainPanelInstance = (
                     <MainPanel
@@ -91,7 +115,7 @@ define(['models/quiz',
                 );
 
                 var menuInstance = (
-                    <Menu onMenuButtonClicked={this.setQuizMode}
+                    <Menu onButtonEditClicked={this.setEditMode} onButtonPlayClicked={this.setPlayMode}
                     />
                 );
 
@@ -103,8 +127,26 @@ define(['models/quiz',
                     </div>
                 );
             },
-            setQuizMode: function(event) {
-                this.setState({mode: event.target.innerHTML});
+            setEditMode: function(event) {
+                // this.setState({mode: event.target.innerHTML});
+                quiz.set("mode", 'Edit');
+                this.setState({
+                    mode: 'Edit',
+                    quizItems: quiz.get("quizItems")
+                });
+            },
+            setPlayMode: function(event) {
+                quiz.set("mode", 'Play');
+                var quizItems = quiz.get("quizItems");
+                var quizItemsLeft = quiz.get("quizItems").getRandom(8);
+                var quizItemsRight = quizItemsLeft.shuffle();
+                this.setState({
+                    mode: 'Play',
+                    quizItems: quizItems,
+                    quizItemsLeft: quizItemsLeft,
+                    quizItemsRight: quizItemsRight,
+                    selectedCategoryCount: quizItems.length
+                });
             },
             toggleSound: function(event) {
                 quiz.set("sound", this.state.sound == "on" ? "off" : "on");
@@ -144,6 +186,13 @@ define(['models/quiz',
                     quiz.deleteItem(item);
                 }
             },
+            shuffleItems: function() {
+                if (this.state.mode == "Play") {
+                    this.setState({
+                        quizItems: quiz.get("quizItems").getRandom(8)
+                    })
+                }
+            },
             itemChange: function(event) {
                 var id = event.target.id;
                 var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
@@ -170,19 +219,6 @@ define(['models/quiz',
                 });
             },
             // Open item for editing, substitute clicked Grid element by Input elements
-            /*
-            itemSetEditable: function(event) {
-                if (this.state.mode == "Edit") {
-                    var id = event.currentTarget.id;
-                    var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
-                    quiz.get("quizItems").setEditable(item);
-                    // quizItems is Backbone's mutable object, when it changes state is not changed
-                    // so call force update for DOM modification
-                    // see http://stackoverflow.com/questions/21709905/can-i-avoid-forceupdate-when-using-react-with-backbone
-                    this.forceUpdate();
-                }
-            },
-            */
             itemSayIt: function(event) {
                 if (this.state.sound == "on") {
                     var id = event.currentTarget.id;
@@ -210,10 +246,6 @@ define(['models/quiz',
             },
 
             render: function() {
-                var items = quiz.get("quizItems");
-                // Augment item with "editable" flag, setting to "false"
-                items.dropEditable();
-
                 var guizComponentInstance = (
                     <QuizComponent />
                 );

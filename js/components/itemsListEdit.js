@@ -4,14 +4,10 @@
 
 define([],
     function () {
-        var ItemsList = React.createClass({
-            rowClicked: function() {
-                console.log("row clicked");
-            },
+        var ItemsListEdit = React.createClass({
             render: function() {
                 var langLeft = "spanish";
                 var langRight = "russian";
-                var mode = this.props.mode;
 
                 var options = this.props.categories.map(function (item) {
                     return (
@@ -23,7 +19,7 @@ define([],
 
                 var list = this.props.items.map(function (item) {
 
-                    var itemLeftInstance = (mode == "Edit" && item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
+                    var itemLeftInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
                             <ReactBootstrap.Input bsSize="small"  type="text" defaultValue={item.get(langLeft)}  name={langLeft} id={item.id} onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
@@ -33,7 +29,7 @@ define([],
                         </ReactBootstrap.Col>
                     );
 
-                    var itemRightInstance = (mode == "Edit" && item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
+                    var itemRightInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
                             <ReactBootstrap.Input bsSize="small" type="text" defaultValue={item.get(langRight)}  name={langRight} id={item.id} onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
@@ -43,7 +39,7 @@ define([],
                         </ReactBootstrap.Col>
                     );
 
-                    var categorySelectInstance = (mode == "Edit" && item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
+                    var categorySelectInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={2} md={2}>
                         <ReactBootstrap.Input type='select' bsSize="small" defaultValue={item.get("category")}  ref={item.id} id={item.id} onChange={this.props.onCategoryChanged}>
                             {options}
@@ -67,23 +63,13 @@ define([],
                     );
 
                     var gridColumns;
-                    if (mode == "Edit") {
-                        gridColumns = React.addons.createFragment({
-                            itemLeftInstance: itemLeftInstance,
-                            itemRightInstance: itemRightInstance,
-                            categorySelectInstance: categorySelectInstance,
-                            buttonSayItInstance: buttonSayItInstance,
-                            buttonGlobeInstance: buttonGlobeInstance
-                        });
-                    }
-                    else {
-                        gridColumns = React.addons.createFragment({
-                            itemLeftInstance: itemLeftInstance,
-                            itemRightInstance: itemRightInstance,
-                            buttonSayItInstance: buttonSayItInstance,
-                            buttonGlobeInstance: buttonGlobeInstance
-                        });
-                    }
+                    gridColumns = React.addons.createFragment({
+                        itemLeftInstance: itemLeftInstance,
+                        itemRightInstance: itemRightInstance,
+                        categorySelectInstance: categorySelectInstance,
+                        buttonSayItInstance: buttonSayItInstance,
+                        buttonGlobeInstance: buttonGlobeInstance
+                    });
 
                     var bsStyle = item.id == this.props.selectedItemId ? 'success' : 'info';
 
@@ -107,7 +93,10 @@ define([],
             }
         });
 
-        return ItemsList;
+        return ItemsListEdit;
     });
 
 /*<ReactBootstrap.Glyphicon glyph='remove' />*/
+/*,
+ buttonSayItInstance: buttonSayItInstance,
+ buttonGlobeInstance: buttonGlobeInstance*/

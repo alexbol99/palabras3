@@ -13,7 +13,7 @@ define(['models/palabra'],
                 this.query = new Parse.Query(PalabraParseObject);
             },
 
-            sync: function(category, mode, numWeeksBefore) {
+            sync: function(category, numWeeksBefore) {
                 if (category) {
                     if (category == "All") {
                         var numTiksBefore = (numWeeksBefore * 7 * 24 * 3600 * 1000);
@@ -32,24 +32,24 @@ define(['models/palabra'],
                             delete this.query._where.createdAt
                         }
                     }
-                    // if (mode == "Edit") {
+
                     this.query.ascending("spanish");
-                    // }
+
                     this.fetch({reset: true});
                 }
             },
 
             getRandom: function(maxnum) {
-                var palabras = [];
+                var newItems = new QuizItems();
                 var inds = [];
                 // var maxnum = this.maxNum;
                 var i;
 
                 if (this.length <= maxnum) {
                     this.forEach(function(p) {
-                        palabras.push(p);
+                        newItems.add(p);
                     });
-                    return palabras;
+                    return newItems;
                 }
 
                 while (inds.length < maxnum) {
@@ -60,13 +60,15 @@ define(['models/palabra'],
                 }
 
                 inds.forEach(function(i) {
-                    palabras.push(this.at(i));
+                    newItems.add(this.at(i));
                 }, this);
-                return palabras;
+                return newItems;
             },
 
             // http://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript
-            shuffle: function(array) {
+            shuffle: function() {
+                var newItems = new QuizItems();
+                var array = this.models.slice();
                 var counter = array.length, temp, index;
 
                 // While there are elements in the array
@@ -83,22 +85,10 @@ define(['models/palabra'],
                     array[index] = temp;
                 }
 
-                return array;
-            },
-
-            // Augment item with "editable" flag
-            dropEditable: function() {
-                return this.forEach(function(item) {
-                    item.set("editable", false);
-                })
-            },
-
-            // Set flag "editable" for selected item, drop for all others
-            setEditable: function(itemForEdit) {
-                this.forEach(function(item) {
-                    item === itemForEdit ? item.set("editable", true) : item.set("editable", false);
-                })
+                newItems.add(array);
+                return newItems;
             }
+
         });
 
         return QuizItems;

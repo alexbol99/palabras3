@@ -12,7 +12,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 quizItems : null,
                 started: false,
                 selectedCategory: "",
-                mode: "",
+                mode: "Edit",
                 /*forceRefresh: false,*/
                 sound: "on",
                 numWeeksBefore: 2
@@ -26,6 +26,9 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 this.on("change:selectedCategory", this.retrieveItems, this);
                 this.on("change:numWeeksBefore", this.retrieveItems, this);
                 // this.on("change:forceRefresh", this.forceRefresh, this);
+                this.on("change:mode", function() {
+                    localStorage.mode = this.get("mode");
+                }, this);
             },
             // on quiz selected start to create stuff
             start: function() {
@@ -41,7 +44,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 this.get("categories").on("ready", this.categoriesSynced, this);
                 this.get("categories").sync(this.get("numWeeksBefore"));
 
-                this.set("mode", "Play");
+                // this.set("mode", "Play");
             },
             saveState: function() {
                 if (window.localStorage) {
@@ -49,12 +52,14 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                     localStorage.selectedCategory = this.get("selectedCategory");
                     localStorage.numWeeksBefore = this.get("numWeeksBefore");
                     localStorage.sound = this.get("sound");
+                    localStorage.mode = this.get("mode");
                 }
             },
             restoreState: function() {
                 if (window.localStorage) {
                     this.set("numWeeksBefore", localStorage.numWeeksBefore || this.get("numWeeksBefore"));
                     this.set("sound", localStorage.sound || this.get("sound"));
+                    this.set("mode", localStorage.mode || this.get("mode"));
                 }
             },
             saveCategories: function() {
@@ -110,7 +115,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
 
                     self.trigger("ready");
                 }, this);
-                this.get("quizItems").sync(category, mode, numWeeksBefore);
+                this.get("quizItems").sync(category, numWeeksBefore);
             },
 
             // called when item added or item changed and we want to refresh view

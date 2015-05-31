@@ -24,7 +24,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                 const buttonFilter = (
                     <ReactBootstrap.ButtonGroup>
                         <ReactBootstrap.ModalTrigger modal={itemsFilterPopupInstance}>
-                            <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickFilterButton}>
+                            <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Filter" onClick={this.props.onClickFilterButton}>
                                 <ReactBootstrap.Glyphicon glyph='filter' />
                             </ReactBootstrap.Button>
                         </ReactBootstrap.ModalTrigger>
@@ -33,7 +33,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                 const buttonSound = (
                     <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickSoundButton}>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Toggle sound on/off" onClick={this.props.onClickSoundButton}>
                             <ReactBootstrap.Glyphicon glyph={glyphSound} />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
@@ -41,7 +41,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                 const buttonShuffle = (
                     <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.sort}>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Shuffle" onClick={this.props.onClickShuffleButton}>
                             <ReactBootstrap.Glyphicon glyph='refresh' />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
@@ -59,7 +59,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                 var buttonAdd = (
                     <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickAddButton}>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Add item or category" onClick={this.props.onClickAddButton}>
                             <ReactBootstrap.Glyphicon glyph='plus' />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
@@ -67,7 +67,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                 var buttonEdit = (
                     <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickEditButton}>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Edit item" onClick={this.props.onClickEditButton}>
                             <ReactBootstrap.Glyphicon glyph='pencil' />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
@@ -75,26 +75,34 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                 var buttonDelete = this.props.mode == "Edit" && this.props.selectedItemId != undefined ? (
                     <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' onClick={this.props.onClickDeleteButton}>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Remove item" onClick={this.props.onClickDeleteButton}>
                             <ReactBootstrap.Glyphicon glyph='remove' />
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
                 ) : null;
 
-                var button1 = buttonFilter;
-                var button2 = buttonSound;
-                var button3 = this.props.mode == "Edit" ? buttonAdd : buttonShuffle;
-                var button4 = this.props.mode == "Edit" ? buttonEdit : buttonInfo;
-                var button5 = buttonDelete;
+                var buttons;
+                if (this.props.mode == "Edit") {
+                    buttons = {
+                        button1: buttonFilter,
+                        button2: buttonSound,
+                        button3: buttonAdd,
+                        button4: buttonEdit,
+                        button5: buttonDelete
+                    };
+                }
+                else {                 // mode == "Play"
+                    buttons = {
+                        button1: buttonFilter,
+                        button2: buttonSound,
+                        button3: buttonShuffle
+                    };
+                }
 
                 const toolbarInstance = (
                     <div>
                         <ReactBootstrap.ButtonGroup justified>
-                            {button1}
-                            {button2}
-                            {button3}
-                            {button4}
-                            {button5}
+                            {buttons}
                         </ReactBootstrap.ButtonGroup>
                     </div>
                 );
@@ -104,3 +112,15 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
         return Toolbar;
     });
+
+//var button1 = buttonFilter;
+//var button2 = buttonSound;
+//var button3 = this.props.mode == "Edit" ? buttonAdd : buttonShuffle;
+//var button4 = this.props.mode == "Edit" ? buttonEdit : buttonInfo;
+//var button5 = buttonDelete;
+
+//{button1}
+//{button2}
+//{button3}
+//{button4}
+//{button5}

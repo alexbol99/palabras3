@@ -11,13 +11,13 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                         <ReactBootstrap.ButtonGroup justified>
 
                             <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onMenuButtonClicked}>
+                                <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onButtonEditClicked}>
                                     Edit
                                 </ReactBootstrap.Button>
                             </ReactBootstrap.ButtonGroup>
 
                             <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onMenuButtonClicked}>
+                                <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onButtonPlayClicked}>
                                     Play
                                 </ReactBootstrap.Button>
                             </ReactBootstrap.ButtonGroup>
