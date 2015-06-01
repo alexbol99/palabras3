@@ -21,15 +21,22 @@ define([],
 
                 var list = items.map(function (item) {
 
+                    var bsStyleLeft = item.left.id == this.props.selectedLeftItemId ? 'success' : 'info';
+                    var bsStyleRight = item.right.id == this.props.selectedRightItemId ? 'success' : 'info';
+
                     var itemLeftInstance = (
-                        <ReactBootstrap.Col xs={5} md={5}>
-                            <h4>{item.left.get(langLeft)}</h4>
+                        <ReactBootstrap.Col xs={6} md={6} id={item.left.id} onClick={this.props.onLeftItemClick}>
+                            <ReactBootstrap.Button bsStyle={bsStyleLeft}>
+                                <h4>{item.left.get(langLeft)}</h4>
+                            </ReactBootstrap.Button>
                         </ReactBootstrap.Col>
                     );
 
                     var itemRightInstance = (
-                        <ReactBootstrap.Col xs={5} md={5}>
-                            <h4>{item.right.get(langRight)}</h4>
+                        <ReactBootstrap.Col xs={6} md={6} id={item.right.id} onClick={this.props.onRightItemClick}>
+                            <ReactBootstrap.Button bsStyle={bsStyleRight}>
+                                <h4>{item.right.get(langRight)}</h4>
+                            </ReactBootstrap.Button>
                         </ReactBootstrap.Col>
                     );
 
@@ -41,10 +48,10 @@ define([],
                     var bsStyle = item.id == this.props.selectedItemId ? 'success' : 'info';
 
                     return (
-                        <ReactBootstrap.ListGroupItem bsStyle={bsStyle} key={item.left.cid + '_' + item.right.cid}>
+                        <ReactBootstrap.ListGroupItem key={item.left.cid + '_' + item.right.cid}>
 
                             <ReactBootstrap.Grid>
-                                <ReactBootstrap.Row className='show-grid' id={item.id} onClick={this.props.onItemClick}>
+                                <ReactBootstrap.Row className='show-grid'>
                                     {gridColumns}
                                 </ReactBootstrap.Row>
                             </ReactBootstrap.Grid>

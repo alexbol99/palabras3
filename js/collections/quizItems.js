@@ -87,6 +87,13 @@ define(['models/palabra'],
 
                 newItems.add(array);
                 return newItems;
+            },
+
+            clone: function() {
+                var newItems = new QuizItems();
+                var array = this.models.slice();
+                newItems.add(array);
+                return newItems;
             }
 
         });

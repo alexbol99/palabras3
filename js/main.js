@@ -2,7 +2,7 @@
  * Created by alexbol on 1/8/2015.
  */
 require.config({
-    urlArgs: "bust=" + (new Date()).getTime()
+    /*urlArgs: "bust=" + (new Date()).getTime()*/
 });
 require(['models/app','models/quiz','models/palabra',
         'collections/categories','collections/quizItems',

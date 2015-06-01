@@ -23,6 +23,8 @@ define(['models/quiz',
                     numWeeksBefore: 2,
                     mode: "Edit",
                     selectedItemId: undefined,
+                    selectedLeftItemId: undefined,
+                    selectedRightItemId: undefined,
                     editSelectedItem: false,
                     maxItemsToPlay: (window.orientation == undefined || window.orientation == 0) ? 8 : 4
                 }
@@ -100,9 +102,10 @@ define(['models/quiz',
                     <ItemsListPlay
                         itemsLeft = {this.state.quizItemsLeft}
                         itemsRight = {this.state.quizItemsRight}
-                        selectedItemId = {this.state.selectedItemId}
-                        editSelectedItem = {this.state.editSelectedItem}
-                        onItemClick = {this.toggleSelectedItemId}
+                        selectedLeftItemId = {this.state.selectedLeftItemId}
+                        selectedRightItemId = {this.state.selectedRightItemId}
+                        onLeftItemClick = {this.toggleLeftSelectedItemId}
+                        onRightItemClick = {this.toggleRightSelectedItemId}
                     />
                 );
 
@@ -156,7 +159,8 @@ define(['models/quiz',
                     quizItems: quizItems,
                     quizItemsLeft: quizItemsLeft,
                     quizItemsRight: quizItemsRight,
-                    selectedCategoryCount: quizItems.length
+                    selectedLeftItemId: undefined,
+                    selectedRightItemId: undefined
                 });
             },
 
@@ -215,9 +219,14 @@ define(['models/quiz',
 
             // Do not need this ?
             shuffleItems: function() {
+                var quizItems = quiz.get("quizItems");
+                var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
+                var quizItemsRight = quizItemsLeft.shuffle();
                 if (this.state.mode == "Play") {
                     this.setState({
-                        quizItems: quiz.get("quizItems").getRandom(this.state.maxItemsToPlay)
+                        quizItems: quiz.get("quizItems").getRandom(this.state.maxItemsToPlay),
+                        selectedLeftItemId: undefined,
+                        selectedRightItemId: undefined
                     })
                 }
             },
@@ -270,6 +279,47 @@ define(['models/quiz',
                 // window.location.replace(link);
                 // similar behavior as clicking on a link
                 window.location.href = link;
+            },
+
+            // Items list logic in "Play" mode
+            // ----------------------------------
+            toggleLeftSelectedItemId: function(event) {
+                var id = event.currentTarget.id;
+                this.setState({
+                    selectedLeftItemId:
+                        (this.state.selectedLeftItemId != undefined && this.state.selectedLeftItemId == id) ? undefined : id
+                }, this.checkMatch);
+            },
+
+            toggleRightSelectedItemId: function(event) {
+                var id = event.currentTarget.id;
+                this.setState({
+                    selectedRightItemId:
+                        (this.state.selectedRightItemId != undefined && this.state.selectedRightItemId == id) ? undefined : id
+                }, this.checkMatch);
+            },
+
+            checkMatch: function() {
+                if (this.state.selectedLeftItemId == undefined || this.state.selectedRightItemId == undefined)
+                    return;
+                if (this.state.selectedLeftItemId == this.state.selectedRightItemId) {
+                    var itemLeft = _.findWhere(this.state.quizItemsLeft.models, {"id": this.state.selectedLeftItemId});
+                    var itemRight = _.findWhere(this.state.quizItemsRight.models, {"id": this.state.selectedRightItemId});
+                    var quizItemsLeftNew = this.state.quizItemsLeft.clone();
+                    var quizItemsRightNew = this.state.quizItemsRight.clone();
+                    quizItemsLeftNew.remove(itemLeft);
+                    quizItemsRightNew.remove(itemRight);
+                    this.setState({
+                        quizItemsLeft: quizItemsLeftNew,
+                        quizItemsRight: quizItemsRightNew
+                    }, this.refresh)
+                }
+            },
+
+            refresh: function() {
+                if (this.state.quizItemsLeft.length == 0 && this.state.quizItemsRight.length == 0) {
+                    this.setPlayMode();            // repeat again
+                }
             }
         });
 
