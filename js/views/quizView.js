@@ -23,27 +23,33 @@ define(['models/quiz',
                     numWeeksBefore: 2,
                     mode: "Edit",
                     selectedItemId: undefined,
-                    editSelectedItem: false
+                    editSelectedItem: false,
+                    maxItemsToPlay: (window.orientation == undefined || window.orientation == 0) ? 8 : 4
                 }
             },
             componentDidMount: function() {
+                var quizItems = quiz.get("quizItems");
+                var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
+                var quizItemsRight = quizItemsLeft.shuffle();
                 this.setState({
                     categories: quiz.get("categories").models,
                     selectedCategoryName: quiz.get("selectedCategory"),
                     selectedCategoryCount: quiz.get("quizItems").length,
                     numWeeksBefore: quiz.get("numWeeksBefore"),
-                    quizItems: quiz.get("quizItems"),
+                    quizItems: quizItems,
+                    quizItemsLeft: quizItemsLeft,
+                    quizItemsRight: quizItemsRight,
                     sound: quiz.get("sound"),
                     mode: quiz.get("mode")
                 });
 
-                // Observe changes of the quiz model
+                // Observe future changes of the quiz model
                 // ---------------------------------
                 quiz.off("ready");
                 quiz.on("ready", function() {
                     // console.log("ready to play");
                     var quizItems = quiz.get("quizItems");
-                    var quizItemsLeft = quiz.get("quizItems").getRandom(8);
+                    var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
                     var quizItemsRight = quizItemsLeft.shuffle();
                     this.setState({
                         quizItems: quizItems,
@@ -57,6 +63,7 @@ define(['models/quiz',
                 quiz.saveState();    // when DOM updated save current state in localStorage
             },
             render: function () {
+
                 var toolbarInstance = (
                     <Toolbar categories={this.state.categories}
                         selectedCategoryName={this.state.selectedCategoryName}
@@ -74,6 +81,7 @@ define(['models/quiz',
                         onClickShuffleButton = {this.shuffleItems}
                     />
                 );
+
                 var itemsListEditInstance = (
                     <ItemsListEdit
                         categories={this.state.categories}
@@ -127,6 +135,9 @@ define(['models/quiz',
                     </div>
                 );
             },
+
+            // Footer menu logic - switch between "Edit" and "Play" mode
+            // -----------------------------------------------------------
             setEditMode: function(event) {
                 // this.setState({mode: event.target.innerHTML});
                 quiz.set("mode", 'Edit');
@@ -138,7 +149,7 @@ define(['models/quiz',
             setPlayMode: function(event) {
                 quiz.set("mode", 'Play');
                 var quizItems = quiz.get("quizItems");
-                var quizItemsLeft = quiz.get("quizItems").getRandom(8);
+                var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
                 var quizItemsRight = quizItemsLeft.shuffle();
                 this.setState({
                     mode: 'Play',
@@ -148,24 +159,16 @@ define(['models/quiz',
                     selectedCategoryCount: quizItems.length
                 });
             },
+
+            // Header toolbar logic in mode "Edit"
+            // -----------------------------------
+
+            // Button "Sound" - both in "Edit" and "Play" modes
             toggleSound: function(event) {
                 quiz.set("sound", this.state.sound == "on" ? "off" : "on");
                 this.setState({ "sound": (this.state.sound == "on" ? "off" : "on") });
             },
-            setSelectedCategory: function(event) {
-                var selectedCategoryName = event.target.value;
-                quiz.set("selectedCategory", selectedCategoryName);
-                this.setState({
-                    selectedCategoryName: selectedCategoryName
-                });
-            },
-            setNumWeeksBefore: function(event) {
-                var numWeeksBefore = event.target.value;
-                quiz.set("numWeeksBefore", numWeeksBefore);
-                this.setState({
-                    numWeeksBefore: numWeeksBefore
-                })
-            },
+            // Button "Add" - add new empty item
             addEmptyItem: function(event) {
                 if (this.state.mode == "Edit") {
                     quiz.addEmptyItem();
@@ -174,31 +177,70 @@ define(['models/quiz',
                     });
                 }
             },
+            // Button "Edit" - toggle selected item to be edited or displayed
             toggleEditItem: function() {
                 this.setState({
                     editSelectedItem: this.state.editSelectedItem ? false : true
                 });
                 quiz.sortItems();
             },
+            // Button "Delete" - delete selected item. TODO - confirmation popup
             deleteSelectedItem: function(event) {
                 if (this.state.mode == "Edit" && this.state.selectedItemId != undefined) {
                     var item = _.findWhere(quiz.get("quizItems").models, {"id": this.state.selectedItemId});
                     quiz.deleteItem(item);
                 }
             },
+
+            // 2 callbacks for the items filter, cause fetching items from Parse
+            // Both in "Edit" and "Play" modes
+            // -----------------------------------------------------------------
+
+            // Called when category changed
+            setSelectedCategory: function(event) {
+                var selectedCategoryName = event.target.value;
+                quiz.set("selectedCategory", selectedCategoryName);
+                this.setState({
+                    selectedCategoryName: selectedCategoryName
+                });
+            },
+            // Called when number of weeks for new items changed
+            setNumWeeksBefore: function(event) {
+                var numWeeksBefore = event.target.value;
+                quiz.set("numWeeksBefore", numWeeksBefore);
+                this.setState({
+                    numWeeksBefore: numWeeksBefore
+                })
+            },
+
+            // Do not need this ?
             shuffleItems: function() {
                 if (this.state.mode == "Play") {
                     this.setState({
-                        quizItems: quiz.get("quizItems").getRandom(8)
+                        quizItems: quiz.get("quizItems").getRandom(this.state.maxItemsToPlay)
                     })
                 }
             },
+
+            // Items list logic in "Edit" mode
+            // -------------------------------------
+
+            // Toggle item selection. Selected item can be edited or deleted
+            toggleSelectedItemId: function(event) {
+                var id = event.currentTarget.id;
+                this.setState({
+                    selectedItemId:
+                        (this.state.selectedItemId != undefined && this.state.selectedItemId == id && !this.state.editSelectedItem) ? undefined : id
+                });
+            },
+            // Item was edited - update databased on Parse
             itemChange: function(event) {
                 var id = event.target.id;
                 var item = _.findWhere(quiz.get("quizItems").models, {"id":id});
                 item.set(event.target.name, event.target.value);
                 item.updateParse();
             },
+            // Items category was changed. Update database, change items list and counters
             itemChangeCategory: function(event) {
                 if (this.state.mode == "Edit") {
                     var id = event.target.id;
@@ -211,13 +253,6 @@ define(['models/quiz',
                     });
                 }
             },
-            toggleSelectedItemId: function(event) {
-                var id = event.currentTarget.id;
-                this.setState({
-                    selectedItemId:
-                        (this.state.selectedItemId != undefined && this.state.selectedItemId == id && !this.state.editSelectedItem) ? undefined : id
-                });
-            },
             // Open item for editing, substitute clicked Grid element by Input elements
             itemSayIt: function(event) {
                 if (this.state.sound == "on") {
@@ -226,6 +261,7 @@ define(['models/quiz',
                     item.sayIt();
                 }
             },
+            // Redirect to external source
             redirectToSpanishdict: function(event) {
                 var id = event.currentTarget.id;
                 var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
@@ -237,10 +273,8 @@ define(['models/quiz',
             }
         });
 
-        var Quiz = Backbone.View.extend({
+        var QuizView = Backbone.View.extend({
             initialize: function () {
-                self = this;
-                // this.maxNum = (window.orientation == undefined || window.orientation == 0) ? 8 : 4;
                 // quiz.on("match", this.match, this);
                 quiz.on("ready", this.render, this);
             },
@@ -253,6 +287,6 @@ define(['models/quiz',
             }
         });
 
-        return new Quiz();
+        return new QuizView();
     });
 
