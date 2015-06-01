@@ -41,6 +41,8 @@ define(['models/quiz',
                     quizItems: quizItems,
                     quizItemsLeft: quizItemsLeft,
                     quizItemsRight: quizItemsRight,
+                    selectedLeftItemId: undefined,
+                    selectedRightItemId: undefined,
                     sound: quiz.get("sound"),
                     mode: quiz.get("mode")
                 });
@@ -55,9 +57,11 @@ define(['models/quiz',
                     var quizItemsRight = quizItemsLeft.shuffle();
                     this.setState({
                         quizItems: quizItems,
+                        selectedCategoryCount: quizItems.length,
                         quizItemsLeft: quizItemsLeft,
                         quizItemsRight: quizItemsRight,
-                        selectedCategoryCount: quizItems.length
+                        selectedLeftItemId: undefined,
+                        selectedRightItemId: undefined
                     });
                 }, this);
             },
@@ -151,17 +155,23 @@ define(['models/quiz',
             },
             setPlayMode: function(event) {
                 quiz.set("mode", 'Play');
-                var quizItems = quiz.get("quizItems");
-                var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
-                var quizItemsRight = quizItemsLeft.shuffle();
-                this.setState({
-                    mode: 'Play',
-                    quizItems: quizItems,
-                    quizItemsLeft: quizItemsLeft,
-                    quizItemsRight: quizItemsRight,
-                    selectedLeftItemId: undefined,
-                    selectedRightItemId: undefined
-                });
+
+                if (this.state.selectedLeftItemId == undefined && this.state.selectedRightItemId == undefined) {
+                    var quizItems = quiz.get("quizItems");
+                    var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
+                    var quizItemsRight = quizItemsLeft.shuffle();
+                    this.setState({
+                        mode: 'Play',
+                        quizItems: quizItems,
+                        quizItemsLeft: quizItemsLeft,
+                        quizItemsRight: quizItemsRight
+                    });
+                }
+                else {
+                    this.setState({
+                        mode: 'Play'
+                    });
+                }
             },
 
             // Header toolbar logic in mode "Edit"
@@ -217,14 +227,15 @@ define(['models/quiz',
                 })
             },
 
-            // Do not need this ?
+            // Shuffle items and refresh component
             shuffleItems: function() {
                 var quizItems = quiz.get("quizItems");
                 var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
                 var quizItemsRight = quizItemsLeft.shuffle();
                 if (this.state.mode == "Play") {
                     this.setState({
-                        quizItems: quiz.get("quizItems").getRandom(this.state.maxItemsToPlay),
+                        quizItemsLeft: quizItemsLeft,
+                        quizItemsRight: quizItemsRight,
                         selectedLeftItemId: undefined,
                         selectedRightItemId: undefined
                     })
@@ -305,6 +316,12 @@ define(['models/quiz',
                 if (this.state.selectedLeftItemId == this.state.selectedRightItemId) {
                     var itemLeft = _.findWhere(this.state.quizItemsLeft.models, {"id": this.state.selectedLeftItemId});
                     var itemRight = _.findWhere(this.state.quizItemsRight.models, {"id": this.state.selectedRightItemId});
+
+                    if (this.state.sound == "on") {
+                        itemLeft.sayIt("spanish");
+                        // itemRight.sayIt("russian");
+                    }
+
                     var quizItemsLeftNew = this.state.quizItemsLeft.clone();
                     var quizItemsRightNew = this.state.quizItemsRight.clone();
                     quizItemsLeftNew.remove(itemLeft);
@@ -318,7 +335,10 @@ define(['models/quiz',
 
             refresh: function() {
                 if (this.state.quizItemsLeft.length == 0 && this.state.quizItemsRight.length == 0) {
-                    this.setPlayMode();            // repeat again
+                    this.setState({
+                        selectedLeftItemId: undefined,
+                        selectedRightItemId: undefined
+                    }, this.setPlayMode);                  // repeat again
                 }
             }
         });

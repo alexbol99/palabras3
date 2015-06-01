@@ -47,10 +47,10 @@ define(['models/quiz'],
                     }
                 });
             },
-            sayIt: function() {
+            sayIt: function(lang) {
                 if ('speechSynthesis' in window) {
                     // Synthesis support. Make your web apps talk!
-                    var msg = new SpeechSynthesisUtterance(this.get("spanish"));
+                    var msg = new SpeechSynthesisUtterance(this.get(lang));
                     msg.lang = 'es-ES';
                     msg.rate = 0.9; // 0.1 to 10
                     msg.pitch = 0.9; //0 to 2
