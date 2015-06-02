@@ -39,14 +39,6 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                     </ReactBootstrap.ButtonGroup>
                 );
 
-                const buttonShuffle = (
-                    <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Shuffle" onClick={this.props.onClickShuffleButton}>
-                            <ReactBootstrap.Glyphicon glyph='refresh' />
-                        </ReactBootstrap.Button>
-                    </ReactBootstrap.ButtonGroup>
-                );
-
                 const buttonInfo = (
                     <ReactBootstrap.ButtonGroup>
                         <ReactBootstrap.ModalTrigger modal={<InfoPopup />}>
@@ -81,6 +73,25 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                     </ReactBootstrap.ButtonGroup>
                 ) : null;
 
+                const buttonShuffle = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Shuffle" onClick={this.props.onClickShuffleButton}>
+                            <ReactBootstrap.Glyphicon glyph='refresh' />
+                        </ReactBootstrap.Button>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
+                var autoPlayGlyph = this.props.autoPlayStarted ? "pause" : "play";
+
+                const buttonPlay = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Auto play" onClick={this.props.onClickAutoPlayButton}>
+                            <ReactBootstrap.Glyphicon glyph={autoPlayGlyph} />
+                        </ReactBootstrap.Button>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
+
                 var buttons;
                 if (this.props.mode == "Edit") {
                     buttons = {
@@ -95,7 +106,8 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                     buttons = {
                         button1: buttonFilter,
                         button2: buttonSound,
-                        button3: buttonShuffle
+                        button3: buttonShuffle,
+                        button4: buttonPlay
                     };
                 }
 

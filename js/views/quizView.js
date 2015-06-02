@@ -26,7 +26,8 @@ define(['models/quiz',
                     selectedLeftItemId: undefined,
                     selectedRightItemId: undefined,
                     editSelectedItem: false,
-                    maxItemsToPlay: (window.orientation == undefined || window.orientation == 0) ? 8 : 4
+                    maxItemsToPlay: (window.orientation == undefined || window.orientation == 0) ? 8 : 4,
+                    autoPlayStarted: false
                 }
             },
             componentDidMount: function() {
@@ -78,6 +79,7 @@ define(['models/quiz',
                         sound={this.state.sound}
                         numWeeksBefore={this.state.numWeeksBefore}
                         selectedItemId = {this.state.selectedItemId}
+                        autoPlayStarted = {this.state.autoPlayStarted}
                         onCategorySelected = {this.setSelectedCategory}
                         onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
                         onClickSoundButton = {this.toggleSound}
@@ -85,6 +87,7 @@ define(['models/quiz',
                         onClickEditButton = {this.toggleEditItem}
                         onClickDeleteButton = {this.deleteSelectedItem}
                         onClickShuffleButton = {this.shuffleItems}
+                        onClickAutoPlayButton = {this.togglePlayOrPause}
                     />
                 );
 
@@ -319,7 +322,7 @@ define(['models/quiz',
 
                     if (this.state.sound == "on") {
                         itemLeft.sayIt("spanish");
-                        // itemRight.sayIt("russian");
+                        itemRight.sayIt("russian");
                     }
 
                     var quizItemsLeftNew = this.state.quizItemsLeft.clone();
@@ -340,6 +343,12 @@ define(['models/quiz',
                         selectedRightItemId: undefined
                     }, this.setPlayMode);                  // repeat again
                 }
+            },
+
+            togglePlayOrPause: function() {
+                this.setState({
+                    autoPlayStarted: this.state.autoPlayStarted ? false : true
+                })
             }
         });
 
