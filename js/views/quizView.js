@@ -8,7 +8,14 @@ define(['models/quiz',
         '../components/mainPanel',
         'components/menu'],
     function (quiz, Toolbar, ItemsListEdit, ItemsListPlay, MainPanel, Menu) {
-        var self;
+        var recognition;
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ru-RU';
+        }
+        var final_transcript = '';
 
         var QuizComponent = React.createClass({
             getInitialState: function () {
@@ -322,8 +329,10 @@ define(['models/quiz',
 
                     if (this.state.sound == "on") {
                         itemLeft.sayIt("spanish");
-                        itemRight.sayIt("russian");
+                        // itemRight.sayIt("russian");
                     }
+
+                    // recognition.stop();
 
                     var quizItemsLeftNew = this.state.quizItemsLeft.clone();
                     var quizItemsRightNew = this.state.quizItemsRight.clone();
@@ -331,24 +340,84 @@ define(['models/quiz',
                     quizItemsRightNew.remove(itemRight);
                     this.setState({
                         quizItemsLeft: quizItemsLeftNew,
-                        quizItemsRight: quizItemsRightNew
-                    }, this.refresh)
+                        quizItemsRight: quizItemsRightNew,
+                        selectedLeftItemId: undefined,
+                        selectedRightItemId: undefined
+                    }, this.stopRecognition);    // this.refresh)
                 }
             },
 
             refresh: function() {
                 if (this.state.quizItemsLeft.length == 0 && this.state.quizItemsRight.length == 0) {
-                    this.setState({
-                        selectedLeftItemId: undefined,
-                        selectedRightItemId: undefined
-                    }, this.setPlayMode);                  // repeat again
+                    this.setPlayMode();
+                    //this.setState({
+                    //    selectedLeftItemId: undefined,
+                    //    selectedRightItemId: undefined
+                    //}, this.setPlayMode);                  // repeat again
+                }
+                else {
+                    this.autoPlay();
                 }
             },
 
             togglePlayOrPause: function() {
                 this.setState({
                     autoPlayStarted: this.state.autoPlayStarted ? false : true
-                })
+                }, this.autoPlay);
+            },
+
+            autoPlay: function() {
+                if (this.state.autoPlayStarted) {
+                    var item = this.state.quizItemsLeft.at(0);
+
+                    // item.sayIt("spanish");
+
+                    this.setState({
+                        selectedLeftItemId: item.id
+                    }, this.startRecognition);
+                }
+            },
+
+            startRecognition: function() {
+                var itemLeft = _.findWhere(this.state.quizItemsLeft.models, {"id": this.state.selectedLeftItemId});
+                var self = this;
+
+                recognition.onresult = function (event) {
+                    var interim_transcript = '';
+
+                    for (var i = event.resultIndex; i < event.results.length; ++i) {
+                        interim_transcript += event.results[i][0].transcript;
+                        console.log(interim_transcript);
+                    }
+
+                    if (interim_transcript == itemLeft.get('russian')) {
+                        self.setState({
+                            selectedRightItemId: itemLeft.id
+                        }, self.checkMatch);
+                    }
+                };
+
+                try {
+                    recognition.start();
+                }
+                catch (e) {
+                    console.log(e);
+                }
+
+            },
+
+            stopRecognition: function() {
+                var self = this;
+                recognition.onend = function() {
+                    self.refresh();
+                }
+                try {
+                    recognition.stop();
+                }
+                catch(e) {
+
+                }
+                this.refresh();
             }
         });
 
