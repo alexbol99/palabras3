@@ -13,7 +13,7 @@ define(['models/quiz',
             recognition = new webkitSpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = 'ru-RU';
+            recognition.lang = 'es-ES';
         }
         var final_transcript = '';
 
@@ -368,18 +368,23 @@ define(['models/quiz',
 
             autoPlay: function() {
                 if (this.state.autoPlayStarted) {
-                    var item = this.state.quizItemsLeft.at(0);
+                    var item = this.state.quizItemsRight.at(0);
 
                     // item.sayIt("spanish");
 
                     this.setState({
-                        selectedLeftItemId: item.id
+                        selectedRightItemId: item.id
                     }, this.startRecognition);
+                }
+                else {
+                    this.setState({
+                        selectedRightItemId: undefined
+                    });
                 }
             },
 
             startRecognition: function() {
-                var itemLeft = _.findWhere(this.state.quizItemsLeft.models, {"id": this.state.selectedLeftItemId});
+                var itemRight = _.findWhere(this.state.quizItemsLeft.models, {"id": this.state.selectedRightItemId});
                 var self = this;
 
                 recognition.onresult = function (event) {
@@ -390,13 +395,30 @@ define(['models/quiz',
                         console.log(interim_transcript);
                     }
 
-                    if (interim_transcript == itemLeft.get('russian')) {
+                    if (interim_transcript == itemRight.get('spanish')) {
                         self.setState({
-                            selectedRightItemId: itemLeft.id
+                            selectedLeftItemId: itemRight.id
                         }, self.checkMatch);
                     }
                 };
 
+                //recognition.onaudioend = function(event) {
+                //    self.setState({
+                //        autoPlayStarted: false
+                //    });
+                //};
+                //
+                //recognition.onsoundend = function(event) {
+                //    self.setState({
+                //        autoPlayStarted: false
+                //    }, self.stopRecognition);
+                //};
+                //recognition.onspeechend = function(event) {
+                //    self.setState({
+                //        autoPlayStarted: false
+                //    }, self.stopRecognition);
+                //};
+                //
                 try {
                     recognition.start();
                 }
@@ -410,7 +432,7 @@ define(['models/quiz',
                 var self = this;
                 recognition.onend = function() {
                     self.refresh();
-                }
+                };
                 try {
                     recognition.stop();
                 }
