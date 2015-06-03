@@ -402,12 +402,12 @@ define(['models/quiz',
                     }
                 };
 
-                //recognition.onaudioend = function(event) {
-                //    self.setState({
-                //        autoPlayStarted: false
-                //    });
-                //};
-                //
+                recognition.onaudioend = function(event) {
+                    self.setState({
+                        selectedLeftItemId: itemRight.id
+                    }, self.checkMatch);
+                };
+
                 //recognition.onsoundend = function(event) {
                 //    self.setState({
                 //        autoPlayStarted: false
