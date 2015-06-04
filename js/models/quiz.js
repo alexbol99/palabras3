@@ -22,7 +22,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 this.set("categories", new Categories());
                 // Restore state from local storage
                 this.restoreState();
-                app.on("change:currentDictionary", this.start, this);
+                // app.on("change:currentDictionary", this.start, this);
                 this.on("change:selectedCategory", this.retrieveItems, this);
                 this.on("change:numWeeksBefore", this.retrieveItems, this);
                 // this.on("change:forceRefresh", this.forceRefresh, this);
@@ -31,7 +31,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 }, this);
             },
             // on quiz selected start to create stuff
-            start: function() {
+            start: function(category) {
                 Palabra.prototype.className = app.get("currentDictionary");
                 this.set("quizItems", new QuizItems());
 
@@ -40,6 +40,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                  and render view, then proceed with categories in background
                   */
                 this.restoreCategories();
+                this.setSelectedCategory(category);
 
                 this.get("categories").on("ready", this.categoriesSynced, this);
                 this.get("categories").sync(this.get("numWeeksBefore"));
@@ -80,7 +81,6 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                     var categoriesArray = JSON.parse(categoriesItem);
                     this.get('categories').reset();
                     this.get('categories').add(categoriesArray);
-                    this.setSelectedCategory();
                 }
             },
             // on categories sync'ed, save them in local storage
@@ -92,14 +92,22 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
             },
             // on categories sync'ed, set first category as selected category
             // it will trigger retrieveItems
-            setSelectedCategory: function() {
-                if (window.localStorage && localStorage.selectedCategory) {
-                    this.set("selectedCategory", localStorage.selectedCategory);
+            setSelectedCategory: function(category) {
+                // 1st option: set to category parameter if defined (on route path match)
+                if (category != undefined) {
+                    this.set("selectedCategory", category);
                 }
                 else {
-                    var firstCategory = this.get("categories").at(0);
-                    var selectedCategoryName = firstCategory.get("category");
-                    this.set("selectedCategory", selectedCategoryName);
+                    // 2nd option: restore from local storage (on refresh)
+                    if (window.localStorage && localStorage.selectedCategory) {
+                        this.set("selectedCategory", localStorage.selectedCategory);
+                    }
+                    // 3d option: take the first in the list of categories (on the first entrance)
+                    else {
+                        var firstCategory = this.get("categories").at(0);
+                        var selectedCategoryName = firstCategory.get("category");
+                        this.set("selectedCategory", selectedCategoryName);
+                    }
                 }
             },
             // fetch items, then trigger ready to start QuizView

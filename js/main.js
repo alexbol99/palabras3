@@ -2,7 +2,7 @@
  * Created by alexbol on 1/8/2015.
  */
 require.config({
-    /*urlArgs: "bust=" + (new Date()).getTime()*/
+    urlArgs: "bust=" + (new Date()).getTime()
 });
 require(['models/app','models/quiz','models/palabra',
         'collections/categories','collections/quizItems',
@@ -16,7 +16,37 @@ require(['models/app','models/quiz','models/palabra',
 
         // Configure React's event system to handle touch events on mobile devices.
         React.initializeTouchEvents(true);
-        app.start();
+
+        var AppRouter = Backbone.Router.extend({
+
+            routes: {
+                "": "home",
+                "categories/:category":   "quiz",  // #categories/verbos regulares
+                '*default': 'default'
+            },
+
+            home: function() {
+                app.set("currentDictionary", "Class_Alberto_Ru");
+                quiz.start();
+            },
+
+            quiz: function(category, numWeeksBefore) {
+                app.set("currentDictionary", "Class_Alberto_Ru");
+                quiz.start(category);
+            },
+
+            default : function(params) {
+                console.log("we are here");
+            }
+
+        });
+
+        //define our new instance of router
+        var appRouter = new AppRouter();
+
+        // without History API
+        Backbone.history.start({pushState: false});
+
     });
 
 

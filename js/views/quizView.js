@@ -434,6 +434,7 @@ define(['models/quiz',
                     self.refresh();
                 };
                 try {
+                    recognition.onaudioend = null;
                     recognition.stop();
                 }
                 catch(e) {
