@@ -298,7 +298,7 @@ define(['models/quiz',
                 if (this.state.sound == "on") {
                     var id = event.currentTarget.id;
                     var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
-                    item.sayIt();
+                    item.sayIt("spanish");
                 }
             },
             // Redirect to external source
