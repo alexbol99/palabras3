@@ -65,6 +65,7 @@ define(['models/quiz',
                     var quizItemsRight = quizItemsLeft.shuffle();
                     this.setState({
                         quizItems: quizItems,
+                        selectedCategoryName: quiz.get("selectedCategory"),
                         selectedCategoryCount: quizItems.length,
                         quizItemsLeft: quizItemsLeft,
                         quizItemsRight: quizItemsRight,
@@ -223,7 +224,13 @@ define(['models/quiz',
             // Called when category changed
             setSelectedCategory: function(event) {
                 var selectedCategoryName = event.target.value;
-                quiz.set("selectedCategory", selectedCategoryName);
+                var link = '#category/' + selectedCategoryName;
+                if (selectedCategoryName == 'All') {
+                    link += '/' + quiz.get('numWeeksBefore');
+                }
+                // similar behavior as clicking on a link
+                window.location.href = link;
+                // quiz.set("selectedCategory", selectedCategoryName);
                 this.setState({
                     selectedCategoryName: selectedCategoryName
                 });
@@ -231,7 +238,10 @@ define(['models/quiz',
             // Called when number of weeks for new items changed
             setNumWeeksBefore: function(event) {
                 var numWeeksBefore = event.target.value;
-                quiz.set("numWeeksBefore", numWeeksBefore);
+                var link = '#category/All/' + quiz.get('numWeeksBefore');
+                // similar behavior as clicking on a link
+                window.location.href = link;
+                // quiz.set("numWeeksBefore", numWeeksBefore);
                 this.setState({
                     numWeeksBefore: numWeeksBefore
                 })

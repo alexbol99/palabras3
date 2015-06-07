@@ -21,7 +21,8 @@ require(['models/app','models/quiz','models/palabra',
 
             routes: {
                 "": "home",
-                "categories/:category":   "quiz",  // #categories/verbos regulares
+                'categories' : "categories",
+                "category/:category(/:numWeeksBefore)":   "quiz",  // #category/verbos regulares
                 '*default': 'default'
             },
 
@@ -30,9 +31,13 @@ require(['models/app','models/quiz','models/palabra',
                 quiz.start();
             },
 
+            categories: function() {
+                console.log('categories')
+            },
+
             quiz: function(category, numWeeksBefore) {
                 app.set("currentDictionary", "Class_Alberto_Ru");
-                quiz.start(category);
+                quiz.start(category, numWeeksBefore);
             },
 
             default : function(params) {

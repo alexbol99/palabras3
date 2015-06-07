@@ -31,16 +31,19 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 }, this);
             },
             // on quiz selected start to create stuff
-            start: function(category) {
+            start: function(category, numWeeksBefore) {
                 Palabra.prototype.className = app.get("currentDictionary");
                 this.set("quizItems", new QuizItems());
 
+                if (category == 'All') {
+                    this.set('numWeeksBefore', numWeeksBefore);
+                }
                 /* Fetching categories may take time, do not
                  wait for its termination, read them first from local storage
                  and render view, then proceed with categories in background
                   */
                 this.restoreCategories();
-                this.setSelectedCategory(category);
+                this.setSelectedCategory(category, numWeeksBefore);
 
                 this.get("categories").on("ready", this.categoriesSynced, this);
                 this.get("categories").sync(this.get("numWeeksBefore"));
