@@ -12,7 +12,7 @@ define(['models/palabra'],
             },
 
             sync: function(/*numWeeksBefore*/) {
-                var categories;
+
                 var query = new Parse.Query(PalabraParseObject)
                     .select("category")
                     .limit(1000);
@@ -29,18 +29,29 @@ define(['models/palabra'],
                             });
                         }
                         model.set("count", model.get("count")+1);
+
+                        /*
+                        var queryCat = new Parse.Query(CategoryClass)
+                            .equalTo("category", category);
+                        queryCat.find().then( function(categoryCat) {
+                            result.set("category_id", categoryCat[0].id);
+                            result.save();
+                        })
+                        */
                     });
+
+                    /*
+                    var CategoryClass = Parse.Object.extend("Class_Alberto_Ru_Cat");
+                    self.models.forEach( function(category) {
+                        var categoryParseObject = new CategoryClass();
+                        categoryParseObject.set("category", category.get("category"));
+                        categoryParseObject.save();
+                    });
+                    */
+
                     self.trigger("ready");
                 });
             }
-/*
-            changeCounter: function(category, delta) {
-                var model = this.findWhere({"category": category});
-                if (model != undefined) {
-                    model.set("count", model.get("count")+delta);
-                }
-            }
-*/
         });
 
         return Categories;
