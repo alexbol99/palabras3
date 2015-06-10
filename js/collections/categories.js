@@ -9,26 +9,15 @@ define(['models/palabra'],
 
             initialize: function() {
                 self = this;
-                // this.sync();
             },
 
-            sync: function(numWeeksBefore) {
+            sync: function(/*numWeeksBefore*/) {
                 var categories;
                 var query = new Parse.Query(PalabraParseObject)
                     .select("category")
                     .limit(1000);
 
-                var numTiksBefore = (numWeeksBefore * 7 * 24 * 3600 * 1000);
-                var currentDate = new Date();
-                var newItemsDate = new Date(currentDate.getTime() - (numTiksBefore));
-
                 this.reset();
-
-                var modelNewWords = this.add({
-                    "category": "All",
-                    "count": 0
-                });
-
                 query.find().then(function(results) {
                     results.forEach( function(result) {
                         var category = result.get("category");
@@ -40,23 +29,18 @@ define(['models/palabra'],
                             });
                         }
                         model.set("count", model.get("count")+1);
-
-                        /* Increase counter if item considered as new item */
-                        if (result.createdAt.getTime() > newItemsDate.getTime()) {
-                            modelNewWords.set("count", modelNewWords.get("count")+1);
-                        }
                     });
                     self.trigger("ready");
                 });
-            },
-
+            }
+/*
             changeCounter: function(category, delta) {
                 var model = this.findWhere({"category": category});
                 if (model != undefined) {
                     model.set("count", model.get("count")+delta);
                 }
             }
-
+*/
         });
 
         return Categories;

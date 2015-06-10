@@ -10,45 +10,51 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 dictionary : "",
                 categories : null,
                 quizItems : null,
-                started: false,
                 selectedCategory: "",
                 mode: "Edit",
-                /*forceRefresh: false,*/
                 sound: "on",
-                numWeeksBefore: 2
+                numWeeksBefore: 2,
+                selectionMode: 'all'
             },
             initialize: function() {
                 self = this;
                 this.set("categories", new Categories());
+
                 // Restore state from local storage
                 this.restoreState();
-                // app.on("change:currentDictionary", this.start, this);
-                this.on("change:selectedCategory", this.retrieveItems, this);
-                this.on("change:numWeeksBefore", this.retrieveItems, this);
-                // this.on("change:forceRefresh", this.forceRefresh, this);
+
                 this.on("change:mode", function() {
                     localStorage.mode = this.get("mode");
                 }, this);
             },
+
             // on quiz selected start to create stuff
-            start: function(category, numWeeksBefore) {
+            start: function(selectionMode, category, numWeeksBefore) {
                 Palabra.prototype.className = app.get("currentDictionary");
                 this.set("quizItems", new QuizItems());
 
-                if (category == 'All') {
-                    this.set('numWeeksBefore', numWeeksBefore);
+                this.restoreState();
+
+                this.set("selectionMode", selectionMode || this.get("selectionMode"));
+
+                if (this.get("selectionMode") == 'all') {
+                    this.set("numWeeksBefore", numWeeksBefore || this.get("numWeeksBefore"));
                 }
+
                 /* Fetching categories may take time, do not
                  wait for its termination, read them first from local storage
                  and render view, then proceed with categories in background
                   */
                 this.restoreCategories();
-                this.setSelectedCategory(category, numWeeksBefore);
 
+                this.setSelectedCategory(category);
+
+                /* Start to fetch categories */
                 this.get("categories").on("ready", this.categoriesSynced, this);
-                this.get("categories").sync(this.get("numWeeksBefore"));
+                this.get("categories").sync();
 
-                // this.set("mode", "Play");
+                /* Start to retrieve items, on ready initialize view */
+                this.retrieveItems();
             },
             saveState: function() {
                 if (window.localStorage) {
@@ -57,6 +63,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                     localStorage.numWeeksBefore = this.get("numWeeksBefore");
                     localStorage.sound = this.get("sound");
                     localStorage.mode = this.get("mode");
+                    localStorage.selectionMode = this.get("selectionMode");
                 }
             },
             restoreState: function() {
@@ -64,6 +71,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                     this.set("numWeeksBefore", localStorage.numWeeksBefore || this.get("numWeeksBefore"));
                     this.set("sound", localStorage.sound || this.get("sound"));
                     this.set("mode", localStorage.mode || this.get("mode"));
+                    this.set("selectionMode", localStorage.selectionMode || this.get("selectionMode"));
                 }
             },
             saveCategories: function() {
@@ -91,13 +99,10 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                 if (window.localStorage) {
                     this.saveCategories();
                 }
-                this.setSelectedCategory();
             },
-            // on categories sync'ed, set first category as selected category
-            // it will trigger retrieveItems
             setSelectedCategory: function(category) {
                 // 1st option: set to category parameter if defined (on route path match)
-                if (category != undefined) {
+                if (category != undefined && category != "") {
                     this.set("selectedCategory", category);
                 }
                 else {
@@ -107,17 +112,20 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                     }
                     // 3d option: take the first in the list of categories (on the first entrance)
                     else {
-                        var firstCategory = this.get("categories").at(0);
-                        var selectedCategoryName = firstCategory.get("category");
-                        this.set("selectedCategory", selectedCategoryName);
+                        if (this.get("categories").length > 0) {
+                            var firstCategory = this.get("categories").at(0);
+                            var selectedCategoryName = firstCategory.get("category");
+                            this.set("selectedCategory", selectedCategoryName);
+                        }
                     }
                 }
             },
             // fetch items, then trigger ready to start QuizView
             retrieveItems: function() {
+                var selectionMode = this.get("selectionMode");
                 var category = this.get("selectedCategory");
-                var mode = this.get("mode");
                 var numWeeksBefore = this.get("numWeeksBefore");
+
                 this.get("quizItems").off();
                 this.get("quizItems").on("sync", function() {
 
@@ -126,24 +134,12 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
 
                     self.trigger("ready");
                 }, this);
-                this.get("quizItems").sync(category, numWeeksBefore);
+
+                this.get("quizItems").sync(selectionMode, category, numWeeksBefore);
             },
 
-            // called when item added or item changed and we want to refresh view
-            // forceRefresh: function() {
-                // this.set("forceRefresh", false);
-               // this.retrieveItems();
-            // },
-
-            triggerMatch: function() {
-                this.trigger("match");
-            },
             addEmptyItem: function() {
                 var item = new Palabra();
-
-                if (this.get("selectedCategory") != "All") {
-                    item.set("category", this.get("selectedCategory"));
-                }
 
                 item.on("added", function(item) {
                     // add empty item to the list of quiz items
@@ -174,7 +170,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
                     var quizItems = this.get("quizItems");
 
                     item.on("updated", function(item) {
-                        if (self.get("selectedCategory") == "All") {
+                        if (self.get("selectionMode") == "all") {
                             self.updateOtherCategoryCounter(oldCategory, -1);
                             self.updateOtherCategoryCounter(newCategory, 1);
                         }

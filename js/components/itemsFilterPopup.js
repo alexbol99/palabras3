@@ -3,52 +3,56 @@
  */
 define([],
     function () {
-        var MySelect = React.createClass({
-            addedBeforeChanged: function(event) {
-                console.log(event.target.value)
-            },
-            render: function () {
-                var Input = ReactBootstrap.Input;
-                var ListGroupItem = ReactBootstrap.ListGroupItem;
+       var ItemsFilterPopup = React.createClass({
+            render: function() {
                 var selectedCategoryName = this.props.selectedCategoryName;
+
                 var label = 'Select only new words added in the last ' + this.props.numWeeksBefore + ' weeks';
-                var numWeeksBeforeDisabled = selectedCategoryName != "All";
-                var options = this.props.data.map(function (item) {
+
+                var options = this.props.categories.map(function (item) {
                     return (
                         <option bsStyle='success' value={item.get('category')} key={item.get('category')} >
                             {item.get('category') + " (" + item.get('count') + ')'}
                         </option>
                     )
                 });
-                const selectInstance = (
+
+                var radioAllInstance = (this.props.selectionMode == 'all' ?
+                    <ReactBootstrap.Input type='radio' name='selectionMode' label='All categories' value='all' checked onChange={this.props.onSelectionModeChange} /> :
+                    <ReactBootstrap.Input type='radio' name='selectionMode' label='All categories' value='all' onChange={this.props.onSelectionModeChange} />);
+
+                var radioSelectedInstance = (this.props.selectionMode == 'selected' ?
+                    <ReactBootstrap.Input type='radio' name='selectionMode' label='Selected categories' value='selected' checked onChange={this.props.onSelectionModeChange}/> :
+                    <ReactBootstrap.Input type='radio' name='selectionMode' label='Selected categories' value='selected' onChange={this.props.onSelectionModeChange}/>);
+
+                var selectCategoriesDisabled = (this.props.selectionMode == 'all');
+                var numWeeksBeforeDisabled = (this.props.selectionMode == 'selected');
+
+                const filterFormInstance = (
                     <form>
-                        <ReactBootstrap.Input type='select' label='Categories' placeholder='select' defaultValue={selectedCategoryName} onChange={this.props.onCategorySelected}>
+                        <label className="radio-inline">
+                            {radioAllInstance}
+                        </label>
+                        <label className="radio-inline">
+                            {radioSelectedInstance}
+                        </label>
+
+                        <ReactBootstrap.Input type='select' label='Categories' placeholder='select' ref='selectCategory' defaultValue={selectedCategoryName} disabled={selectCategoriesDisabled}
+                            onChange={this.props.onCategorySelected}>
                             {options}
                         </ReactBootstrap.Input>
-                        <ReactBootstrap.Input type='number' min='1' max='54' label={label} defaultValue={this.props.numWeeksBefore} disabled={numWeeksBeforeDisabled}
+
+
+                        <ReactBootstrap.Input type='number' min='1' max='54' label={label} ref='numWeeksBefore' defaultValue={this.props.numWeeksBefore} disabled={numWeeksBeforeDisabled}
                             onChange={this.props.onNumWeeksBeforeChanged} />
                     </form>
-                );
-                return selectInstance;
-            }
-        });
-
-        const ItemsFilterPopup = React.createClass({
-            render: function() {
-                const myselectInstance = (
-                    <MySelect data={this.props.categories} ref="categories"
-                        selectedCategoryName = {this.props.selectedCategoryName}
-                        numWeeksBefore = {this.props.numWeeksBefore}
-                        onCategorySelected = {this.props.onCategorySelected}
-                        onNumWeeksBeforeChanged = {this.props.onNumWeeksBeforeChanged}
-                    />
                 );
 
                 return (
                     <ReactBootstrap.Modal {...this.props} bsStyle='primary' title='Filter' animation={true}>
                         <div className='modal-body'>
 
-                            {myselectInstance}
+                            {filterFormInstance}
 
                         </div>
                         <div className='modal-footer'>

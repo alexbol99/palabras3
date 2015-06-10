@@ -20,8 +20,9 @@ define(['models/quiz',
         var QuizComponent = React.createClass({
             getInitialState: function () {
                 return {
-                    categories: [],
                     sound: "on",
+                    categories: [],
+                    selectionMode: 'all',
                     selectedCategoryName: "",
                     selectedCategoryCount: 0,
                     quizItems: [],
@@ -43,6 +44,7 @@ define(['models/quiz',
                 var quizItemsRight = quizItemsLeft.shuffle();
                 this.setState({
                     categories: quiz.get("categories").models,
+                    selectionMode: quiz.get("selectionMode"),
                     selectedCategoryName: quiz.get("selectedCategory"),
                     selectedCategoryCount: quiz.get("quizItems").length,
                     numWeeksBefore: quiz.get("numWeeksBefore"),
@@ -81,6 +83,7 @@ define(['models/quiz',
 
                 var toolbarInstance = (
                     <Toolbar categories={this.state.categories}
+                        selectionMode={this.state.selectionMode}
                         selectedCategoryName={this.state.selectedCategoryName}
                         selectedCategoryCount={this.state.selectedCategoryCount}
                         mode={this.state.mode}
@@ -88,6 +91,7 @@ define(['models/quiz',
                         numWeeksBefore={this.state.numWeeksBefore}
                         selectedItemId = {this.state.selectedItemId}
                         autoPlayStarted = {this.state.autoPlayStarted}
+                        onSelectionModeChanged = {this.toggleSelectionMode}
                         onCategorySelected = {this.setSelectedCategory}
                         onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
                         onClickSoundButton = {this.toggleSound}
@@ -129,6 +133,7 @@ define(['models/quiz',
                 var mainPanelInstance = (
                     <MainPanel
                         mode={this.state.mode}
+                        selectionMode={this.state.selectionMode}
                         selectedCategoryName={this.state.selectedCategoryName}
                         selectedCategoryCount={this.state.selectedCategoryCount}
                         numWeeksBefore={this.state.numWeeksBefore}>
@@ -217,49 +222,41 @@ define(['models/quiz',
                 }
             },
 
-            // 2 callbacks for the items filter, cause fetching items from Parse
+            // 3 callbacks for the items filter, cause redirect to new page and fetching items from Parse
             // Both in "Edit" and "Play" modes
-            // -----------------------------------------------------------------
+            // -------------------------------------------------------------------------------------------
 
+            // Called when selection mode (radio group All/Selected) changed
+            toggleSelectionMode: function(event) {
+                this.setState({
+                    selectionMode: event.currentTarget.value
+                }, this.redirectToNewQuiz);
+            },
             // Called when category changed
             setSelectedCategory: function(event) {
-                var selectedCategoryName = event.target.value;
-                var link = '#category/' + selectedCategoryName;
-                if (selectedCategoryName == 'All') {
-                    link += '/' + quiz.get('numWeeksBefore');
-                }
-                // similar behavior as clicking on a link
-                window.location.href = link;
-                // quiz.set("selectedCategory", selectedCategoryName);
                 this.setState({
-                    selectedCategoryName: selectedCategoryName
-                });
+                    selectedCategoryName: event.target.value
+                }, this.redirectToNewQuiz);
             },
             // Called when number of weeks for new items changed
             setNumWeeksBefore: function(event) {
-                var numWeeksBefore = event.target.value;
-                var link = '#category/All/' + quiz.get('numWeeksBefore');
+                this.setState({
+                    numWeeksBefore:  event.target.value
+                }, this.redirectToNewQuiz)
+            },
+            // REDIRECT TO NEW PAGE
+            redirectToNewQuiz: function() {
+                var link;
+                switch (this.state.selectionMode) {
+                    case 'all':
+                        link = '#categories/all/' + this.state.numWeeksBefore;
+                        break;
+                    case 'selected':
+                        link = '#categories/selected/' + this.state.selectedCategoryName;
+                        break;
+                }
                 // similar behavior as clicking on a link
                 window.location.href = link;
-                // quiz.set("numWeeksBefore", numWeeksBefore);
-                this.setState({
-                    numWeeksBefore: numWeeksBefore
-                })
-            },
-
-            // Shuffle items and refresh component
-            shuffleItems: function() {
-                var quizItems = quiz.get("quizItems");
-                var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
-                var quizItemsRight = quizItemsLeft.shuffle();
-                if (this.state.mode == "Play") {
-                    this.setState({
-                        quizItemsLeft: quizItemsLeft,
-                        quizItemsRight: quizItemsRight,
-                        selectedLeftItemId: undefined,
-                        selectedRightItemId: undefined
-                    })
-                }
             },
 
             // Items list logic in "Edit" mode
@@ -313,7 +310,23 @@ define(['models/quiz',
             },
 
             // Items list logic in "Play" mode
-            // ----------------------------------
+            // ---------------------------------------------
+
+            // Shuffle items and refresh component
+            shuffleItems: function() {
+                var quizItems = quiz.get("quizItems");
+                var quizItemsLeft = quiz.get("quizItems").getRandom(this.state.maxItemsToPlay);
+                var quizItemsRight = quizItemsLeft.shuffle();
+                if (this.state.mode == "Play") {
+                    this.setState({
+                        quizItemsLeft: quizItemsLeft,
+                        quizItemsRight: quizItemsRight,
+                        selectedLeftItemId: undefined,
+                        selectedRightItemId: undefined
+                    })
+                }
+            },
+
             toggleLeftSelectedItemId: function(event) {
                 var id = event.currentTarget.id;
                 this.setState({

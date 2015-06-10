@@ -13,9 +13,8 @@ define(['models/palabra'],
                 this.query = new Parse.Query(PalabraParseObject);
             },
 
-            sync: function(category, numWeeksBefore) {
-                if (category) {
-                    if (category == "All") {
+            sync: function(selectionMode, category, numWeeksBefore) {
+                    if (selectionMode == "all") {
                         var numTiksBefore = (numWeeksBefore * 7 * 24 * 3600 * 1000);
                         var currentDate = new Date();
                         var newItemsDate = new Date(currentDate.getTime() - (numTiksBefore));
@@ -36,7 +35,7 @@ define(['models/palabra'],
                     this.query.ascending("spanish");
 
                     this.fetch({reset: true});
-                }
+
             },
 
             getRandom: function(maxnum) {

@@ -10,16 +10,11 @@ define([],
                 var langRight = "russian";
 
                 var options = this.props.categories.map(function (item) {
-                    if (item.get('category') == 'All') {
-                        return null;
-                    }
-                    else {
-                        return (
-                            <option bsStyle='success' value={item.get('category')} key={item.get('category')}>
-                                {item.get('category') + " (" + item.get('count') + ')'}
-                            </option>
-                        )
-                    }
+                    return (
+                        <option bsStyle='success' value={item.get('category')} key={item.get('category')}>
+                            {item.get('category') + " (" + item.get('count') + ')'}
+                        </option>
+                    )
                 });
 
                 var list = this.props.items.map(function (item) {

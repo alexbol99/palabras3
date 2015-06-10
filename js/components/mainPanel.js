@@ -5,7 +5,7 @@ define(['components/menu'],
     function (Menu) {
         var MainPanel = React.createClass({
             render: function () {
-                var selectedTitle = this.props.selectedCategoryName == "All" ?
+                var selectedTitle = this.props.selectionMode == "all" ?
                     "All new words in last " + this.props.numWeeksBefore + " weeks" :
                     this.props.selectedCategoryName;
 

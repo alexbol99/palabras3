@@ -2,7 +2,7 @@
  * Created by alexbol on 1/8/2015.
  */
 require.config({
-    /*urlArgs: "bust=" + (new Date()).getTime()*/
+    urlArgs: "bust=" + (new Date()).getTime()
 });
 require(['models/app','models/quiz','models/palabra',
         'collections/categories','collections/quizItems',
@@ -17,17 +17,19 @@ require(['models/app','models/quiz','models/palabra',
         // Configure React's event system to handle touch events on mobile devices.
         React.initializeTouchEvents(true);
 
+        app.set("currentDictionary", "Class_Alberto_Ru");
+
         var AppRouter = Backbone.Router.extend({
 
             routes: {
-                "": "home",
-                'categories' : "categories",
-                "category/:category(/:numWeeksBefore)":   "quiz",  // #category/verbos regulares
+                "": 'home',
+                'categories' : 'categories',
+                'categories/all/(:numWeeksBefore)' : 'quizAll',  // #categories/all/2
+                'categories/selected/(:category)':   'quizSelected',  // #categories/selected/verbos regulares
                 '*default': 'default'
             },
 
             home: function() {
-                app.set("currentDictionary", "Class_Alberto_Ru");
                 quiz.start();
             },
 
@@ -35,9 +37,12 @@ require(['models/app','models/quiz','models/palabra',
                 console.log('categories')
             },
 
-            quiz: function(category, numWeeksBefore) {
-                app.set("currentDictionary", "Class_Alberto_Ru");
-                quiz.start(category, numWeeksBefore);
+            quizAll: function(numWeeksBefore) {
+                quiz.start("all", "", numWeeksBefore);
+            },
+
+            quizSelected: function(category) {
+                quiz.start("selected", category);
             },
 
             default : function(params) {
