@@ -97,7 +97,6 @@ define(['models/quiz',
                         onClickSoundButton = {this.toggleSound}
                         onClickAddButton = {this.addEmptyItem}
                         onClickEditButton = {this.toggleEditItem}
-                        onClickDeleteButton = {this.deleteSelectedItem}
                         onClickShuffleButton = {this.shuffleItems}
                         onClickAutoPlayButton = {this.togglePlayOrPause}
                     />
@@ -114,6 +113,7 @@ define(['models/quiz',
                         onCategoryChanged = {this.itemChangeCategory}
                         onClickSayItButton = {this.itemSayIt}
                         onClickGlobeButton = {this.redirectToSpanishdict}
+                        onConfirmDeleteItem = {this.itemDelete}
                     />
                 );
 
@@ -214,13 +214,6 @@ define(['models/quiz',
                 });
                 quiz.sortItems();
             },
-            // Button "Delete" - delete selected item. TODO - confirmation popup
-            deleteSelectedItem: function(event) {
-                if (this.state.mode == "Edit" && this.state.selectedItemId != undefined) {
-                    var item = _.findWhere(quiz.get("quizItems").models, {"id": this.state.selectedItemId});
-                    quiz.deleteItem(item);
-                }
-            },
 
             // 3 callbacks for the items filter, cause redirect to new page and fetching items from Parse
             // Both in "Edit" and "Play" modes
@@ -292,6 +285,7 @@ define(['models/quiz',
             },
             // Open item for editing, substitute clicked Grid element by Input elements
             itemSayIt: function(event) {
+                event.stopPropagation();
                 if (this.state.sound == "on") {
                     var id = event.currentTarget.id;
                     var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
@@ -308,6 +302,19 @@ define(['models/quiz',
                 // similar behavior as clicking on a link
                 window.location.href = link;
             },
+            // Button "Delete" - delete selected item. TODO - confirmation popup
+            itemDelete: function(event) {
+                if (this.state.mode == "Edit" && this.state.selectedItemId) {
+                    // var id = event.currentTarget.id;
+                    var item = _.findWhere(quiz.get("quizItems").models, {"id": this.state.selectedItemId});
+                    quiz.deleteItem(item);
+                    this.setState({
+                        selectedItemId: undefined
+                    });
+
+                }
+            },
+
 
             // Items list logic in "Play" mode
             // ---------------------------------------------

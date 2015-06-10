@@ -2,9 +2,31 @@
  * Created by Owner on 5/9/15.
  */
 
-define([],
-    function () {
+define(['components/confirmPopup'],
+    function (ConfirmPopup) {
         var ItemsListEdit = React.createClass({
+            getInitialState: function () {
+                return {
+                    confirmDeletePopup: false
+                }
+            },
+            raiseConfirmDeletePopup: function(event) {
+                event.stopPropagation();
+                this.setState({
+                    confirmDeletePopup: true
+                });
+            },
+            hideConfirmDeletePopup: function(event) {
+                this.setState({
+                    confirmDeletePopup: false
+                });
+            },
+            confirmAndHideConfirmPopup: function(event) {
+                this.setState({
+                    confirmDeletePopup: false
+                });
+                this.props.onConfirmDeleteItem();
+            },
             render: function() {
                 var langLeft = "spanish";
                 var langRight = "russian";
@@ -17,14 +39,40 @@ define([],
                     )
                 });
 
+                var item;
+                var message = "";
+                if (this.props.selectedItemId) {
+                    item = _.findWhere(this.props.items.models, {"id": this.props.selectedItemId});
+                    message = "Item " + item.get(langLeft) + " will be deleted";
+                }
+
+                var confirmDeletePopupInstance = this.state.confirmDeletePopup ? (
+                    <ConfirmPopup
+                        title = "Are you sure?"
+                        message = {message}
+                        onConfirm = {this.confirmAndHideConfirmPopup}
+                        onCancel = {this.hideConfirmDeletePopup}
+                        hidePopup = {this.hideConfirmDeletePopup}
+                    />
+                ) : null;
+
+                var self = this;
                 var list = this.props.items.map(function (item) {
+
+                    var buttonRemoveInstance = (item.id == this.props.selectedItemId && !this.props.editSelectedItem) ? (
+                        <ReactBootstrap.Col xs={1} md={1}>
+                            <span bsSize='small' id={item.id}>
+                                <ReactBootstrap.Glyphicon glyph='remove-sign' title="delete item" onClick={self.raiseConfirmDeletePopup} />
+                            </span>
+                        </ReactBootstrap.Col>
+                    ) : null;
 
                     var itemLeftInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
                             <ReactBootstrap.Input bsSize="small"  type="text" defaultValue={item.get(langLeft)}  name={langLeft} id={item.id} onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
                     ) : (
-                        <ReactBootstrap.Col xs={5} md={5}>
+                        <ReactBootstrap.Col xs={4} md={4}>
                             <h4>{item.get(langLeft)}</h4>
                         </ReactBootstrap.Col>
                     );
@@ -34,7 +82,7 @@ define([],
                             <ReactBootstrap.Input bsSize="small" type="text" defaultValue={item.get(langRight)}  name={langRight} id={item.id} onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
                     ) : (
-                        <ReactBootstrap.Col xs={5} md={5}>
+                        <ReactBootstrap.Col xs={4} md={4}>
                             <h4>{item.get(langRight)}</h4>
                         </ReactBootstrap.Col>
                     );
@@ -49,14 +97,14 @@ define([],
 
                     var buttonSayItInstance = (
                         <ReactBootstrap.Col xs={1} md={1}>
-                            <span bsSize='small' id={item.id} onClick={this.props.onClickSayItButton}>
+                            <span bsSize='small' id={item.id} title="say it" onClick={this.props.onClickSayItButton}>
                                 <ReactBootstrap.Glyphicon glyph='volume-up' />
                             </span>
                         </ReactBootstrap.Col>
                     );
                     var buttonGlobeInstance = (
                         <ReactBootstrap.Col xs={1} md={1}>
-                            <span bsSize='small' id={item.id} onClick={this.props.onClickGlobeButton}>
+                            <span bsSize='small' id={item.id} title="more info ..." onClick={this.props.onClickGlobeButton}>
                                 <ReactBootstrap.Glyphicon glyph='globe' />
                             </span>
                         </ReactBootstrap.Col>
@@ -64,6 +112,7 @@ define([],
 
                     var gridColumns;
                     gridColumns = React.addons.createFragment({
+                        buttonRemoveInstance: buttonRemoveInstance,
                         itemLeftInstance: itemLeftInstance,
                         itemRightInstance: itemRightInstance,
                         categorySelectInstance: categorySelectInstance,
@@ -86,9 +135,12 @@ define([],
                     )
                 }, this);
                 return (
-                    <ReactBootstrap.ListGroup>
-                        {list}
-                    </ReactBootstrap.ListGroup>
+                    <div>
+                        {confirmDeletePopupInstance}
+                        <ReactBootstrap.ListGroup>
+                            {list}
+                        </ReactBootstrap.ListGroup>
+                    </div>
                 );
             }
         });

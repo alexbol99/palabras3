@@ -26,7 +26,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                 const buttonFilter = (
                     <ReactBootstrap.ButtonGroup>
                         <ReactBootstrap.ModalTrigger modal={itemsFilterPopupInstance}>
-                            <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Filter" onClick={this.props.onClickFilterButton}>
+                            <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Filter">
                                 <ReactBootstrap.Glyphicon glyph='filter' />
                             </ReactBootstrap.Button>
                         </ReactBootstrap.ModalTrigger>
@@ -66,7 +66,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
                 );
-
+/*
                 var buttonDelete = this.props.mode == "Edit" && this.props.selectedItemId != undefined ? (
                     <ReactBootstrap.ButtonGroup>
                         <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Remove item" onClick={this.props.onClickDeleteButton}>
@@ -74,7 +74,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                         </ReactBootstrap.Button>
                     </ReactBootstrap.ButtonGroup>
                 ) : null;
-
+*/
                 const buttonShuffle = (
                     <ReactBootstrap.ButtonGroup>
                         <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Shuffle" onClick={this.props.onClickShuffleButton}>
@@ -100,8 +100,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                         button1: buttonFilter,
                         button2: buttonSound,
                         button3: buttonAdd,
-                        button4: buttonEdit,
-                        button5: buttonDelete
+                        button4: buttonEdit
                     };
                 }
                 else {                 // mode == "Play"
