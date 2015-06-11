@@ -1,16 +1,16 @@
 /**
  * Created by alexbol on 2/10/2015.
  */
-define(['models/palabra'],
-    function (PalabraParseObject) {
+define(['../models/quizItem'],
+    function (QuizItem) {
         var self;
 
         var QuizItems = Parse.Collection.extend({
-            model: PalabraParseObject,
-            // query: new Parse.Query(PalabraParseObject),
+            model: QuizItem,
+            // query: new Parse.Query(QuizItem),
 
             initialize: function() {
-                this.query = new Parse.Query(PalabraParseObject);
+                this.query = new Parse.Query(QuizItem);
             },
 
             sync: function(selectionMode, category, numWeeksBefore) {

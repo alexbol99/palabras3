@@ -1,20 +1,20 @@
 /**
- * Created by alexbol on 1/8/2015.
+ * Created by alexbol on 6/11/2015.
  */
 define(['models/quiz'],
     function (quiz) {
         return Parse.Object.extend({
-            className: "",   // app.get("currentDictionary"),           // "Palabra",
-
+            className: ""   // app.get("currentDictionary"),           // "Palabra",
+/*
             addToParse: function() {
                 var self = this;
                 this.save( null, {
-                        success: function (palabra) {
-                            // alert('New word added: ' + palabra.get("spanish"));
+                        success: function (item) {
+                            // alert('New word added: ' + item.get("spanish"));
                             // quiz.set("forceRefresh", true);
-                            self.trigger("added", palabra);
+                            self.trigger("added", item);
                         },
-                        error: function (palabra, error) {
+                        error: function (item, error) {
                             alert('Failed to create new object, with error code: ' + error.message);
                         }
                     }
@@ -23,12 +23,12 @@ define(['models/quiz'],
             updateParse: function() {
                 var self = this;
                 this.save( null, {
-                        success: function (palabra) {
-                            // alert("Word '" + palabra.get("spanish") + "' was successfully updated");
+                        success: function (item) {
+                            // alert("Word '" + item.get("spanish") + "' was successfully updated");
                             // quiz.set("forceRefresh", true);
-                            self.trigger("updated", palabra);
+                            self.trigger("updated", item);
                         },
-                        error: function (palabra, error) {
+                        error: function (item, error) {
                             alert('Failed to update object, with error code: ' + error.message);
                         }
                     }
@@ -37,11 +37,11 @@ define(['models/quiz'],
             deleteFromParse: function() {
                 var self = this;
                 this.destroy({
-                    success: function(palabra) {
+                    success: function(item) {
                         // The object was deleted from the Parse Cloud.
-                        self.trigger("destroyed", palabra);
+                        self.trigger("destroyed", item);
                     },
-                    error: function(palabra, error) {
+                    error: function(item, error) {
                         // The delete failed.
                         alert('Failed to update object, with error code: ' + error.message);
                     }
@@ -57,5 +57,6 @@ define(['models/quiz'],
                     window.speechSynthesis.speak(msg);
                 }
             }
+*/
         });
     });

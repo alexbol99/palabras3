@@ -4,7 +4,7 @@
 require.config({
     urlArgs: "bust=" + (new Date()).getTime()
 });
-require(['models/app','models/quiz','models/palabra',
+require(['models/app','models/quiz','models/quizItem', 'models/category',
         'collections/categories','collections/quizItems',
         'jsx!views/quizView', 'jsx!components/confirmPopup',
         'jsx!components/toolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',

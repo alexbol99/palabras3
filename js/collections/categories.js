@@ -1,8 +1,8 @@
 /**
  * Created by Owner on 1/17/15.
  */
-define(['models/palabra'],
-    function (PalabraParseObject) {
+define(['../models/quizItem', 'models/category'],
+    function (QuizItem, Category) {
         var self;
 
         var Categories = Backbone.Collection.extend({
@@ -13,14 +13,14 @@ define(['models/palabra'],
 
             sync: function(/*numWeeksBefore*/) {
 
-                var query = new Parse.Query(PalabraParseObject)
+                var query = new Parse.Query(QuizItem)
                     .select("category")
                     .limit(1000);
 
                 this.reset();
-                query.find().then(function(results) {
-                    results.forEach( function(result) {
-                        var category = result.get("category");
+                query.find().then(function(items) {
+                    items.forEach( function(item) {
+                        var category = item.get("category");
                         var model = self.findWhere({"category": category});
                         if (model == undefined) {
                             model = self.add({

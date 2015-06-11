@@ -1,13 +1,14 @@
 /**
  * Created by alexbol on 2/9/2015.
+ * This model is responsible on quiz data and quiz configuration
  */
-define(['models/app', 'models/palabra', 'collections/categories', 'collections/quizItems'],
-    function (app, Palabra, Categories, QuizItems) {
+define(['models/app', 'models/quizItem', 'models/category',
+        'collections/categories', 'collections/quizItems'],
+    function (app, QuizItem, Category, Categories, QuizItems) {
         var self;
         var Quiz = Backbone.Model.extend({
             /*className: "Quiz",*/
             defaults: {
-                dictionary : "",
                 categories : null,
                 quizItems : null,
                 selectedCategory: "",
@@ -18,10 +19,9 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
             },
             initialize: function() {
                 self = this;
-                this.set("categories", new Categories());
 
                 // Restore state from local storage
-                this.restoreState();
+                // this.restoreState();
 
                 this.on("change:mode", function() {
                     localStorage.mode = this.get("mode");
@@ -30,8 +30,11 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
 
             // on quiz selected start to create stuff
             start: function(selectionMode, category, numWeeksBefore) {
-                Palabra.prototype.className = app.get("currentDictionary");
+                QuizItem.prototype.className = app.get("currentDictionary");
+                Category.prototype.className = app.get("currentDictionary") + "_Cat";
+
                 this.set("quizItems", new QuizItems());
+                this.set("categories", new Categories());
 
                 this.restoreState();
 
@@ -139,7 +142,7 @@ define(['models/app', 'models/palabra', 'collections/categories', 'collections/q
             },
 
             addEmptyItem: function() {
-                var item = new Palabra();
+                var item = new QuizItem();
 
                 item.on("added", function(item) {
                     // add empty item to the list of quiz items
