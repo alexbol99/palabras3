@@ -476,7 +476,6 @@ define(['models/quiz',
 
         var QuizView = Backbone.View.extend({
             initialize: function () {
-                // quiz.on("match", this.match, this);
                 quiz.on("ready", this.render, this);
             },
 

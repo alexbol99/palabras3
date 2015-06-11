@@ -5,10 +5,10 @@
 define(['models/app', 'models/quizItem', 'models/category',
         'collections/categories', 'collections/quizItems'],
     function (app, QuizItem, Category, Categories, QuizItems) {
-        var self;
+
         var Quiz = Backbone.Model.extend({
-            /*className: "Quiz",*/
             defaults: {
+                currentDirectory: "",
                 categories : null,
                 quizItems : null,
                 selectedCategory: "",
@@ -18,39 +18,26 @@ define(['models/app', 'models/quizItem', 'models/category',
                 selectionMode: 'all'
             },
             initialize: function() {
-                self = this;
-
-                // Restore state from local storage
-                // this.restoreState();
-
                 this.on("change:mode", function() {
                     localStorage.mode = this.get("mode");
                 }, this);
             },
 
             // on quiz selected start to create stuff
-            start: function(selectionMode, category, numWeeksBefore) {
-                QuizItem.prototype.className = app.get("currentDictionary");
-                Category.prototype.className = app.get("currentDictionary") + "_Cat";
+            start: function(/*selectionMode, category, numWeeksBefore*/) {
+                QuizItem.prototype.className = this.get("currentDictionary");
+                Category.prototype.className = this.get("currentDictionary") + "_Cat";
 
                 this.set("quizItems", new QuizItems());
                 this.set("categories", new Categories());
 
-                this.restoreState();
+                // this.restoreState();
 
-                this.set("selectionMode", selectionMode || this.get("selectionMode"));
-
-                if (this.get("selectionMode") == 'all') {
-                    this.set("numWeeksBefore", numWeeksBefore || this.get("numWeeksBefore"));
-                }
-
-                /* Fetching categories may take time, do not
-                 wait for its termination, read them first from local storage
-                 and render view, then proceed with categories in background
-                  */
                 this.restoreCategories();
 
-                this.setSelectedCategory(category);
+                if (this.get("selectedCategory") == "") {
+                    this.setSelectedCategory();
+                }
 
                 /* Start to fetch categories */
                 this.get("categories").on("ready", this.categoriesSynced, this);
@@ -103,23 +90,17 @@ define(['models/app', 'models/quizItem', 'models/category',
                     this.saveCategories();
                 }
             },
-            setSelectedCategory: function(category) {
-                // 1st option: set to category parameter if defined (on route path match)
-                if (category != undefined && category != "") {
-                    this.set("selectedCategory", category);
+            setSelectedCategory: function() {
+                // 1st option: restore from local storage (on refresh)
+                if (window.localStorage && localStorage.selectedCategory) {
+                    this.set("selectedCategory", localStorage.selectedCategory);
                 }
+                // 2nd option: take the first in the list of categories (on the first entrance)
                 else {
-                    // 2nd option: restore from local storage (on refresh)
-                    if (window.localStorage && localStorage.selectedCategory) {
-                        this.set("selectedCategory", localStorage.selectedCategory);
-                    }
-                    // 3d option: take the first in the list of categories (on the first entrance)
-                    else {
-                        if (this.get("categories").length > 0) {
-                            var firstCategory = this.get("categories").at(0);
-                            var selectedCategoryName = firstCategory.get("category");
-                            this.set("selectedCategory", selectedCategoryName);
-                        }
+                    if (this.get("categories").length > 0) {
+                        var firstCategory = this.get("categories").at(0);
+                        var selectedCategoryName = firstCategory.get("category");
+                        this.set("selectedCategory", selectedCategoryName);
                     }
                 }
             },
@@ -135,7 +116,7 @@ define(['models/app', 'models/quizItem', 'models/category',
                     // Update category counter
                     this.updateSelectedCategoryCounter();
 
-                    self.trigger("ready");
+                    this.trigger("ready");
                 }, this);
 
                 this.get("quizItems").sync(selectionMode, category, numWeeksBefore);
@@ -146,12 +127,12 @@ define(['models/app', 'models/quizItem', 'models/category',
 
                 item.on("added", function(item) {
                     // add empty item to the list of quiz items
-                    var quizItems = self.get("quizItems");
+                    var quizItems = this.get("quizItems");
                     quizItems.add(item, {at: 0});
                     // update counter
                     this.updateSelectedCategoryCounter();
                     // this cause view rendering
-                    self.trigger("ready");
+                    this.trigger("ready");
                 }, this);
 
                 item.addToParse();       // save to cloud and trigger event "added" on success
@@ -161,9 +142,9 @@ define(['models/app', 'models/quizItem', 'models/category',
                     var quizItems = this.get("quizItems");
                     item.on("destroyed", function (item) {
                         quizItems.remove(item);
-                        self.updateSelectedCategoryCounter();
+                        this.updateSelectedCategoryCounter();
                         // this cause view rendering
-                        self.trigger("ready");
+                        this.trigger("ready");
                     }, this);
                     item.deleteFromParse();
                 }
@@ -173,17 +154,17 @@ define(['models/app', 'models/quizItem', 'models/category',
                     var quizItems = this.get("quizItems");
 
                     item.on("updated", function(item) {
-                        if (self.get("selectionMode") == "all") {
-                            self.updateOtherCategoryCounter(oldCategory, -1);
-                            self.updateOtherCategoryCounter(newCategory, 1);
+                        if (this.get("selectionMode") == "all") {
+                            this.updateOtherCategoryCounter(oldCategory, -1);
+                            this.updateOtherCategoryCounter(newCategory, 1);
                         }
                         else {
                             quizItems.remove(item);
-                            self.updateSelectedCategoryCounter();
+                            this.updateSelectedCategoryCounter();
                         }
 
                         // this cause view rendering
-                        self.trigger("ready");
+                        this.trigger("ready");
                     }, this);
 
                     item.set('category', newCategory);

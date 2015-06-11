@@ -30,6 +30,10 @@ require(['models/app','models/quiz','models/quizItem', 'models/category',
             },
 
             home: function() {
+                quiz.set({
+                    currentDictionary: "Class_Alberto_Ru"
+                });
+                quiz.restoreState();
                 quiz.start();
             },
 
@@ -38,11 +42,21 @@ require(['models/app','models/quiz','models/quizItem', 'models/category',
             },
 
             quizAll: function(numWeeksBefore) {
-                quiz.start("all", "", numWeeksBefore);
+                quiz.set({
+                    currentDictionary: "Class_Alberto_Ru",
+                    selectionMode: "all",
+                    numWeeksBefore: numWeeksBefore
+                });
+                quiz.start();             // "all", "", numWeeksBefore);
             },
 
             quizSelected: function(category) {
-                quiz.start("selected", category);
+                quiz.set({
+                    currentDictionary: "Class_Alberto_Ru",
+                    selectionMode: "selected",
+                    selectedCategory: category
+                });
+                quiz.start();    // "selected", category);
             },
 
             default : function(params) {
