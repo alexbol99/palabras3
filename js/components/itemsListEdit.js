@@ -69,7 +69,8 @@ define(['components/confirmPopup'],
 
                     var itemLeftInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
-                            <ReactBootstrap.Input bsSize="small"  type="text" defaultValue={item.get(langLeft)}  name={langLeft} id={item.id} onChange={this.props.onItemChanged} />
+                            <ReactBootstrap.Input bsSize="small"  type="text" defaultValue={item.get(langLeft)}  name={langLeft} id={item.id}
+                                autocomplete="off" autocorrect="off" autocapitalize="off" onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
                     ) : (
                         <ReactBootstrap.Col xs={4} md={4}>
@@ -79,7 +80,8 @@ define(['components/confirmPopup'],
 
                     var itemRightInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
-                            <ReactBootstrap.Input bsSize="small" type="text" defaultValue={item.get(langRight)}  name={langRight} id={item.id} onChange={this.props.onItemChanged} />
+                            <ReactBootstrap.Input bsSize="small" type="text" defaultValue={item.get(langRight)}  name={langRight} id={item.id}
+                                autocomplete="off" autocorrect="off" autocapitalize="off" onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
                     ) : (
                         <ReactBootstrap.Col xs={4} md={4}>
