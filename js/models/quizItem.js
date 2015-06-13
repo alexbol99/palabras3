@@ -1,8 +1,8 @@
 /**
  * Created by alexbol on 1/8/2015.
  */
-define(['models/quiz'],
-    function (quiz) {
+define([],
+    function () {
         return Parse.Object.extend({
             className: "",   // app.get("currentDictionary"),           // "Palabra",
 
@@ -10,8 +10,6 @@ define(['models/quiz'],
                 var self = this;
                 this.save( null, {
                         success: function (item) {
-                            // alert('New word added: ' + item.get("spanish"));
-                            // quiz.set("forceRefresh", true);
                             self.trigger("added", item);
                         },
                         error: function (item, error) {
@@ -24,8 +22,6 @@ define(['models/quiz'],
                 var self = this;
                 this.save( null, {
                         success: function (item) {
-                            // alert("Word '" + item.get("spanish") + "' was successfully updated");
-                            // quiz.set("forceRefresh", true);
                             self.trigger("updated", item);
                         },
                         error: function (item, error) {

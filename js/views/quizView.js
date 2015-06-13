@@ -3,7 +3,7 @@
  */
 
 define(['models/quiz',
-        'components/toolbar',
+        '../components/quizToolbar',
         '../components/itemsListEdit', '../components/itemsListPlay',
         '../components/mainPanel',
         'components/menu'],
@@ -273,14 +273,21 @@ define(['models/quiz',
             // Items category was changed. Update database, change items list and counters
             itemChangeCategory: function(event) {
                 if (this.state.mode == "Edit") {
-                    var id = event.target.id;
-                    var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
-                    var oldCategory = item.get("category");
-                    var newCategory = event.target.value;
-                    quiz.itemUpdateCategory(item, oldCategory, newCategory);
-                    this.setState({
-                        selectedItemId: undefined
-                    });
+                    if (event.target.value == "add new category") {
+                        /* Redirect to the categories editing page */
+                        var link = '#categories';
+                        window.location.href = link;
+                    }
+                    else {
+                        var id = event.target.id;
+                        var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
+                        var oldCategory = item.get("category");
+                        var newCategory = event.target.value;
+                        quiz.itemUpdateCategory(item, oldCategory, newCategory);
+                        this.setState({
+                            selectedItemId: undefined
+                        });
+                    }
                 }
             },
             // Open item for editing, substitute clicked Grid element by Input elements
@@ -477,6 +484,7 @@ define(['models/quiz',
         var QuizView = Backbone.View.extend({
             initialize: function () {
                 quiz.on("ready", this.render, this);
+                quiz.start();
             },
 
             render: function() {
@@ -487,6 +495,6 @@ define(['models/quiz',
             }
         });
 
-        return new QuizView();
+        return QuizView;    // new QuizView();
     });
 

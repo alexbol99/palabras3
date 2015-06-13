@@ -1,8 +1,8 @@
 /**
  * Created by alexbol on 6/11/2015.
  */
-define(['models/quiz'],
-    function (quiz) {
+define([],
+    function () {
         return Parse.Object.extend({
             className: ""   // app.get("currentDictionary"),           // "Palabra",
 /*

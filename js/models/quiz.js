@@ -25,8 +25,8 @@ define(['models/app', 'models/quizItem', 'models/category',
 
             // on quiz selected start to create stuff
             start: function(/*selectionMode, category, numWeeksBefore*/) {
-                QuizItem.prototype.className = this.get("currentDictionary");
-                Category.prototype.className = this.get("currentDictionary") + "_Cat";
+                // QuizItem.prototype.className = this.get("currentDictionary");
+                // Category.prototype.className = this.get("currentDictionary") + "_Cat";
 
                 this.set("quizItems", new QuizItems());
                 this.set("categories", new Categories());

@@ -91,6 +91,9 @@ define(['components/confirmPopup'],
                         <ReactBootstrap.Col xs={2} md={2}>
                         <ReactBootstrap.Input type='select' bsSize="small" defaultValue={item.get("category")}  ref={item.id} id={item.id} onChange={this.props.onCategoryChanged}>
                             {options}
+                            <option bsStyle='success' disabled>──────────</option>
+                            <option bsStyle='success' value="add new category">Add new category ...</option>
+
                         </ReactBootstrap.Input>
                         </ReactBootstrap.Col>
                     ) : null;

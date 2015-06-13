@@ -1,8 +1,8 @@
 /**
  * Created by alexbol on 1/8/2015.
  */
-define([],
-    function () {
+define(['models/quizItem', 'models/category'],
+    function (QuizItem, Category) {
         var App = Backbone.Model.extend({
             defaults: {
                 currentDictionary: ""
@@ -14,7 +14,8 @@ define([],
                 }, false);
             },
             start: function() {
-                this.set("currentDictionary", "Class_Alberto_Ru");
+                QuizItem.prototype.className = "Class_Alberto_Ru";
+                Category.prototype.className = "Class_Alberto_Ru" + "_Cat";
             }
         });
         return new App();
