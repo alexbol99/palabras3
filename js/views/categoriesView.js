@@ -1,8 +1,8 @@
 /**
  * Created by Owner on 6/11/15.
  */
-define(['models/quiz', 'models/category', 'collections/catlist', '../components/confirmPopup'],
-    function (quiz, Category, catList, ConfirmPopup) {
+define(['models/quiz', 'models/quizItem', 'models/category', 'collections/catlist', '../components/confirmPopup'],
+    function (quiz, QuizItem, Category, catList, ConfirmPopup) {
         var CategoriesManagerComponent = React.createClass({
             getInitialState: function() {
                 return {
@@ -41,7 +41,6 @@ define(['models/quiz', 'models/category', 'collections/catlist', '../components/
                 })
             },
             toggleEditCategory: function(event) {
-                // TODO: update all items in renamed category
                 this.setState({
                     editSelectedItem: this.state.editSelectedItem ? false : true
                 });
@@ -49,16 +48,41 @@ define(['models/quiz', 'models/category', 'collections/catlist', '../components/
             onCategoryChanged: function(event) {
                 var id = event.target.id;
                 var category = _.findWhere(this.state.categories.models, {"id": id});
-                category.set('category', event.target.value);
-                category.save();
+                var oldCategoryName = category.get("category");
+                var newCategoryName = event.target.value;
+                category.set('category', newCategoryName);
+                category.save().then( function() {
+
+                    // update all items in renamed category
+                    var query = new Parse.Query(QuizItem);
+                    query.equalTo("category", oldCategoryName);
+                    query.find().then( function(items) {
+                        items.forEach(function(item) {
+                            item.set('category', newCategoryName);
+                            item.save();
+                        })
+                    });
+
+                });
             },
             deleteCategory: function(event) {
-                // TODO: delete all items in deleted category
                 var category = _.findWhere(this.state.categories.models, {"id": this.state.selectedItemId});
                 var self = this;
+                // delete category
                 category.destroy().then( function(category) {
+
+                    // delete all items in deleted category
+                    var query = new Parse.Query(QuizItem);
+                    query.equalTo("category", category.get("category"));
+                    query.find().then( function(items) {
+                        items.forEach(function(item) {
+                            item.destroy();
+                        })
+                    });
+
                     var newCatList = catList.clone();
                     newCatList.remove(category);
+
                     self.setState({
                         categories: newCatList,
                         selectedItemId: undefined,

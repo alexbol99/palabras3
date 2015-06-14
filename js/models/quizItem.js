@@ -43,6 +43,7 @@ define([],
                     }
                 });
             },
+
             sayIt: function(lang) {
                 if ('speechSynthesis' in window) {
                     // Synthesis support. Make your web apps talk!

@@ -25,13 +25,9 @@ define(['models/app', 'models/quizItem', 'models/category',
 
             // on quiz selected start to create stuff
             start: function(/*selectionMode, category, numWeeksBefore*/) {
-                // QuizItem.prototype.className = this.get("currentDictionary");
-                // Category.prototype.className = this.get("currentDictionary") + "_Cat";
 
                 this.set("quizItems", new QuizItems());
                 this.set("categories", new Categories());
-
-                // this.restoreState();
 
                 this.restoreCategories();
 
@@ -69,6 +65,7 @@ define(['models/app', 'models/quizItem', 'models/category',
                     var categoriesArray = [];
                     this.get("categories").forEach(function (model) {
                         categoriesArray.push({
+                            "category_id" : model.get("category_id"),
                             "category" : model.get("category"),
                             "count" : model.get("count")
                         })
@@ -124,6 +121,13 @@ define(['models/app', 'models/quizItem', 'models/category',
 
             addEmptyItem: function() {
                 var item = new QuizItem();
+                var selectedCategory = this.get('categories').findWhere({"category": this.get('selectedCategory')});
+                if (selectedCategory) {
+                    item.set({
+                        category_id: selectedCategory.get('category_id'),
+                        category: selectedCategory.get('category')
+                    });
+                }
 
                 item.on("added", function(item) {
                     // add empty item to the list of quiz items
