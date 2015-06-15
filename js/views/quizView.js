@@ -212,7 +212,7 @@ define(['models/quiz',
                 this.setState({
                     editSelectedItem: this.state.editSelectedItem ? false : true
                 });
-                quiz.sortItems();
+                // quiz.sortItems();
             },
 
             // 3 callbacks for the items filter, cause redirect to new page and fetching items from Parse
@@ -301,6 +301,7 @@ define(['models/quiz',
             },
             // Redirect to external source
             redirectToSpanishdict: function(event) {
+                event.stopPropagation();
                 var id = event.currentTarget.id;
                 var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
                 var link = "http://www.spanishdict.com/translate/" + item.get("spanish");

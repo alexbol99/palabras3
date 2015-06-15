@@ -109,17 +109,22 @@ define(['models/quiz', 'models/quizItem', 'models/category', 'collections/catlis
 
             render() {
                 /* "Are you sure?" Popup definition */
-                var message = "";
                 var item;
                 if (this.state.selectedItemId) {
                     item = _.findWhere(this.state.categories.models, {"id": this.state.selectedItemId});
-                    message = "Category " + item.get('category') + " will be deleted";
                 }
+                var messageInstance = this.state.selectedItemId ? (
+                    <h4>
+                        All items in category&nbsp;
+                        <span><b><i>{item.get('category')}</i></b></span>
+                        &nbsp;will be deleted
+                    </h4>
+                ) : null;
 
                 var confirmDeletePopupInstance = this.state.confirmDeletePopup ? (
                     <ConfirmPopup
                         title = "Are you sure?"
-                        message = {message}
+                        message = {messageInstance}
                         onConfirm = {this.deleteCategory}
                         onCancel = {this.hideConfirmDeletePopup}
                         hidePopup = {this.hideConfirmDeletePopup}

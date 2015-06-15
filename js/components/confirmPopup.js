@@ -9,7 +9,7 @@ define([],
                     <ReactBootstrap.Modal {...this.props} bsStyle='primary' title={this.props.title} animation={true}
                         onRequestHide={this.props.hidePopup}>
                         <div className='modal-body'>
-                            <h4>{this.props.message}</h4>
+                            {this.props.message}
                         </div>
                         <div className='modal-footer'>
                             <ReactBootstrap.Button onClick={this.props.onConfirm}>OK</ReactBootstrap.Button>

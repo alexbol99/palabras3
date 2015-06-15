@@ -40,16 +40,21 @@ define(['components/confirmPopup'],
                 });
 
                 var item;
-                var message = "";
                 if (this.props.selectedItemId) {
                     item = _.findWhere(this.props.items.models, {"id": this.props.selectedItemId});
-                    message = "Item " + item.get(langLeft) + " will be deleted";
                 }
+                var messageInstance = this.props.selectedItemId && item != undefined ? (
+                    <h4>
+                        Item&nbsp;
+                        <span><b><i>{item.get(langLeft)}</i></b></span>
+                        &nbsp;will be deleted
+                    </h4>
+                ) : null;
 
                 var confirmDeletePopupInstance = this.state.confirmDeletePopup ? (
                     <ConfirmPopup
                         title = "Are you sure?"
-                        message = {message}
+                        message = {messageInstance}
                         onConfirm = {this.confirmAndHideConfirmPopup}
                         onCancel = {this.hideConfirmDeletePopup}
                         hidePopup = {this.hideConfirmDeletePopup}
@@ -58,14 +63,6 @@ define(['components/confirmPopup'],
 
                 var self = this;
                 var list = this.props.items.map(function (item) {
-
-                    var buttonRemoveInstance = (item.id == this.props.selectedItemId && !this.props.editSelectedItem) ? (
-                        <ReactBootstrap.Col xs={1} md={1}>
-                            <span bsSize='small' id={item.id}>
-                                <ReactBootstrap.Glyphicon glyph='remove-sign' title="delete item" onClick={self.raiseConfirmDeletePopup} />
-                            </span>
-                        </ReactBootstrap.Col>
-                    ) : null;
 
                     var itemLeftInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
@@ -100,14 +97,22 @@ define(['components/confirmPopup'],
                         </ReactBootstrap.Col>
                     ) : null;
 
-                    var buttonSayItInstance = (
+                    var buttonRemoveInstance = (item.id == this.props.selectedItemId && !this.props.editSelectedItem) ? (
+                        <ReactBootstrap.Col xs={4} md={4}>
+                            <span id={item.id}>
+                                <ReactBootstrap.Glyphicon glyph='remove-sign' title="delete item" onClick={self.raiseConfirmDeletePopup} />
+                            </span>
+                        </ReactBootstrap.Col>
+                    ) : null;
+
+                    var buttonSayItInstance = (item.id == this.props.selectedItemId) ? null : (
                         <ReactBootstrap.Col xs={1} md={1}>
                             <span bsSize='small' id={item.id} title="say it" onClick={this.props.onClickSayItButton}>
                                 <ReactBootstrap.Glyphicon glyph='volume-up' />
                             </span>
                         </ReactBootstrap.Col>
                     );
-                    var buttonGlobeInstance = (
+                    var buttonGlobeInstance = (item.id == this.props.selectedItemId) ? null : (
                         <ReactBootstrap.Col xs={1} md={1}>
                             <span bsSize='small' id={item.id} title="more info ..." onClick={this.props.onClickGlobeButton}>
                                 <ReactBootstrap.Glyphicon glyph='globe' />
@@ -117,10 +122,10 @@ define(['components/confirmPopup'],
 
                     var gridColumns;
                     gridColumns = React.addons.createFragment({
-                        buttonRemoveInstance: buttonRemoveInstance,
                         itemLeftInstance: itemLeftInstance,
                         itemRightInstance: itemRightInstance,
                         categorySelectInstance: categorySelectInstance,
+                        buttonRemoveInstance: buttonRemoveInstance,
                         buttonSayItInstance: buttonSayItInstance,
                         buttonGlobeInstance: buttonGlobeInstance
                     });
@@ -153,6 +158,7 @@ define(['components/confirmPopup'],
         return ItemsListEdit;
     });
 
+/* style={{fontSize: "1.8em"}} */
 /*<ReactBootstrap.Glyphicon glyph='remove' />*/
 /*,
  buttonSayItInstance: buttonSayItInstance,

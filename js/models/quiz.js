@@ -175,7 +175,7 @@ define(['models/app', 'models/quizItem', 'models/category',
                     item.updateParse();
                 }
             },
-            sortItems: function() {
+            sortItems: function() {    // meanwhile not in use
                 // update comparator function
                 this.get("quizItems").comparator = function(model) {
                     return model.get('spanish');
