@@ -4,14 +4,15 @@
 require.config({
     urlArgs: "bust=" + (new Date()).getTime()
 });
-require(['models/app','models/quiz', 'jsx!views/categoriesView', 'jsx!views/quizView',
-        'models/quizItem', 'models/category',
-        'collections/categories','collections/quizItems', 'collections/catlist',
+require(['models/app','models/quiz',
+        'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView',
+        'models/quizItem', 'models/category', 'models/dictionary',
+        'collections/categories','collections/quizItems', 'collections/catlist', 'collections/dictionaries',
         'jsx!components/confirmPopup',
         'jsx!components/quizToolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
         'jsx!components/mainPanel', 'jsx!components/menu'],
-    function (app, quiz, CategoriesView, QuizView) {
+    function (app, quiz, CategoriesView, QuizView, DictionariesView) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
 
@@ -25,6 +26,7 @@ require(['models/app','models/quiz', 'jsx!views/categoriesView', 'jsx!views/quiz
 
             routes: {
                 "": 'home',
+                'dictionary' : 'dictionary',          // #dictionary  TODO: no sense, change later
                 'categories' : 'categories',                     // #categories
                 'categories/all/(:numWeeksBefore)' : 'quizAll',  // #categories/all/2
                 'categories/selected/(:category)':   'quizSelected',  // #categories/selected/verbos regulares
@@ -32,12 +34,15 @@ require(['models/app','models/quiz', 'jsx!views/categoriesView', 'jsx!views/quiz
             },
 
             home: function() {
-                quiz.set({
-                    currentDictionary: "Class_Alberto_Ru"
-                });
-                quiz.restoreState();
-                var quizView = new QuizView();
-                // quiz.start();
+                var dictionaries = new DictionariesView();
+            },
+
+            dictionary: function() {
+                 quiz.set({
+                     currentDictionary: "Class_Alberto_Ru"
+                 });
+                 quiz.restoreState();
+                 var quizView = new QuizView();
             },
 
             categories: function() {
@@ -50,7 +55,6 @@ require(['models/app','models/quiz', 'jsx!views/categoriesView', 'jsx!views/quiz
                     selectionMode: "all",
                     numWeeksBefore: numWeeksBefore
                 });
-                // quiz.start();             // "all", "", numWeeksBefore);
                 var quizView = new QuizView();
             },
 
@@ -60,7 +64,6 @@ require(['models/app','models/quiz', 'jsx!views/categoriesView', 'jsx!views/quiz
                     selectionMode: "selected",
                     selectedCategory: category
                 });
-                // quiz.start();    // "selected", category);
                 var quizView = new QuizView();
             },
 
