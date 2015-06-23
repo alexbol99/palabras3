@@ -100,7 +100,7 @@ define(['components/confirmPopup'],
                     var buttonRemoveInstance = (item.id == this.props.selectedItemId && !this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
                             <span id={item.id}>
-                                <ReactBootstrap.Glyphicon glyph='remove-sign' title="delete item" onClick={self.raiseConfirmDeletePopup} />
+                                <ReactBootstrap.Glyphicon glyph='trash' title="delete item" onClick={self.raiseConfirmDeletePopup} />
                             </span>
                         </ReactBootstrap.Col>
                     ) : null;

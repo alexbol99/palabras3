@@ -166,7 +166,7 @@ define(['models/quiz', 'models/quizItem', 'models/category', 'collections/catlis
 
                     var buttonRemoveInstance = (cat.id == this.state.selectedItemId && !this.state.editSelectedItem) ? (
                         <span id={cat.id}>
-                            <ReactBootstrap.Glyphicon glyph='remove-sign' title="delete item" onClick={this.raiseConfirmDeletePopup} />
+                            <ReactBootstrap.Glyphicon glyph='trash' title="delete item" onClick={this.raiseConfirmDeletePopup} />
                         </span>
                     ) : null;
 
