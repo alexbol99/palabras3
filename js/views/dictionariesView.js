@@ -202,18 +202,25 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                 }, this);
 
                 return (
-                    <div>
+                    <ReactBootstrap.Panel>
                         <div className='modal-body'>
                             {confirmDeletePopupInstance}
 
                             <ReactBootstrap.ListGroup>
                                 {list}
                             </ReactBootstrap.ListGroup>
+
                         </div>
                         <div className='modal-footer'>
-                            <ReactBootstrap.Button onClick={this.props.startQuiz}>Start</ReactBootstrap.Button>
+                            <ReactBootstrap.ButtonGroup>
+                                <ReactBootstrap.Button bsStyle='info' bsSize='large' block title="Add new dictionary" onClick={this.props.addNewDictionary}>
+                                    <ReactBootstrap.Glyphicon glyph='plus-sign' style={{fontSize: "1.4em"}} />
+                                    &nbsp;&nbsp;
+                                    Add new dictionary
+                                </ReactBootstrap.Button>
+                            </ReactBootstrap.ButtonGroup>
                         </div>
-                    </div>
+                    </ReactBootstrap.Panel>
                 );
             }
         });
@@ -223,6 +230,9 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                 dictionaries.off();
                 dictionaries.on("sync", this.render, this);
                 dictionaries.sync();
+            },
+            addNewDictionary: function(event) {
+                console.log("add");
             },
             startQuiz: function(event) {
                 var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
@@ -240,6 +250,7 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                     <DictionariesManagerComponent
                         startQuiz={this.startQuiz}
                         editSettings={this.editSettings}
+                        addNewDictionary={this.addNewDictionary}
                     />
                 );
                 React.render(dictionariesManagerComponentInstance, document.body);
