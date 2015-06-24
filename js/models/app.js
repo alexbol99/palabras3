@@ -5,7 +5,7 @@ define(['models/quizItem', 'models/category'],
     function (QuizItem, Category) {
         var App = Backbone.Model.extend({
             defaults: {
-                currentDictionary: ""
+                currentDictionaryName: ""
             },
             initialize: function () {
                 Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
@@ -13,9 +13,10 @@ define(['models/quizItem', 'models/category'],
                     location.reload();
                 }, false);
             },
-            start: function() {
-                QuizItem.prototype.className = "Class_Alberto_Ru";
-                Category.prototype.className = "Class_Alberto_Ru" + "_Cat";
+            setDictionary: function(dictionary) {
+                QuizItem.prototype.className = dictionary;             // "Class_Alberto_Ru";
+                Category.prototype.className = dictionary + "_Cat";    // "Class_Alberto_Ru" + "_Cat";
+                this.set("currentDictionaryName", dictionary);
             }
         });
         return new App();

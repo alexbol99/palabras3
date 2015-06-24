@@ -5,14 +5,14 @@ require.config({
     urlArgs: "bust=" + (new Date()).getTime()
 });
 require(['models/app','models/quiz',
-        'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView',
+        'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettings',
         'models/quizItem', 'models/category', 'models/dictionary',
         'collections/categories','collections/quizItems', 'collections/catlist', 'collections/dictionaries',
         'jsx!components/confirmPopup',
         'jsx!components/quizToolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
         'jsx!components/mainPanel', 'jsx!components/menu'],
-    function (app, quiz, CategoriesView, QuizView, DictionariesView) {
+    function (app, quiz, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
 
@@ -20,36 +20,47 @@ require(['models/app','models/quiz',
         React.initializeTouchEvents(true);
 
         // app.set("currentDictionary", "Class_Alberto_Ru");
-        app.start();         // set dictionary
+        // app.start();         // set dictionary
 
         var AppRouter = Backbone.Router.extend({
 
             routes: {
                 "": 'home',
-                'dictionary' : 'dictionary',          // #dictionary  TODO: no sense, change later
-                'categories' : 'categories',                     // #categories
-                'categories/all/(:numWeeksBefore)' : 'quizAll',  // #categories/all/2
-                'categories/selected/(:category)':   'quizSelected',  // #categories/selected/verbos regulares
+                'dictionaries'                                        : 'dictionaries',                  // #dictionaries
+                'dictionaries/:dictionary'                            : 'dictionarySettings',            // #dictionaries/Class_Alberto_ru - settings
+                'categories/:dictionary'                              : 'categories',                    // #categories/Class_Alberto_ru
+                'quiz/:dictionary'                                    : 'quizDefault',                   // #quiz/Class_Alberto_ru
+                'quiz/all/:dictionary/(:numWeeksBefore)'              : 'quizAll',                       // #quiz/all/Class_Alberto_ru/2
+                'quiz/selected/:dictionary/(:category)'               : 'quizSelected',                  // #quiz/selected/Class_Alberto_ru/verbos regulares
                 '*default': 'default'
             },
 
             home: function() {
                 var dictionaries = new DictionariesView();
             },
-
-            dictionary: function() {
-                 quiz.set({
-                     currentDictionary: "Class_Alberto_Ru"
-                 });
-                 quiz.restoreState();
-                 var quizView = new QuizView();
+            dictionaries: function() {
+                app.setDictionary(dictionary);
+                var dictionaries = new DictionariesView();
             },
-
-            categories: function() {
+            dictionarySettings: function(dictionary) {
+                app.setDictionary(dictionary);
+                var settings = new DictionarySettingsView();
+            },
+            categories: function(dictionary) {
+                app.setDictionary(dictionary);
                 var categoriesView = new CategoriesView();
             },
 
-            quizAll: function(numWeeksBefore) {
+            quizDefault: function(dictionary) {
+                app.setDictionary(dictionary);
+                quiz.set({
+                    currentDictionary: dictionary
+                });
+                quiz.restoreState();
+                var quizView = new QuizView();
+            },
+            quizAll: function(dictionary, numWeeksBefore) {
+                app.setDictionary(dictionary);
                 quiz.set({
                     currentDictionary: "Class_Alberto_Ru",
                     selectionMode: "all",
@@ -58,7 +69,8 @@ require(['models/app','models/quiz',
                 var quizView = new QuizView();
             },
 
-            quizSelected: function(category) {
+            quizSelected: function(dictionary, category) {
+                app.setDictionary(dictionary);
                 quiz.set({
                     currentDictionary: "Class_Alberto_Ru",
                     selectionMode: "selected",

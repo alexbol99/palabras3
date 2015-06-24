@@ -176,18 +176,24 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                     var dictionaryInstance = (dictionary.id == this.state.selectedItemId && this.state.editSelectedItem) ? (
                         <ReactBootstrap.Input type="text" defaultValue={dictionary.get('name')}  name='name' id={dictionary.id} onChange={this.onNameChanged} />
                     ) : (
-                        <h4>{dictionary.get('name')}</h4>
+                        <h4 id={dictionary.id} onClick={this.props.startQuiz}>{dictionary.get('name')}</h4>
+                    );
+
+                    var buttonSettingsInstance = (
+                        <span id={dictionary.id} onClick={this.props.editSettings}>
+                            <ReactBootstrap.Glyphicon glyph='cog' title="settings" />
+                        </span>
                     );
 
                     return (
                         <ReactBootstrap.ListGroupItem bsStyle={bsStyle} key={dictionary.cid} >
                             <ReactBootstrap.Grid>
-                                <ReactBootstrap.Row className='show-grid' id={dictionary.id} onClick={this.toggleSelected}  >
+                                <ReactBootstrap.Row className='show-grid' id={dictionary.id} >
                                     <ReactBootstrap.Col xs={10} md={10}>
                                         {dictionaryInstance}
                                     </ReactBootstrap.Col>
                                     <ReactBootstrap.Col xs={2} md={2}>
-                                        {buttonRemoveInstance}
+                                        {buttonSettingsInstance}
                                     </ReactBootstrap.Col>
                                 </ReactBootstrap.Row>
                             </ReactBootstrap.Grid>
@@ -218,14 +224,22 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                 dictionaries.on("sync", this.render, this);
                 dictionaries.sync();
             },
-            startQuiz: function() {
-                var link = '#dictionary';
+            startQuiz: function(event) {
+                var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
+                var link = '#quiz/' + dictionary.get('name');
+                window.location.href = link;
+            },
+            editSettings: function(event) {
+                event.stopPropagation();
+                var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
+                var link = '#dictionaries/' + dictionary.get('name');
                 window.location.href = link;
             },
             render: function() {
                 var dictionariesManagerComponentInstance = (
                     <DictionariesManagerComponent
                         startQuiz={this.startQuiz}
+                        editSettings={this.editSettings}
                     />
                 );
                 React.render(dictionariesManagerComponentInstance, document.body);

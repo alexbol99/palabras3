@@ -239,13 +239,13 @@ define(['models/quiz',
             },
             // REDIRECT TO NEW PAGE
             redirectToNewQuiz: function() {
-                var link;
+                var link = '#quiz/';
                 switch (this.state.selectionMode) {
                     case 'all':
-                        link = '#categories/all/' + this.state.numWeeksBefore;
+                        link += 'all/' + quiz.get('currentDictionary') + '/' + this.state.numWeeksBefore;
                         break;
                     case 'selected':
-                        link = '#categories/selected/' + this.state.selectedCategoryName;
+                        link += 'selected/' + quiz.get('currentDictionary') + '/' + this.state.selectedCategoryName;
                         break;
                 }
                 // similar behavior as clicking on a link
@@ -275,7 +275,7 @@ define(['models/quiz',
                 if (this.state.mode == "Edit") {
                     if (event.target.value == "add new category") {
                         /* Redirect to the categories editing page */
-                        var link = '#categories';
+                        var link = '#categories/' + quiz.get('currentDictionary');
                         window.location.href = link;
                     }
                     else {
