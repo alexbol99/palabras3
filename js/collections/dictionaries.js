@@ -14,7 +14,9 @@ define(['models/dictionary'],
             },
 
             sync: function() {
-                this.query = new Parse.Query(Dictionary);
+                this.query = new Parse.Query(Dictionary)
+                    .include('language1')
+                    .include('language2');
                 this.fetch({reset: true})
 
             }

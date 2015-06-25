@@ -241,8 +241,8 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
             },
             editSettings: function(event) {
                 event.stopPropagation();
-                var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
-                var link = '#dictionaries/' + dictionary.get('name');
+                // var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
+                var link = '#dictionaries/' + event.currentTarget.id;
                 window.location.href = link;
             },
             render: function() {

@@ -27,7 +27,7 @@ require(['models/app','models/quiz',
             routes: {
                 "": 'home',
                 'dictionaries'                                        : 'dictionaries',                  // #dictionaries
-                'dictionaries/:dictionary'                            : 'dictionarySettings',            // #dictionaries/Class_Alberto_ru - settings
+                'dictionaries/:dictionaryId'                          : 'dictionarySettings',            // #dictionaries/Class_Alberto_Ru - settings
                 'categories/:dictionary'                              : 'categories',                    // #categories/Class_Alberto_ru
                 'quiz/:dictionary'                                    : 'quizDefault',                   // #quiz/Class_Alberto_ru
                 'quiz/all/:dictionary/(:numWeeksBefore)'              : 'quizAll',                       // #quiz/all/Class_Alberto_ru/2
@@ -42,9 +42,9 @@ require(['models/app','models/quiz',
                 app.setDictionary(dictionary);
                 var dictionaries = new DictionariesView();
             },
-            dictionarySettings: function(dictionary) {
-                app.setDictionary(dictionary);
-                var settings = new DictionarySettingsView();
+            dictionarySettings: function(dictionaryId) {
+                // app.setDictionary(dictionary);
+                var settings = new DictionarySettingsView(dictionaryId);
             },
             categories: function(dictionary) {
                 app.setDictionary(dictionary);
