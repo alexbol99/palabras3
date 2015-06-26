@@ -4,7 +4,7 @@
 define(['models/dictionary'],
     function (Dictionary) {
         var Dictionaries = Parse.Collection.extend({
-            model: Dictionary,
+            model: "Dictionaries",
             /*query: new Parse.Query(Category),*/
             //comparator: function(model) {
             //    return model.get('category');
@@ -19,6 +19,26 @@ define(['models/dictionary'],
                     .include('language2');
                 this.fetch({reset: true})
 
+            },
+            find: function(id, callback) {
+                this.query = new Parse.Query(Dictionary)
+                    .equalTo("objectId", id);
+                this.query.find().then( function(resp) {  // unique id, supposed only one in response
+                    var dictionary = resp[0];
+                    callback(dictionary);
+                })
+            },
+            clone: function() {
+                var newDictionaries = new Dictionaries();
+                var array = this.models.slice();
+                newDictionaries.add(array);
+                return newDictionaries;
+            },
+            addDictionary: function(dictionary) {
+                //var newDictionaries = this.clone();
+                //newDictionaries.add(dictionary, {at: 0});
+                //return dictionary;
+                this.add(dictionary);
             }
         });
 
@@ -26,17 +46,6 @@ define(['models/dictionary'],
     });
 
 /*
-            clone: function() {
-                var newCategories = new CatList();
-                var array = this.models.slice();
-                newCategories.add(array);
-                return newCategories;
-            },
-            addEmpty: function(category) {
-                var newCatList = this.clone();
-                newCatList.add(category, {at: 0});
-                return newCatList;
-            },
             deleteCategory: function(category) {
                 var newCatList = this.clone();
                 newCatList.remove(category);

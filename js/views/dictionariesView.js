@@ -132,37 +132,6 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                         hidePopup = {this.hideConfirmDeletePopup}
                     />
                 ) : null;
-/*
-                var buttonAdd = (
-                    <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Add item or category" onClick={this.addButtonClicked} >
-                            <ReactBootstrap.Glyphicon glyph='plus' />
-                        </ReactBootstrap.Button>
-                    </ReactBootstrap.ButtonGroup>
-                );
-
-                var buttonEdit = (
-                    <ReactBootstrap.ButtonGroup>
-                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Edit item" onClick={this.toggleEditCategory} >
-                            <ReactBootstrap.Glyphicon glyph='pencil' />
-                        </ReactBootstrap.Button>
-                    </ReactBootstrap.ButtonGroup>
-                );
-
-                var buttons;
-                buttons = {
-                    button1: buttonAdd,
-                    button2: buttonEdit
-                };
-
-                const toolbarInstance = (
-                    <div>
-                        <ReactBootstrap.ButtonGroup justified>
-                            {buttons}
-                        </ReactBootstrap.ButtonGroup>
-                    </div>
-                );
-*/
 
                 var list = this.state.dictionaries.map(function (dictionary) {
                     var bsStyle = dictionary.id == this.state.selectedItemId ? 'success' : 'info';
@@ -181,7 +150,7 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
 
                     var buttonSettingsInstance = (
                         <span id={dictionary.id} onClick={this.props.editSettings}>
-                            <ReactBootstrap.Glyphicon glyph='cog' title="settings" />
+                            <ReactBootstrap.Glyphicon glyph='cog' title="settings" style={{fontSize: "1.4em"}} />
                         </span>
                     );
 
@@ -203,6 +172,9 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
 
                 return (
                     <ReactBootstrap.Panel>
+                        <div className='modal-header'>
+                            <h4>My dictionaries</h4>
+                        </div>
                         <div className='modal-body'>
                             {confirmDeletePopupInstance}
 
@@ -212,8 +184,8 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
 
                         </div>
                         <div className='modal-footer'>
-                            <ReactBootstrap.ButtonGroup>
-                                <ReactBootstrap.Button bsStyle='info' bsSize='large' block title="Add new dictionary" onClick={this.props.addNewDictionary}>
+                            <ReactBootstrap.ButtonGroup style={{width:"100%"}}>
+                                <ReactBootstrap.Button bsStyle='info' bsSize='large' block title="Add new dictionary" style={{textAlign:"left"}} onClick={this.props.addNewDictionary}>
                                     <ReactBootstrap.Glyphicon glyph='plus-sign' style={{fontSize: "1.4em"}} />
                                     &nbsp;&nbsp;
                                     Add new dictionary
@@ -232,7 +204,14 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                 dictionaries.sync();
             },
             addNewDictionary: function(event) {
-                console.log("add");
+                var dictionary = new Dictionary();
+                // set createdBy user attribute
+                // then redirect to edit properties page
+                dictionary.save().then( function(dictionary) {
+                    dictionaries.addDictionary(dictionary);      // add to the collection
+                    var link = '#dictionaries/' + dictionary.id;
+                    window.location.href = link;
+                });
             },
             startQuiz: function(event) {
                 var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
@@ -241,7 +220,6 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
             },
             editSettings: function(event) {
                 event.stopPropagation();
-                // var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
                 var link = '#dictionaries/' + event.currentTarget.id;
                 window.location.href = link;
             },

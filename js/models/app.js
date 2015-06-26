@@ -17,6 +17,9 @@ define(['models/quizItem', 'models/category'],
                 QuizItem.prototype.className = dictionary;             // "Class_Alberto_Ru";
                 Category.prototype.className = dictionary + "_Cat";    // "Class_Alberto_Ru" + "_Cat";
                 this.set("currentDictionaryName", dictionary);
+            },
+            addEmptyDictionary: function() {
+
             }
         });
         return new App();

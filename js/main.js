@@ -5,9 +5,10 @@ require.config({
     urlArgs: "bust=" + (new Date()).getTime()
 });
 require(['models/app','models/quiz',
-        'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettings',
+        'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettingsView',
         'models/quizItem', 'models/category', 'models/dictionary',
         'collections/categories','collections/quizItems', 'collections/catlist', 'collections/dictionaries',
+        'collections/languages',
         'jsx!components/confirmPopup',
         'jsx!components/quizToolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
