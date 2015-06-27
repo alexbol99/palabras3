@@ -10,12 +10,6 @@ define(['models/app',
         'components/menu'],
     function (app, quiz, Toolbar, ItemsListEdit, ItemsListPlay, MainPanel, Menu) {
         var recognition;
-        if ('webkitSpeechRecognition' in window) {
-            recognition = new webkitSpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = 'es-ES';
-        }
         var final_transcript = '';
 
         var QuizComponent = React.createClass({
@@ -312,11 +306,12 @@ define(['models/app',
                 event.stopPropagation();
                 var id = event.currentTarget.id;
                 var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
-                var link = "http://www.spanishdict.com/translate/" + item.get("spanish");
-                // similar behavior as an HTTP redirect
-                // window.location.replace(link);
-                // similar behavior as clicking on a link
-                window.location.href = link;
+                var url = this.state.languageOnLeft.get("learnMore");
+                var languageName = this.state.languageOnLeft.get("name");
+                if (url) {
+                    var link = url + item.get(languageName);   // "spanish");
+                    window.location.href = link;
+                }
             },
             // Button "Delete" - delete selected item. TODO - confirmation popup
             itemDelete: function(event) {
@@ -441,8 +436,8 @@ define(['models/app',
                         interim_transcript += event.results[i][0].transcript;
                         console.log(interim_transcript);
                     }
-
-                    if (interim_transcript == itemRight.get('spanish')) {
+                    var languageName = self.state.languageOnLeft.get('name');
+                    if (interim_transcript == itemRight.get(languageName)) {   // 'spanish')) {
                         self.setState({
                             selectedLeftItemId: itemRight.id
                         }, self.checkMatch);
@@ -493,6 +488,13 @@ define(['models/app',
 
         var QuizView = Backbone.View.extend({
             initialize: function () {
+                if ('webkitSpeechRecognition' in window) {
+                    recognition = new webkitSpeechRecognition();
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    recognition.lang = app.get('currentDictionary').get('language1').get('lcid');  // 'es-ES';
+                }
+
                 quiz.on("ready", this.render, this);
                 quiz.start();
             },
