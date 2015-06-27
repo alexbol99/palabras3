@@ -20,13 +20,17 @@ define(['models/dictionary'],
                 this.fetch({reset: true})
 
             },
-            find: function(id, callback) {
+            find: function(id) {
                 this.query = new Parse.Query(Dictionary)
-                    .equalTo("objectId", id);
-                this.query.find().then( function(resp) {  // unique id, supposed only one in response
-                    var dictionary = resp[0];
-                    callback(dictionary);
-                })
+                    .equalTo("objectId", id)
+                    .include('language1')
+                    .include('language2');
+
+                //this.query.find().then( function(resp) {  // unique id, supposed only one in response
+                //    var dictionary = resp[0];
+                //    callback(dictionary);
+                //})
+                return this.query.first();        // return promise
             },
             clone: function() {
                 var newDictionaries = new Dictionaries();

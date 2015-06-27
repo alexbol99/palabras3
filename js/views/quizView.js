@@ -2,12 +2,13 @@
  * Created by alexbol on 1/8/2015.
  */
 
-define(['models/quiz',
+define(['models/app',
+        'models/quiz',
         '../components/quizToolbar',
         '../components/itemsListEdit', '../components/itemsListPlay',
         '../components/mainPanel',
         'components/menu'],
-    function (quiz, Toolbar, ItemsListEdit, ItemsListPlay, MainPanel, Menu) {
+    function (app, quiz, Toolbar, ItemsListEdit, ItemsListPlay, MainPanel, Menu) {
         var recognition;
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
@@ -28,6 +29,8 @@ define(['models/quiz',
                     quizItems: [],
                     quizItemsLeft: [],
                     quizItemsRight: [],
+                    languageOnLeft: null,
+                    languageOnRight: null,
                     numWeeksBefore: 2,
                     mode: "Edit",
                     selectedItemId: undefined,
@@ -51,6 +54,8 @@ define(['models/quiz',
                     quizItems: quizItems,
                     quizItemsLeft: quizItemsLeft,
                     quizItemsRight: quizItemsRight,
+                    languageOnLeft: this.props.dictionary.get('language1'),
+                    languageOnRight: this.props.dictionary.get('language2'),
                     selectedLeftItemId: undefined,
                     selectedRightItemId: undefined,
                     sound: quiz.get("sound"),
@@ -104,6 +109,7 @@ define(['models/quiz',
 
                 var itemsListEditInstance = (
                     <ItemsListEdit
+                        dictionary={this.props.dictionary}
                         categories={this.state.categories}
                         items = {this.state.quizItems}
                         selectedItemId = {this.state.selectedItemId}
@@ -119,6 +125,7 @@ define(['models/quiz',
 
                 var itemsListPlayInstance = (
                     <ItemsListPlay
+                        dictionary={this.props.dictionary}
                         itemsLeft = {this.state.quizItemsLeft}
                         itemsRight = {this.state.quizItemsRight}
                         selectedLeftItemId = {this.state.selectedLeftItemId}
@@ -242,10 +249,10 @@ define(['models/quiz',
                 var link = '#quiz/';
                 switch (this.state.selectionMode) {
                     case 'all':
-                        link += 'all/' + quiz.get('currentDictionary') + '/' + this.state.numWeeksBefore;
+                        link += 'all/' + app.get('currentDictionary').id + '/' + this.state.numWeeksBefore;
                         break;
                     case 'selected':
-                        link += 'selected/' + quiz.get('currentDictionary') + '/' + this.state.selectedCategoryName;
+                        link += 'selected/' + app.get('currentDictionary').id + '/' + this.state.selectedCategoryName;
                         break;
                 }
                 // similar behavior as clicking on a link
@@ -275,7 +282,7 @@ define(['models/quiz',
                 if (this.state.mode == "Edit") {
                     if (event.target.value == "add new category") {
                         /* Redirect to the categories editing page */
-                        var link = '#categories/' + quiz.get('currentDictionary');
+                        var link = '#categories/' + app.get('currentDictionary').id;
                         window.location.href = link;
                     }
                     else {
@@ -296,7 +303,8 @@ define(['models/quiz',
                 if (this.state.sound == "on") {
                     var id = event.currentTarget.id;
                     var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
-                    item.sayIt("spanish");
+                    var language = this.state.languageOnLeft;
+                    item.sayIt(language);           // "spanish");
                 }
             },
             // Redirect to external source
@@ -366,7 +374,8 @@ define(['models/quiz',
                     var itemRight = _.findWhere(this.state.quizItemsRight.models, {"id": this.state.selectedRightItemId});
 
                     if (this.state.sound == "on") {
-                        itemLeft.sayIt("spanish");
+                        var language = this.state.languageOnLeft;
+                        itemLeft.sayIt(language);           // "spanish");
                         // itemRight.sayIt("russian");
                     }
 
@@ -490,7 +499,9 @@ define(['models/quiz',
 
             render: function() {
                 var guizComponentInstance = (
-                    <QuizComponent />
+                    <QuizComponent
+                        dictionary = {app.get('currentDictionary')}
+                    />
                 );
                 React.render(guizComponentInstance, document.body);
             }

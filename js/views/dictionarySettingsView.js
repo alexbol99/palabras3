@@ -49,28 +49,37 @@ define(['models/app', 'collections/dictionaries', 'collections/languages', '../c
             }
         });
 
+        var thisView;
         var DictionarySettingsView = Backbone.View.extend({
-            initialize: function (dictionaryId) {
-                this.id = dictionaryId;
-                // this.dictionary =  _.findWhere(dictionaries.models, {"id": this.id});
-                var self = this;
-                dictionaries.find(this.id, function(dictionary) {
-                    self.dictionary = dictionary;
-                    self.render();
-                })
-
+            initialize: function (dictionary) {
+                thisView = this;
+                thisView.dictionary = dictionary;
+                thisView.render();
             },
             hidePopup: function() {
                 window.history.back();
             },
-            changeDictionaryName: function() {
-                // Table cannot be altered */
+            changeDictionaryName: function(event) {
+                thisView.dictionary.set({
+                    name: event.target.value
+                });
+                thisView.dictionary.save();
             },
             changeLanguage1: function(event) {
                 console.log(event.target.value);
+                var language = languages.find(event.target.value);
+                thisView.dictionary.set({
+                    language1: language
+                });
+                thisView.dictionary.save();
             },
             changeLanguage2: function(event) {
                 console.log(event.target.value);
+                var language = languages.find(event.target.value);
+                thisView.dictionary.set({
+                    language2: language
+                });
+                thisView.dictionary.save();
             },
             render: function() {
                 var dictionarySettingsComponentInstance = (

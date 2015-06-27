@@ -8,14 +8,15 @@ define(['models/app', 'models/quizItem', 'models/category',
 
         var Quiz = Backbone.Model.extend({
             defaults: {
-                currentDirectory: "",
                 categories : null,
                 quizItems : null,
                 selectedCategory: "",
                 mode: "Edit",
                 sound: "on",
                 numWeeksBefore: 2,
-                selectionMode: 'all'
+                selectionMode: 'all',
+                language1: null,
+                language2: null
             },
             initialize: function() {
                 this.on("change:mode", function() {
@@ -24,10 +25,13 @@ define(['models/app', 'models/quizItem', 'models/category',
             },
 
             // on quiz selected start to create stuff
-            start: function(/*selectionMode, category, numWeeksBefore*/) {
+            start: function() {
 
                 this.set("quizItems", new QuizItems());
                 this.set("categories", new Categories());
+
+                this.set("language1", app.get('currentDictionary').get('language1'));
+                this.set("language2", app.get('currentDictionary').get('language2'));
 
                 this.restoreCategories();
 
@@ -74,17 +78,20 @@ define(['models/app', 'models/quizItem', 'models/category',
                 }
             },
             restoreCategories: function() {
-                if (window.localStorage) {
-                    var categoriesItem = localStorage.getItem('categories');
-                    var categoriesArray = JSON.parse(categoriesItem);
-                    this.get('categories').reset();
-                    this.get('categories').add(categoriesArray);
-                }
+                //if (window.localStorage) {
+                //    var categoriesItem = localStorage.getItem('categories');
+                //    var categoriesArray = JSON.parse(categoriesItem);
+                //    this.get('categories').reset();
+                //    this.get('categories').add(categoriesArray);
+                //}
             },
             // on categories sync'ed, save them in local storage
             categoriesSynced: function() {
-                if (window.localStorage) {
-                    this.saveCategories();
+                //if (window.localStorage) {
+                //    this.saveCategories();
+                //}
+                if (this.get('categories') == null || this.get('categories').length == 0) {
+                    this.set('selectedCategory', '');
                 }
             },
             setSelectedCategory: function() {
@@ -106,6 +113,7 @@ define(['models/app', 'models/quizItem', 'models/category',
                 var selectionMode = this.get("selectionMode");
                 var category = this.get("selectedCategory");
                 var numWeeksBefore = this.get("numWeeksBefore");
+                var orderedBy = this.get('language1').get('name');
 
                 this.get("quizItems").off();
                 this.get("quizItems").on("sync", function() {
@@ -116,7 +124,7 @@ define(['models/app', 'models/quizItem', 'models/category',
                     this.trigger("ready");
                 }, this);
 
-                this.get("quizItems").sync(selectionMode, category, numWeeksBefore);
+                this.get("quizItems").sync(selectionMode, category, numWeeksBefore, orderedBy);
             },
 
             addEmptyItem: function() {
@@ -128,6 +136,20 @@ define(['models/app', 'models/quizItem', 'models/category',
                         category: selectedCategory.get('category')
                     });
                 }
+
+                var dictionary = app.get("currentDictionary");
+                var language1 = dictionary.get('language1').get('name');
+                var language2 = dictionary.get('language2').get('name');
+                // http://stackoverflow.com/questions/9640253/how-to-set-a-dynamic-property-on-a-model-with-backbone-js
+                var map = {};
+                map[language1] = '';
+                map[language2] = '';
+                item.set(map);
+
+                //item.set({
+                //    language1: '',
+                //    language2: ''
+                //});
 
                 item.on("added", function(item) {
                     // add empty item to the list of quiz items
@@ -177,8 +199,9 @@ define(['models/app', 'models/quizItem', 'models/category',
             },
             sortItems: function() {    // meanwhile not in use
                 // update comparator function
+                var lang = app.get("currentDictionary").get("language1").get("name");
                 this.get("quizItems").comparator = function(model) {
-                    return model.get('spanish');
+                    return model.get(lang);          // 'spanish');
                 };
                 // call the sort method
                 this.get("quizItems").sort();

@@ -28,8 +28,8 @@ define(['components/confirmPopup'],
                 this.props.onConfirmDeleteItem();
             },
             render: function() {
-                var langLeft = "spanish";
-                var langRight = "russian";
+                var langLeft = this.props.dictionary.get('language1').get('name');   // "spanish";
+                var langRight = this.props.dictionary.get('language2').get('name');  // "russian";
 
                 var options = this.props.categories.map(function (item) {
                     return (

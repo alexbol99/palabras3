@@ -13,7 +13,7 @@ define(['../models/quizItem'],
                 this.query = new Parse.Query(QuizItem);
             },
 
-            sync: function(selectionMode, category, numWeeksBefore) {
+            sync: function(selectionMode, category, numWeeksBefore, orderedBy) {
                     if (selectionMode == "all") {
                         var numTiksBefore = (numWeeksBefore * 7 * 24 * 3600 * 1000);
                         var currentDate = new Date();
@@ -32,7 +32,7 @@ define(['../models/quizItem'],
                         }
                     }
 
-                    this.query.ascending("spanish");
+                    this.query.ascending(orderedBy);    // "spanish");
 
                     this.fetch({reset: true});
 

@@ -44,11 +44,11 @@ define([],
                 });
             },
 
-            sayIt: function(lang) {
+            sayIt: function(language) {
                 if ('speechSynthesis' in window) {
                     // Synthesis support. Make your web apps talk!
-                    var msg = new SpeechSynthesisUtterance(this.get(lang));
-                    msg.lang = 'es-ES';
+                    var msg = new SpeechSynthesisUtterance(this.get(language.get('name')));
+                    msg.lang = language.get('lcid'); 'es-ES';
                     msg.rate = 0.9; // 0.1 to 10
                     msg.pitch = 0.9; //0 to 2
                     window.speechSynthesis.speak(msg);

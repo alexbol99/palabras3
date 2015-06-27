@@ -215,7 +215,9 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
             },
             startQuiz: function(event) {
                 var dictionary = _.findWhere(dictionaries.models, {"id": event.currentTarget.id});
-                var link = '#quiz/' + dictionary.get('name');
+                if (dictionary) {
+                    var link = '#quiz/' + event.currentTarget.id; // dictionary.get('name');
+                }
                 window.location.href = link;
             },
             editSettings: function(event) {

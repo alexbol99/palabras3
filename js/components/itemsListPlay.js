@@ -6,8 +6,8 @@ define([],
     function () {
         var ItemsListPlay = React.createClass({
             render: function() {
-                var langLeft = "spanish";
-                var langRight = "russian";
+                var langLeft = this.props.dictionary.get('language1').get('name');   // "spanish";
+                var langRight = this.props.dictionary.get('language2').get('name');  // "russian";
 
                 var items = [];
 
