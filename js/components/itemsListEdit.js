@@ -88,7 +88,8 @@ define(['components/confirmPopup'],
 
                     var categorySelectInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={2} md={2}>
-                        <ReactBootstrap.Input type='select' bsSize="small" defaultValue={item.get("category")}  ref={item.id} id={item.id} onChange={this.props.onCategoryChanged}>
+                        <ReactBootstrap.Input type='select' bsSize="small" defaultValue={item.get("category")}  ref={item.id} id={item.id}
+                            onChange={this.props.onCategoryChanged} onClick={this.props.onCategoryChanged} >
                             {options}
                             <option bsStyle='success' disabled>──────────</option>
                             <option bsStyle='success' value="add new category">Add new category ...</option>

@@ -54,7 +54,12 @@ require(['models/app','models/quiz', 'collections/dictionaries',
             quizDefault: function(dictionaryId) {
                 dictionaries.find(dictionaryId).then( function(dictionary) {
                     app.setDictionary(dictionary);
-                    quiz.restoreState();
+                    /* temporary: start in "all" mode, do not keep category in storage */
+                    quiz.set({
+                        selectionMode: "all",
+                        numWeeksBefore: 2
+                    });
+                    // quiz.restoreState();
                     var quizView = new QuizView();
                 });
             },
@@ -74,7 +79,7 @@ require(['models/app','models/quiz', 'collections/dictionaries',
                     app.setDictionary(dictionary);
                     quiz.set({
                         selectionMode: "selected",
-                        selectedCategory: category
+                        selectedCategory: category || ''
                     });
                     var quizView = new QuizView();
                 });

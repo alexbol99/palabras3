@@ -66,6 +66,7 @@ define(['models/app',
                     var quizItemsRight = quizItemsLeft.shuffle();
                     this.setState({
                         quizItems: quizItems,
+                        selectionMode: quiz.get("selectionMode"),
                         selectedCategoryName: quiz.get("selectedCategory"),
                         selectedCategoryCount: quizItems.length,
                         quizItemsLeft: quizItemsLeft,
@@ -246,7 +247,13 @@ define(['models/app',
                         link += 'all/' + app.get('currentDictionary').id + '/' + this.state.numWeeksBefore;
                         break;
                     case 'selected':
-                        link += 'selected/' + app.get('currentDictionary').id + '/' + this.state.selectedCategoryName;
+                        if (this.state.selectedCategoryName) {
+                            link += 'selected/' + app.get('currentDictionary').id + '/' + this.state.selectedCategoryName;
+                        }
+                        else {
+                            quiz.setSelectedCategory();
+                            link += 'selected/' + app.get('currentDictionary').id + '/' + quiz.get('selectedCategory');
+                        }
                         break;
                 }
                 // similar behavior as clicking on a link

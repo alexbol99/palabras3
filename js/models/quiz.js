@@ -48,20 +48,20 @@ define(['models/app', 'models/quizItem', 'models/category',
             },
             saveState: function() {
                 if (window.localStorage) {
-                    localStorage.currentDictionary = this.get("currentDictionary");
-                    localStorage.selectedCategory = this.get("selectedCategory");
-                    localStorage.numWeeksBefore = this.get("numWeeksBefore");
+                    // localStorage.currentDictionary = this.get("currentDictionary");
+                    // localStorage.selectedCategory = this.get("selectedCategory");
+                    // localStorage.numWeeksBefore = this.get("numWeeksBefore");
                     localStorage.sound = this.get("sound");
                     localStorage.mode = this.get("mode");
-                    localStorage.selectionMode = this.get("selectionMode");
+                    // localStorage.selectionMode = this.get("selectionMode");
                 }
             },
             restoreState: function() {
                 if (window.localStorage) {
-                    this.set("numWeeksBefore", localStorage.numWeeksBefore || this.get("numWeeksBefore"));
+                    // this.set("numWeeksBefore", localStorage.numWeeksBefore || this.get("numWeeksBefore"));
                     this.set("sound", localStorage.sound || this.get("sound"));
                     this.set("mode", localStorage.mode || this.get("mode"));
-                    this.set("selectionMode", localStorage.selectionMode || this.get("selectionMode"));
+                    // this.set("selectionMode", localStorage.selectionMode || this.get("selectionMode"));
                 }
             },
             saveCategories: function() {
@@ -96,17 +96,17 @@ define(['models/app', 'models/quizItem', 'models/category',
             },
             setSelectedCategory: function() {
                 // 1st option: restore from local storage (on refresh)
-                if (window.localStorage && localStorage.selectedCategory) {
-                    this.set("selectedCategory", localStorage.selectedCategory);
-                }
+                //if (window.localStorage && localStorage.selectedCategory) {
+                //    this.set("selectedCategory", localStorage.selectedCategory);
+                //}
                 // 2nd option: take the first in the list of categories (on the first entrance)
-                else {
+                // else {
                     if (this.get("categories").length > 0) {
                         var firstCategory = this.get("categories").at(0);
                         var selectedCategoryName = firstCategory.get("category");
                         this.set("selectedCategory", selectedCategoryName);
                     }
-                }
+                // }
             },
             // fetch items, then trigger ready to start QuizView
             retrieveItems: function() {

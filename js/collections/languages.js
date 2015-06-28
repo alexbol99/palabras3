@@ -22,15 +22,13 @@ define([],
             },
             // Parse collection does not have Backbone's findWhere method
             find: function(name) {
-                var foundLanguage = null;
-                this.models.forEach( function(language) {
-                    if (language.get('name') == name) {
-                        foundLanguage = language;
-                    }
-                });
-                return foundLanguage;
+                var arr = this.models.filter( function(language) { return (language.get('name') == name) });
+                return arr.length > 0 ? arr[0] : null;
             }
         });
 
         return new Languages();
     });
+
+/* To check if voice is supported by current TTS engine */
+/* window.speechSynthesis.getVoices().filter(function(voice) { return (voice.lang == "es-ES") })[0] */
