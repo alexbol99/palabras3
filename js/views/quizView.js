@@ -152,8 +152,33 @@ define(['models/app',
                     />
                 );
 
+                var homeLinkInstance = (
+                    <ReactBootstrap.Button bsStyle='default' block bsSize='xsmall' title="Home" style={{textAlign:"left"}} href={'#'}>
+                        <ReactBootstrap.Glyphicon glyph='home' />&nbsp;&nbsp;Home
+                    </ReactBootstrap.Button>
+                );
+                var dictionaryConfigButtonInstance = (
+                    <ReactBootstrap.Button bsStyle='default' block bsSize='xsmall' title="Home" style={{textAlign:"left"}} href={'#dictionaries/' + this.props.dictionary.id}>
+                        <ReactBootstrap.Glyphicon glyph='cog' /> &nbsp;&nbsp;{this.props.dictionary.get('name')}
+                    </ReactBootstrap.Button>
+                );
+
+                var overToolbarInstance = (
+                    <ReactBootstrap.Grid>
+                        <ReactBootstrap.Row className='show-grid' >
+                            <ReactBootstrap.Col xs={3} md={3}>
+                                        {homeLinkInstance}
+                            </ReactBootstrap.Col>
+                            <ReactBootstrap.Col xs={9} md={9}>
+                                        {dictionaryConfigButtonInstance}
+                            </ReactBootstrap.Col>
+                        </ReactBootstrap.Row>
+                    </ReactBootstrap.Grid>
+                );
+
                 return (
                     <div>
+                        {overToolbarInstance}
                         {toolbarInstance}
                         {mainPanelInstance}
                         {menuInstance}

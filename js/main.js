@@ -12,7 +12,8 @@ require(['models/app','models/quiz', 'collections/dictionaries',
         'jsx!components/confirmPopup',
         'jsx!components/quizToolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
-        'jsx!components/mainPanel', 'jsx!components/menu'],
+        'jsx!components/mainPanel', 'jsx!components/menu',
+        'jsx!components/dictionarySettings'],
     function (app, quiz, dictionaries, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
@@ -24,13 +25,13 @@ require(['models/app','models/quiz', 'collections/dictionaries',
 
             routes: {
                 "": 'home',
-                'dictionaries'                                        : 'dictionariesList',                  // #dictionaries
-                'dictionaries/:dictionaryId'                          : 'dictionarySettings',            // #dictionaries/Class_Alberto_Ru - settings
-                'categories/:dictionary'                              : 'categories',                    // #categories/Class_Alberto_ru
-                'quiz/:dictionary'                                    : 'quizDefault',                   // #quiz/Class_Alberto_ru
-                'quiz/all/:dictionary/(:numWeeksBefore)'              : 'quizAll',                       // #quiz/all/Class_Alberto_ru/2
-                'quiz/selected/:dictionary/(:category)'               : 'quizSelected',                  // #quiz/selected/Class_Alberto_ru/verbos regulares
-                '*default': 'default'
+                'dictionaries'                            : 'dictionariesList',                  // #dictionaries
+                'dictionaries/:dictionaryId'              : 'dictionarySettings',            // #dictionaries/Class_Alberto_Ru - settings
+                'categories/:dictionary'                  : 'categories',                    // #categories/Class_Alberto_ru
+                'quiz/:dictionary'                        : 'quizDefault',                   // #quiz/Class_Alberto_ru
+                'quiz/all/:dictionary/(:numWeeksBefore)'  : 'quizAll',                       // #quiz/all/Class_Alberto_ru/2
+                'quiz/selected/:dictionary/(:category)'   : 'quizSelected',                  // #quiz/selected/Class_Alberto_ru/verbos regulares
+                '*default'                                : 'defaultRoute'
             },
 
             home: function() {
@@ -85,7 +86,7 @@ require(['models/app','models/quiz', 'collections/dictionaries',
                 });
             },
 
-            default : function(params) {
+            defaultRoute : function(params) {
                 console.log("we are here");
             }
 
