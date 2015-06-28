@@ -175,7 +175,7 @@ define(['models/dictionary', 'collections/dictionaries', '../components/confirmP
                         <div className='modal-header'>
                             <h4>My dictionaries</h4>
                         </div>
-                        <div className='modal-body'>
+                        <div className='modal-body' style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
                             {confirmDeletePopupInstance}
 
                             <ReactBootstrap.ListGroup>
