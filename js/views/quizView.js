@@ -82,24 +82,26 @@ define(['models/app',
             render: function () {
 
                 var toolbarInstance = (
-                    <Toolbar categories={this.state.categories}
-                        selectionMode={this.state.selectionMode}
-                        selectedCategoryName={this.state.selectedCategoryName}
-                        selectedCategoryCount={this.state.selectedCategoryCount}
-                        mode={this.state.mode}
-                        sound={this.state.sound}
-                        numWeeksBefore={this.state.numWeeksBefore}
-                        selectedItemId = {this.state.selectedItemId}
-                        autoPlayStarted = {this.state.autoPlayStarted}
-                        onSelectionModeChanged = {this.toggleSelectionMode}
-                        onCategorySelected = {this.setSelectedCategory}
-                        onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
-                        onClickSoundButton = {this.toggleSound}
-                        onClickAddButton = {this.addEmptyItem}
-                        onClickEditButton = {this.toggleEditItem}
-                        onClickShuffleButton = {this.shuffleItems}
-                        onClickAutoPlayButton = {this.togglePlayOrPause}
-                    />
+                    <ReactBootstrap.Panel header={'Dictionary: ' + this.props.dictionary.get('name')} bsStyle='warning'>
+                        <Toolbar categories={this.state.categories}
+                            selectionMode={this.state.selectionMode}
+                            selectedCategoryName={this.state.selectedCategoryName}
+                            selectedCategoryCount={this.state.selectedCategoryCount}
+                            mode={this.state.mode}
+                            sound={this.state.sound}
+                            numWeeksBefore={this.state.numWeeksBefore}
+                            selectedItemId = {this.state.selectedItemId}
+                            autoPlayStarted = {this.state.autoPlayStarted}
+                            onSelectionModeChanged = {this.toggleSelectionMode}
+                            onCategorySelected = {this.setSelectedCategory}
+                            onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
+                            onClickSoundButton = {this.toggleSound}
+                            onClickAddButton = {this.addEmptyItem}
+                            onClickEditButton = {this.toggleEditItem}
+                            onClickShuffleButton = {this.shuffleItems}
+                            onClickAutoPlayButton = {this.togglePlayOrPause}
+                        />
+                    </ReactBootstrap.Panel>
                 );
 
                 var itemsListEditInstance = (
@@ -140,7 +142,7 @@ define(['models/app',
                         selectedCategoryCount={this.state.selectedCategoryCount}
                         numWeeksBefore={this.state.numWeeksBefore}>
 
-                        <div style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
+                        <div style={{height:'68vh', overflowY:'auto', overflowX:'hidden'}}>
                                 {itemsListInstance}
                         </div>
 
@@ -152,33 +154,8 @@ define(['models/app',
                     />
                 );
 
-                var homeLinkInstance = (
-                    <ReactBootstrap.Button bsStyle='default' block bsSize='xsmall' title="Home" style={{textAlign:"left"}} href={'#'}>
-                        <ReactBootstrap.Glyphicon glyph='home' />&nbsp;&nbsp;Home
-                    </ReactBootstrap.Button>
-                );
-                var dictionaryConfigButtonInstance = (
-                    <ReactBootstrap.Button bsStyle='default' block bsSize='xsmall' title="Home" style={{textAlign:"left"}} href={'#dictionaries/' + this.props.dictionary.id}>
-                        <ReactBootstrap.Glyphicon glyph='cog' /> &nbsp;&nbsp;{this.props.dictionary.get('name')}
-                    </ReactBootstrap.Button>
-                );
-
-                var overToolbarInstance = (
-                    <ReactBootstrap.Grid>
-                        <ReactBootstrap.Row className='show-grid' >
-                            <ReactBootstrap.Col xs={3} md={3}>
-                                        {homeLinkInstance}
-                            </ReactBootstrap.Col>
-                            <ReactBootstrap.Col xs={9} md={9}>
-                                        {dictionaryConfigButtonInstance}
-                            </ReactBootstrap.Col>
-                        </ReactBootstrap.Row>
-                    </ReactBootstrap.Grid>
-                );
-
                 return (
                     <div>
-                        {overToolbarInstance}
                         {toolbarInstance}
                         {mainPanelInstance}
                         {menuInstance}

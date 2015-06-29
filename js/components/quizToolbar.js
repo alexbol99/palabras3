@@ -23,6 +23,14 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                     />
                 );
 
+                var buttonHome = (
+                    <ReactBootstrap.ButtonGroup>
+                        <ReactBootstrap.Button bsStyle='primary' bsSize='large' title="Home" href={'#'}>
+                            <ReactBootstrap.Glyphicon glyph='home' />
+                        </ReactBootstrap.Button>
+                    </ReactBootstrap.ButtonGroup>
+                );
+
                 const buttonFilter = (
                     <ReactBootstrap.ButtonGroup>
                         <ReactBootstrap.ModalTrigger modal={itemsFilterPopupInstance}>
@@ -97,18 +105,20 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
                 var buttons;
                 if (this.props.mode == "Edit") {
                     buttons = {
-                        button1: buttonFilter,
-                        button2: buttonSound,
-                        button3: buttonAdd,
-                        button4: buttonEdit
+                        button1: buttonHome,
+                        button2: buttonFilter,
+                        button3: buttonSound,
+                        button4: buttonAdd,
+                        button5: buttonEdit
                     };
                 }
                 else {                 // mode == "Play"
                     buttons = {
-                        button1: buttonFilter,
-                        button2: buttonSound,
-                        button3: buttonShuffle,
-                        button4: buttonPlay
+                        button1: buttonHome,
+                        button2: buttonFilter,
+                        button3: buttonSound,
+                        button4: buttonShuffle,
+                        button5: buttonPlay
                     };
                 }
 

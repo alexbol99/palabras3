@@ -50,10 +50,7 @@ define(['models/dictionary', 'collections/dictionaries'],
                 }, this);
 
                 return (
-                    <ReactBootstrap.Panel>
-                        <div className='modal-header'>
-                            <h4>My dictionaries</h4>
-                        </div>
+                    <ReactBootstrap.Panel header={'My dictionaries'} bsSize='large' bsStyle='warning'>
                         <div className='modal-body' style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
                             <ReactBootstrap.ListGroup>
                                 {list}
