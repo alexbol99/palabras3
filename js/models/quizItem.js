@@ -44,14 +44,31 @@ define([],
                 });
             },
 
-            sayIt: function(language) {
+            sayIt: function(language1, language2) {
                 if ('speechSynthesis' in window) {
                     // Synthesis support. Make your web apps talk!
-                    var msg = new SpeechSynthesisUtterance(this.get(language.get('name')));
-                    msg.lang = language.get('lcid'); 'es-ES';
-                    msg.rate = 0.9; // 0.1 to 10
-                    msg.pitch = 0.9; //0 to 2
-                    window.speechSynthesis.speak(msg);
+                    this.sayItInLanguage(language1);
+                    this.sayItInLanguage(language2);
+                }
+            },
+
+            sayItInLanguage: function(language) {
+                var voices = window.speechSynthesis.getVoices();
+
+                if (language) {
+                    var voice = voices.filter(function (voice) {
+                        return voice.lang == language.get('lcid');
+                    })[0];
+
+                    if (voice) {
+                        var utterance = new SpeechSynthesisUtterance();
+                        utterance.voice = voice;
+                        utterance.text = this.get(language.get('name'));
+                        utterance.lang = language.get('lcid');                 //  'es-ES';
+                        utterance.rate = 0.9; // 0.1 to 10
+                        utterance.pitch = 0.9; //0 to 2
+                        window.speechSynthesis.speak(utterance);
+                    }
                 }
             }
         });

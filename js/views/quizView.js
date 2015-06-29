@@ -306,8 +306,8 @@ define(['models/app',
                 if (this.state.sound == "on") {
                     var id = event.currentTarget.id;
                     var item = _.findWhere(quiz.get("quizItems").models, {"id": id});
-                    var language = this.state.languageOnLeft;
-                    item.sayIt(language);           // "spanish");
+                    // var language = this.state.languageOnLeft;
+                    item.sayIt(this.state.languageOnLeft, this.state.languageOnRight);           // "spanish");
                 }
             },
             // Redirect to external source
@@ -379,7 +379,7 @@ define(['models/app',
 
                     if (this.state.sound == "on") {
                         var language = this.state.languageOnLeft;
-                        itemLeft.sayIt(language);           // "spanish");
+                        itemLeft.sayIt(this.state.languageOnLeft, this.state.languageOnRight);           // "spanish");
                         // itemRight.sayIt("russian");
                     }
 
