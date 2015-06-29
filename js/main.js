@@ -13,6 +13,7 @@ require(['models/app','models/quiz', 'collections/dictionaries',
         'jsx!components/quizToolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
         'jsx!components/mainPanel', 'jsx!components/menu',
+        'jsx!components/dictionariesList',
         'jsx!components/dictionarySettings'],
     function (app, quiz, dictionaries, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
 
