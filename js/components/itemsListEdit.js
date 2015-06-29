@@ -30,6 +30,12 @@ define(['components/confirmPopup'],
             render: function() {
                 var langLeft = this.props.dictionary.get('language1').get('name');   // "spanish";
                 var langRight = this.props.dictionary.get('language2').get('name');  // "russian";
+                var dirLeft = this.props.dictionary.get('language1').get('rtl') ? 'rtl' : 'ltr';
+                var dirRight = this.props.dictionary.get('language2').get('rtl') ? 'rtl' : 'ltr';
+                var textAlignStyleLeft = this.props.dictionary.get('language1').get('rtl') ? 'textAlign:"right"' : 'textAlign:"left"';
+                var textAlignStyleRight = this.props.dictionary.get('language2').get('rtl') ? 'textAlign:"right"' : 'textAlign:"left"';
+                var classLeft = this.props.dictionary.get('language1').get('rtl') ? 'quiz-item-rtl' : 'quiz-item-ltr';
+                var classRight = this.props.dictionary.get('language2').get('rtl') ? 'quiz-item-rtl' : 'quiz-item-ltr';
 
                 var options = this.props.categories.map(function (item) {
                     return (
@@ -66,23 +72,23 @@ define(['components/confirmPopup'],
 
                     var itemLeftInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
-                            <ReactBootstrap.Input bsSize="small"  type="text" defaultValue={item.get(langLeft)}  name={langLeft} id={item.id}
+                            <ReactBootstrap.Input bsSize="small"  type="text" className={classLeft} defaultValue={item.get(langLeft)}  name={langLeft} id={item.id}
                                 autocomplete="off" autocorrect="off" autocapitalize="off" onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
                     ) : (
                         <ReactBootstrap.Col xs={4} md={4}>
-                            <h4>{item.get(langLeft)}</h4>
+                            <h4 className={classLeft}>{item.get(langLeft)}</h4>
                         </ReactBootstrap.Col>
                     );
 
                     var itemRightInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
                         <ReactBootstrap.Col xs={4} md={4}>
-                            <ReactBootstrap.Input bsSize="small" type="text" defaultValue={item.get(langRight)}  name={langRight} id={item.id}
+                            <ReactBootstrap.Input bsSize="small" type="text" className={classRight} defaultValue={item.get(langRight)}  name={langRight} id={item.id}
                                 autocomplete="off" autocorrect="off" autocapitalize="off" onChange={this.props.onItemChanged} />
                         </ReactBootstrap.Col>
                     ) : (
                         <ReactBootstrap.Col xs={4} md={4}>
-                            <h4>{item.get(langRight)}</h4>
+                            <h4 className={classRight}>{item.get(langRight)}</h4>
                         </ReactBootstrap.Col>
                     );
 
