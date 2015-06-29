@@ -30,10 +30,6 @@ define(['components/confirmPopup'],
             render: function() {
                 var langLeft = this.props.dictionary.get('language1').get('name');   // "spanish";
                 var langRight = this.props.dictionary.get('language2').get('name');  // "russian";
-                var dirLeft = this.props.dictionary.get('language1').get('rtl') ? 'rtl' : 'ltr';
-                var dirRight = this.props.dictionary.get('language2').get('rtl') ? 'rtl' : 'ltr';
-                var textAlignStyleLeft = this.props.dictionary.get('language1').get('rtl') ? 'textAlign:"right"' : 'textAlign:"left"';
-                var textAlignStyleRight = this.props.dictionary.get('language2').get('rtl') ? 'textAlign:"right"' : 'textAlign:"left"';
                 var classLeft = this.props.dictionary.get('language1').get('rtl') ? 'quiz-item-rtl' : 'quiz-item-ltr';
                 var classRight = this.props.dictionary.get('language2').get('rtl') ? 'quiz-item-rtl' : 'quiz-item-ltr';
 
