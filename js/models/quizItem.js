@@ -60,15 +60,16 @@ define([],
                         return voice.lang == language.get('lcid');
                     })[0];
 
-                    if (voice) {
-                        var utterance = new SpeechSynthesisUtterance();
+                    var utterance = new SpeechSynthesisUtterance();
+
+                    if (voice) {               // not found on android but still work
                         utterance.voice = voice;
-                        utterance.text = this.get(language.get('name'));
-                        utterance.lang = language.get('lcid');                 //  'es-ES';
-                        utterance.rate = 0.9; // 0.1 to 10
-                        utterance.pitch = 0.9; //0 to 2
-                        window.speechSynthesis.speak(utterance);
                     }
+                    utterance.text = this.get(language.get('name'));
+                    utterance.lang = language.get('lcid');                 //  'es-ES';
+                    utterance.rate = 0.9; // 0.1 to 10
+                    utterance.pitch = 0.9; //0 to 2
+                    window.speechSynthesis.speak(utterance);
                 }
             }
         });
