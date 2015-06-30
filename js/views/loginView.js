@@ -1,23 +1,37 @@
 /**
  * Created by Owner on 2/13/15.
  */
-define(['models/app'],
-    function (app) {
+define(['components/fbLogin'],
+    function (FBLoginComponent) {
         var self;
 
         var LoginView = Backbone.View.extend({
-
-            el: "div#page-main",
-
             initialize: function () {
-                Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
                 self = this;
-            },
+                window.fbAsyncInit = function() {
+                    Parse.FacebookUtils.init({
+                        appId      : '398066583702762',
+                        status     : true,  // check Facebook Login status
+                        cookie     : true,  // enable cookies to allow Parse to access the session
+                        xfbml      : true,  // initialize Facebook social plugins on the page
+                        version    : 'v2.2' // point to the latest Facebook Graph API version
+                    });
 
-            events: {
-                "click #fb-login-button" : "fbLogin"
-            },
+                    // Run code after the Facebook SDK is loaded.
+                    // FacebookLogIn();
+                    self.render();
 
+                    // var loginView = new LoginView();
+                };
+
+                (function(d, s, id){
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+            },
             fbLogin: function() {
                 Parse.FacebookUtils.logIn("user_friends", {
                     success: function(user) {
@@ -35,7 +49,6 @@ define(['models/app'],
                     }
                 });
             },
-
             goOn: function() {
                 var currentUser = Parse.User.current();
                 if (currentUser) {
@@ -46,6 +59,15 @@ define(['models/app'],
                     });
                     // do stuff with the user
                 }
+            },
+            render: function() {
+                var dictionarySettingsComponentInstance = (
+                    <FBLoginComponent
+                        needLogIn={true}
+                        onLoginButtonClicked={this.fbLogin()}
+                    />
+                );
+                React.render(dictionarySettingsComponentInstance, document.getElementById("fb-login"));
             }
 
         });

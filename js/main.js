@@ -5,6 +5,7 @@ require.config({
     urlArgs: "bust=" + (new Date()).getTime()
 });
 require(['models/app','models/quiz', 'collections/dictionaries',
+        'jsx!views/loginView',
         'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettingsView',
         'models/quizItem', 'models/category', 'models/dictionary',
         'collections/categories','collections/quizItems', 'collections/catlist',
@@ -14,8 +15,9 @@ require(['models/app','models/quiz', 'collections/dictionaries',
         'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
         'jsx!components/mainPanel', 'jsx!components/menu',
         'jsx!components/dictionariesList',
-        'jsx!components/dictionarySettings'],
-    function (app, quiz, dictionaries, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
+        'jsx!components/dictionarySettings',
+        'jsx!components/fbLogin'],
+    function (app, quiz, dictionaries, LoginView, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
 
@@ -26,7 +28,7 @@ require(['models/app','models/quiz', 'collections/dictionaries',
 
             routes: {
                 "": 'home',
-                'dictionaries'                            : 'dictionariesList',                  // #dictionaries
+                'dictionaries'                            : 'dictionariesList',              // #dictionaries
                 'dictionaries/:dictionaryId'              : 'dictionarySettings',            // #dictionaries/Class_Alberto_Ru - settings
                 'categories/:dictionary'                  : 'categories',                    // #categories/Class_Alberto_ru
                 'quiz/:dictionary'                        : 'quizDefault',                   // #quiz/Class_Alberto_ru
@@ -36,7 +38,8 @@ require(['models/app','models/quiz', 'collections/dictionaries',
             },
 
             home: function() {
-                var dictionaries = new DictionariesView();
+                var loginView = new LoginView();
+                // var dictionaries = new DictionariesView();
             },
             dictionariesList: function() {
                 var dictionariesView = new DictionariesView();

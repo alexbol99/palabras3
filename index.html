@@ -37,10 +37,14 @@
             bottom:50px;
         }
 
-        #fb-login-button {
+        .fb-login-button-class {
             background-image: url("css/images/fb_login.png");
             background-repeat: no-repeat;
             background-position: center;
+            position: absolute;
+            bottom: 12vh;
+            width: 100%;
+            height: 60px;
         }
 
         /* Overwrite bootstrap styling */
@@ -88,9 +92,16 @@
     </style>
 </head>
 <body>
-    <!--<div id="fb-root" class="fb_reset"></div>-->
+    <div id="fb-root" class="fb_reset"></div>
     <div id="page-main">
         <div id="index-header">
+        </div>
+        <div style="text-align: center">
+            <h3>Create your dictionary</h3>
+            <h3>Learn new words</h3>
+            <h3>Share with your friends</h3>
+        </div>
+        <div id="fb-login">
         </div>
     </div>
     <script src="js/lib/jquery-2.1.3.min.js"></script>
