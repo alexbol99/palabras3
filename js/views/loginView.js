@@ -64,7 +64,7 @@ define(['components/fbLogin'],
                 var dictionarySettingsComponentInstance = (
                     <FBLoginComponent
                         needLogIn={true}
-                        onLoginButtonClicked={this.fbLogin()}
+                        onLoginButtonClicked={this.fbLogin}
                     />
                 );
                 React.render(dictionarySettingsComponentInstance, document.getElementById("fb-login"));
