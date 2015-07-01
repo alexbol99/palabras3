@@ -11,10 +11,9 @@ define(['components/fbLogin'],
                 window.fbAsyncInit = function() {
                     Parse.FacebookUtils.init({
                         appId      : '398066583702762',
-                        status     : true,  // check Facebook Login status
                         cookie     : true,  // enable cookies to allow Parse to access the session
-                        xfbml      : true,  // initialize Facebook social plugins on the page
-                        version    : 'v2.2' // point to the latest Facebook Graph API version
+                        xfbml      : false, // initialize Facebook social plugins on the page - do not check for plugin, not using them
+                        version    : 'v2.3' // point to the latest Facebook Graph API version
                     });
 
                     // Run code after the Facebook SDK is loaded.
