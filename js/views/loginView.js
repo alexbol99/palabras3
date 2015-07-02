@@ -8,6 +8,8 @@ define(['components/fbLogin'],
         var LoginView = Backbone.View.extend({
             initialize: function () {
                 self = this;
+                // fbmodel.on("fbready", this.render);
+
                 window.fbAsyncInit = function() {
                     Parse.FacebookUtils.init({
                         appId      : '398066583702762',
