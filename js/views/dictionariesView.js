@@ -1,13 +1,18 @@
 /**
  * Created by Owner on 6/19/15.
  */
-define(['models/dictionary', 'collections/dictionaries', 'jsx!components/dictionariesList'],
-    function (Dictionary, dictionaries, DictionariesListComponent) {
+define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!components/dictionariesList'],
+    function (fb, Dictionary, dictionaries, DictionariesListComponent) {
         var DictionariesView = Backbone.View.extend({
             initialize: function () {
                 dictionaries.off();
                 dictionaries.on("sync", this.render, this);
                 dictionaries.sync();
+            },
+            logOut: function() {
+                // fb.logout();
+                var link = '#logout';
+                window.location.href = link;
             },
             addNewDictionary: function (event) {
                 var dictionary = Dictionary.prototype.createEmptyDictionary();
@@ -38,9 +43,10 @@ define(['models/dictionary', 'collections/dictionaries', 'jsx!components/diction
                         startQuiz={this.startQuiz}
                         editSettings={this.editSettings}
                         addNewDictionary={this.addNewDictionary}
+                        onLogOutClicked={this.logOut}
                     />
                 );
-                React.render(dictionariesManagerComponentInstance, document.body);
+                React.render(dictionariesManagerComponentInstance, document.getElementById("page-main"));
             }
         });
 

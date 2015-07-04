@@ -1,15 +1,17 @@
 /**
  * Created by alexbol on 7/2/2015.
  */
-define(['models/app'],
-    function (app) {
+define([],
+    function () {
         var self;
         var FBModel = Backbone.Model.extend({
             defaults: {
-                facebook_id: ""
+                initialized: false
             },
             initialize: function () {
                 self = this;
+            },
+            initFacebook: function() {
                 window.fbAsyncInit = function() {
                     Parse.FacebookUtils.init({
                         appId      : '398066583702762',
@@ -20,9 +22,8 @@ define(['models/app'],
 
                     // Run code after the Facebook SDK is loaded.
                     // FacebookLogIn();
-                    self.trigger("fbready");
-                    // self.render();
-                    // var loginView = new LoginView();
+                    self.set('initialized', true);
+                    self.trigger("fbInitialized");
                 };
 
                 (function(d, s, id){
@@ -32,6 +33,53 @@ define(['models/app'],
                     js.src = "//connect.facebook.net/en_US/sdk.js";
                     fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));
+            },
+            auth: function() {
+                var currentUser = Parse.User.current();
+                if (currentUser) {
+                    this.trigger("authenticated");
+                    // this.set('id', currentUser.get("authData").facebook.id);
+                    // FB.api('/' + id, function (response) {
+                        // console.log(response);
+                       // console.log("hello, " + response.name);
+                    // });
+                    // do stuff with the user
+                }
+                else {
+                    if (this.get('initialized')) {
+                        self.trigger("fbInitialized");
+                    }
+                    else {
+                        this.initFacebook();
+                    }
+                }
+            },
+            login: function() {
+                Parse.FacebookUtils.logIn("user_friends", {
+                    success: function(user) {
+                        self.trigger("authenticated");
+                        //if (!user.existed()) {
+                        //    // welcome new user
+                        //    alert("welcome new user!");
+                        //} else {
+                        //    // welcome existing user
+                        //    alert("welcome back!");
+                        //}
+                        //self.goOn();
+                    },
+                    error: function(user, error) {
+                        alert("User cancelled the Facebook login or did not fully authorize.");
+                    }
+                });
+            },
+            logout: function() {
+                Parse.User.logOut();
+            },
+            getId: function() {
+                var currentUser = Parse.User.current();
+                if (currentUser) {
+                    this.set('id', currentUser.get("authData").facebook.id);
+                }
             }
         });
         return new FBModel();

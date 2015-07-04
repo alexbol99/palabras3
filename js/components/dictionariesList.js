@@ -50,22 +50,25 @@ define([],
                 }, this);
 
                 return (
-                    <ReactBootstrap.Panel header={'My dictionaries'} bsSize='large' bsStyle='warning'>
-                        <div className='modal-body' style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
-                            <ReactBootstrap.ListGroup>
-                                {list}
-                            </ReactBootstrap.ListGroup>
+                    <ReactBootstrap.Panel bsSize='large' bsStyle='warning'>
+                        <ReactBootstrap.Button bsStyle='default' bsSize='small' title="Logout" onClick={this.props.onLogOutClicked}>Log out</ReactBootstrap.Button>
+                        <ReactBootstrap.Panel header={'My dictionaries'} bsSize='large' bsStyle='warning'>
+                            <div className='modal-body' style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
+                                <ReactBootstrap.ListGroup>
+                                    {list}
+                                </ReactBootstrap.ListGroup>
 
-                        </div>
-                        <div className='modal-footer'>
-                            <ReactBootstrap.ButtonGroup style={{width:"100%"}}>
-                                <ReactBootstrap.Button bsStyle='info' bsSize='large' block title="Add new dictionary" style={{textAlign:"left"}} onClick={this.props.addNewDictionary}>
-                                    <ReactBootstrap.Glyphicon glyph='plus-sign' style={{fontSize: "1.4em"}} />
-                                &nbsp;&nbsp;
-                                    Add new dictionary
-                                </ReactBootstrap.Button>
-                            </ReactBootstrap.ButtonGroup>
-                        </div>
+                            </div>
+                            <div className='modal-footer'>
+                                <ReactBootstrap.ButtonGroup style={{width:"100%"}}>
+                                    <ReactBootstrap.Button bsStyle='info' bsSize='large' block title="Add new dictionary" style={{textAlign:"left"}} onClick={this.props.addNewDictionary}>
+                                        <ReactBootstrap.Glyphicon glyph='plus-sign' style={{fontSize: "1.4em"}} />
+                                    &nbsp;&nbsp;
+                                        Add new dictionary
+                                    </ReactBootstrap.Button>
+                                </ReactBootstrap.ButtonGroup>
+                            </div>
+                        </ReactBootstrap.Panel>
                     </ReactBootstrap.Panel>
                 );
             }

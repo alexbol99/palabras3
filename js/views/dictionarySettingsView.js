@@ -51,7 +51,7 @@ define(['models/app', 'models/dictionary', 'collections/dictionaries', 'collecti
                         deleteDictionary = {this.deleteDictionary}
                     />
                 );
-                React.render(dictionarySettingsComponentInstance, document.body);
+                React.render(dictionarySettingsComponentInstance, document.getElementById("page-main"));
             }
         });
 

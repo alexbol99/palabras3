@@ -4,9 +4,8 @@
 require.config({
     urlArgs: "bust=" + (new Date()).getTime()
 });
-require(['models/app','models/quiz', 'collections/dictionaries',
-        'jsx!views/loginView',
-        'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettingsView',
+require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
+        'jsx!views/loginView', 'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettingsView',
         'models/quizItem', 'models/category', 'models/dictionary',
         'collections/categories','collections/quizItems', 'collections/catlist',
         'collections/languages',
@@ -17,7 +16,7 @@ require(['models/app','models/quiz', 'collections/dictionaries',
         'jsx!components/dictionariesList',
         'jsx!components/dictionarySettings',
         'jsx!components/fbLogin'],
-    function (app, quiz, dictionaries, LoginView, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
+    function (fb, app, quiz, dictionaries, LoginView, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
 
@@ -28,6 +27,7 @@ require(['models/app','models/quiz', 'collections/dictionaries',
 
             routes: {
                 "": 'home',
+                'logout'                                  : 'logOut',                        // #logOut
                 'dictionaries'                            : 'dictionariesList',              // #dictionaries
                 'dictionaries/:dictionaryId'              : 'dictionarySettings',            // #dictionaries/Class_Alberto_Ru - settings
                 'categories/:dictionary'                  : 'categories',                    // #categories/Class_Alberto_ru
@@ -38,56 +38,87 @@ require(['models/app','models/quiz', 'collections/dictionaries',
             },
 
             home: function() {
-                var loginView = new LoginView();
-                // var dictionaries = new DictionariesView();
+                // var loginView = new LoginView();
+                fb.on("authenticated", function() {
+                    fb.off("authenticated");
+                    var dictionaries = new DictionariesView();
+                }, this);
+                fb.auth();
+            },
+            logOut: function() {
+                fb.logout();
+                window.location.href = '#';
             },
             dictionariesList: function() {
-                var dictionariesView = new DictionariesView();
+                fb.on("authenticated", function() {
+                    fb.off("authenticated");
+                    var dictionariesView = new DictionariesView();
+                }, this);
+                fb.auth();
             },
             dictionarySettings: function(dictionaryId) {
-                dictionaries.find(dictionaryId).then( function(dictionary) {
-                    var settingsView = new DictionarySettingsView(dictionary);
-                });
+                fb.on("authenticated", function() {
+                    fb.off("authenticated");
+                    dictionaries.find(dictionaryId).then(function (dictionary) {
+                        var settingsView = new DictionarySettingsView(dictionary);
+                    });
+                }, this);
+                fb.auth();
             },
             categories: function(dictionaryId) {
-                dictionaries.find(dictionaryId).then( function(dictionary) {
-                    app.setDictionary(dictionary);
-                    var categoriesView = new CategoriesView();
-                });
+                fb.on("authenticated", function() {
+                    fb.off("authenticated");
+                    dictionaries.find(dictionaryId).then(function (dictionary) {
+                        app.setDictionary(dictionary);
+                        var categoriesView = new CategoriesView();
+                    });
+                }, this);
+                fb.auth();
             },
 
             quizDefault: function(dictionaryId) {
-                dictionaries.find(dictionaryId).then( function(dictionary) {
-                    app.setDictionary(dictionary);
-                    /* temporary: start in "all" mode, do not keep category in storage */
-                    quiz.set({
-                        selectionMode: "all",
-                        numWeeksBefore: 2
+                fb.on("authenticated", function() {
+                    dictionaries.find(dictionaryId).then(function (dictionary) {
+                        app.setDictionary(dictionary);
+                        /* temporary: start in "all" mode, do not keep category in storage */
+                        quiz.set({
+                            selectionMode: "all",
+                            numWeeksBefore: 2
+                        });
+                        // quiz.restoreState();
+                        var quizView = new QuizView();
                     });
-                    // quiz.restoreState();
-                    var quizView = new QuizView();
-                });
+                }, this);
+                fb.auth();
             },
             quizAll: function(dictionaryId, numWeeksBefore) {
-                dictionaries.find(dictionaryId).then( function(dictionary) {
-                    app.setDictionary(dictionary);
-                    quiz.set({
-                        selectionMode: "all",
-                        numWeeksBefore: numWeeksBefore
+                fb.on("authenticated", function() {
+                    fb.off("authenticated");
+                    dictionaries.find(dictionaryId).then(function (dictionary) {
+                        app.setDictionary(dictionary);
+                        quiz.set({
+                            selectionMode: "all",
+                            numWeeksBefore: numWeeksBefore
+                        });
+                        var quizView = new QuizView();
                     });
-                    var quizView = new QuizView();
-                });
+                }, this);
+                fb.auth();
             },
 
             quizSelected: function(dictionaryId, category) {
-                dictionaries.find(dictionaryId).then( function(dictionary) {
-                    app.setDictionary(dictionary);
-                    quiz.set({
-                        selectionMode: "selected",
-                        selectedCategory: category || ''
+                fb.on("authenticated", function() {
+                    fb.off("authenticated");
+                    dictionaries.find(dictionaryId).then(function (dictionary) {
+                        app.setDictionary(dictionary);
+                        quiz.set({
+                            selectionMode: "selected",
+                            selectedCategory: category || ''
+                        });
+                        var quizView = new QuizView();
                     });
-                    var quizView = new QuizView();
-                });
+                }, this);
+                fb.auth();
             },
 
             defaultRoute : function(params) {

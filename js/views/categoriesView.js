@@ -229,7 +229,7 @@ define(['models/quiz', 'models/quizItem', 'models/category', 'collections/catlis
                         hidePopup={this.hidePopup}
                     />
                 );
-                React.render(categoriesManagerComponentInstance, document.body);
+                React.render(categoriesManagerComponentInstance, document.getElementById("page-main"));
             }
         });
 

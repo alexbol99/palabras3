@@ -514,7 +514,7 @@ define(['models/app',
                         dictionary = {app.get('currentDictionary')}
                     />
                 );
-                React.render(guizComponentInstance, document.body);
+                React.render(guizComponentInstance, document.getElementById("page-main"));
             }
         });
 

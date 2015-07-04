@@ -1,81 +1,61 @@
 /**
  * Created by Owner on 2/13/15.
  */
-define(['components/fbLogin'],
-    function (FBLoginComponent) {
+define(['models/fb', 'components/fbLogin'],
+    function (fb, FBLoginComponent) {
         var self;
 
         var LoginView = Backbone.View.extend({
             initialize: function () {
                 self = this;
-                // fbmodel.on("fbready", this.render);
-
-                window.fbAsyncInit = function() {
-                    Parse.FacebookUtils.init({
-                        appId      : '398066583702762',
-                        cookie     : true,  // enable cookies to allow Parse to access the session
-                        xfbml      : false, // initialize Facebook social plugins on the page - do not check for plugin, not using them
-                        version    : 'v2.3' // point to the latest Facebook Graph API version
-                    });
-
-                    // Run code after the Facebook SDK is loaded.
-                    // FacebookLogIn();
-                    self.render();
-
-                    // var loginView = new LoginView();
-                };
-
-                (function(d, s, id){
-                    var js, fjs = d.getElementsByTagName(s)[0];
-                    if (d.getElementById(id)) {return;}
-                    js = d.createElement(s); js.id = id;
-                    js.src = "//connect.facebook.net/en_US/sdk.js";
-                    fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));
+                fb.on('fbInitialized', this.render, this);
             },
             fbLogin: function() {
-                Parse.FacebookUtils.logIn("user_friends", {
-                    success: function(user) {
-                        if (!user.existed()) {
-                            // welcome new user
-                            alert("welcome new user!");
-                        } else {
-                            // welcome existing user
-                            alert("welcome back!");
-                        }
-                        self.goOn();
-                    },
-                    error: function(user, error) {
-                        alert("User cancelled the Facebook login or did not fully authorize.");
-                    }
-                });
-            },
-            goOn: function() {
-                var currentUser = Parse.User.current();
-                if (currentUser) {
-                    var id = currentUser.get("authData").facebook.id;
-                    FB.api('/' + id, function (response) {
-                        // console.log(response);
-                        console.log("hello, " + response.name);
-                    });
-                    // do stuff with the user
-                }
+                fb.login();
             },
             render: function() {
-                var dictionarySettingsComponentInstance = (
-                    <FBLoginComponent
-                        needLogIn={true}
-                        onLoginButtonClicked={this.fbLogin}
-                    />
+                var loginViewInstance = (
+                    <div>
+                        <div id="index-header">
+                        </div>
+                        <div style={{textAlign: "center"}}>
+                            <h3>Create your dictionary</h3>
+                            <h3>Learn new words</h3>
+                            <h3>Share with your friends</h3>
+                        </div>
+                        <FBLoginComponent
+                            needLogIn={true}
+                            onLoginButtonClicked={this.fbLogin}
+                        />
+                    </div>
                 );
-                React.render(dictionarySettingsComponentInstance, document.getElementById("fb-login"));
+                React.render(loginViewInstance, document.getElementById("page-main"));
             }
 
         });
-        return LoginView;
+        return new LoginView();
     });
 
 /*
+ <div id="fb-login">
+ <FBLoginComponent
+ needLogIn={true}
+ onLoginButtonClicked={this.fbLogin}
+ />
+ </div>
+
+ ,
+ goOn: function() {
+ //var currentUser = Parse.User.current();
+ //if (currentUser) {
+ //    var id = currentUser.get("authData").facebook.id;
+ //    FB.api('/' + id, function (response) {
+ //        // console.log(response);
+ //        console.log("hello, " + response.name);
+ //    });
+ //    // do stuff with the user
+ //}
+ },
 function FacebookLogIn() {
     var currentUser = null; //Parse.User.current();
 
