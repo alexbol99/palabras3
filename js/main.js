@@ -2,7 +2,7 @@
  * Created by alexbol on 1/8/2015.
  */
 require.config({
-    urlArgs: "bust=" + (new Date()).getTime()
+    /*urlArgs: "bust=" + (new Date()).getTime()*/
 });
 require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
         'jsx!views/loginView', 'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettingsView',
@@ -39,8 +39,7 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
 
             home: function() {
                 // var loginView = new LoginView();
-                fb.on("authenticated", function() {
-                    fb.off("authenticated");
+                fb.once("authenticated", function() {
                     var dictionaries = new DictionariesView();
                 }, this);
                 fb.auth();
@@ -50,15 +49,13 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
                 window.location.href = '#';
             },
             dictionariesList: function() {
-                fb.on("authenticated", function() {
-                    fb.off("authenticated");
+                fb.once("authenticated", function() {
                     var dictionariesView = new DictionariesView();
                 }, this);
                 fb.auth();
             },
             dictionarySettings: function(dictionaryId) {
-                fb.on("authenticated", function() {
-                    fb.off("authenticated");
+                fb.once("authenticated", function() {
                     dictionaries.find(dictionaryId).then(function (dictionary) {
                         var settingsView = new DictionarySettingsView(dictionary);
                     });
@@ -66,8 +63,7 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
                 fb.auth();
             },
             categories: function(dictionaryId) {
-                fb.on("authenticated", function() {
-                    fb.off("authenticated");
+                fb.once("authenticated", function() {
                     dictionaries.find(dictionaryId).then(function (dictionary) {
                         app.setDictionary(dictionary);
                         var categoriesView = new CategoriesView();
@@ -77,7 +73,7 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
             },
 
             quizDefault: function(dictionaryId) {
-                fb.on("authenticated", function() {
+                fb.once("authenticated", function() {
                     dictionaries.find(dictionaryId).then(function (dictionary) {
                         app.setDictionary(dictionary);
                         /* temporary: start in "all" mode, do not keep category in storage */
@@ -92,8 +88,7 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
                 fb.auth();
             },
             quizAll: function(dictionaryId, numWeeksBefore) {
-                fb.on("authenticated", function() {
-                    fb.off("authenticated");
+                fb.once("authenticated", function() {
                     dictionaries.find(dictionaryId).then(function (dictionary) {
                         app.setDictionary(dictionary);
                         quiz.set({
@@ -107,8 +102,7 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
             },
 
             quizSelected: function(dictionaryId, category) {
-                fb.on("authenticated", function() {
-                    fb.off("authenticated");
+                fb.once("authenticated", function() {
                     dictionaries.find(dictionaryId).then(function (dictionary) {
                         app.setDictionary(dictionary);
                         quiz.set({

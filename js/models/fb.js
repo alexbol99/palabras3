@@ -58,14 +58,6 @@ define([],
                 Parse.FacebookUtils.logIn("user_friends", {
                     success: function(user) {
                         self.trigger("authenticated");
-                        //if (!user.existed()) {
-                        //    // welcome new user
-                        //    alert("welcome new user!");
-                        //} else {
-                        //    // welcome existing user
-                        //    alert("welcome back!");
-                        //}
-                        //self.goOn();
                     },
                     error: function(user, error) {
                         alert("User cancelled the Facebook login or did not fully authorize.");

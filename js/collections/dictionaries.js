@@ -3,6 +3,7 @@
  */
 define(['models/dictionary'],
     function (Dictionary) {
+        var self;
         var Dictionaries = Parse.Collection.extend({
             model: "Dictionaries",
             /*query: new Parse.Query(Category),*/
@@ -10,14 +11,40 @@ define(['models/dictionary'],
             //    return model.get('category');
             //},
             initialize: function() {
+                self = this;
                 // this.query = new Parse.Query(Category);
             },
 
             sync: function() {
+                var user = Parse.User.current();
+
                 this.query = new Parse.Query(Dictionary)
+                    .equalTo("createdBy", user)
                     .include('language1')
-                    .include('language2');
-                this.fetch({reset: true})
+                    .include('language2')
+                    .include('createdBy');
+
+                var sharedWithMeQuery = new Parse.Query('Share')
+                    .equalTo("user", user)
+                    .include("dictionary")
+                    .select("dictionary");
+
+                this.reset();
+
+                this.query.find(function (resp) {
+                    console.log(resp);
+                    self.add(resp);
+                }).then(
+                    function() {
+                        return  sharedWithMeQuery.find(function (respArr) {
+                            respArr.forEach(function (resp) {
+                                console.log(resp.get('dictionary'));
+                                self.add(resp.get('dictionary'));
+                            });
+
+                            self.trigger('sync');
+                        });
+                    });
 
             },
             find: function(id) {

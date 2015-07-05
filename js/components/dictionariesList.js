@@ -21,6 +21,8 @@ define([],
 
             render() {
                 var list = this.props.dictionaries.map(function (dictionary) {
+                    dictionary = dictionary.get('dictionary') || dictionary;
+
                     var bsStyle = 'info';
 
                     var buttonSettingsInstance = (
