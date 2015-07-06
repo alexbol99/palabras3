@@ -18,6 +18,9 @@ define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!compo
                 var dictionary = Dictionary.prototype.createEmptyDictionary();
                 // set createdBy user attribute
                 // then redirect to edit properties page
+                dictionary.set({
+                    "createdBy": fb.currentUser()
+                });
                 dictionary.save().then(function (dictionary) {
                     dictionaries.addDictionary(dictionary);      // add to the collection
                     var link = '#dictionaries/' + dictionary.id;
@@ -36,12 +39,16 @@ define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!compo
                 var link = '#dictionaries/' + event.currentTarget.id;
                 window.location.href = link;
             },
+            shareDictionary: function(event) {
+                fb.share(event.currentTarget.id);
+            },
             render: function () {
                 var dictionariesManagerComponentInstance = (
                     <DictionariesListComponent
                         dictionaries={dictionaries}
                         startQuiz={this.startQuiz}
-                        editSettings={this.editSettings}
+                        onEditSettingsClicked={this.editSettings}
+                        onShareDictionaryClicked={this.shareDictionary}
                         addNewDictionary={this.addNewDictionary}
                         onLogOutClicked={this.logOut}
                     />

@@ -8,7 +8,7 @@ define(['models/fb', 'components/fbLogin'],
         var LoginView = Backbone.View.extend({
             initialize: function () {
                 self = this;
-                fb.on('fbInitialized', this.render, this);
+                fb.once('fbInitialized', this.render, this);
             },
             fbLogin: function() {
                 fb.login();

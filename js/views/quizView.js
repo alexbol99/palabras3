@@ -82,26 +82,24 @@ define(['models/app',
             render: function () {
 
                 var toolbarInstance = (
-                    <ReactBootstrap.Panel header={'Dictionary: ' + this.props.dictionary.get('name')} bsStyle='warning'>
-                        <Toolbar categories={this.state.categories}
-                            selectionMode={this.state.selectionMode}
-                            selectedCategoryName={this.state.selectedCategoryName}
-                            selectedCategoryCount={this.state.selectedCategoryCount}
-                            mode={this.state.mode}
-                            sound={this.state.sound}
-                            numWeeksBefore={this.state.numWeeksBefore}
-                            selectedItemId = {this.state.selectedItemId}
-                            autoPlayStarted = {this.state.autoPlayStarted}
-                            onSelectionModeChanged = {this.toggleSelectionMode}
-                            onCategorySelected = {this.setSelectedCategory}
-                            onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
-                            onClickSoundButton = {this.toggleSound}
-                            onClickAddButton = {this.addEmptyItem}
-                            onClickEditButton = {this.toggleEditItem}
-                            onClickShuffleButton = {this.shuffleItems}
-                            onClickAutoPlayButton = {this.togglePlayOrPause}
-                        />
-                    </ReactBootstrap.Panel>
+                    <Toolbar categories={this.state.categories}
+                        selectionMode={this.state.selectionMode}
+                        selectedCategoryName={this.state.selectedCategoryName}
+                        selectedCategoryCount={this.state.selectedCategoryCount}
+                        mode={this.state.mode}
+                        sound={this.state.sound}
+                        numWeeksBefore={this.state.numWeeksBefore}
+                        selectedItemId = {this.state.selectedItemId}
+                        autoPlayStarted = {this.state.autoPlayStarted}
+                        onSelectionModeChanged = {this.toggleSelectionMode}
+                        onCategorySelected = {this.setSelectedCategory}
+                        onNumWeeksBeforeChanged = {this.setNumWeeksBefore}
+                        onClickSoundButton = {this.toggleSound}
+                        onClickAddButton = {this.addEmptyItem}
+                        onClickEditButton = {this.toggleEditItem}
+                        onClickShuffleButton = {this.shuffleItems}
+                        onClickAutoPlayButton = {this.togglePlayOrPause}
+                    />
                 );
 
                 var itemsListEditInstance = (
@@ -136,13 +134,14 @@ define(['models/app',
 
                 var mainPanelInstance = (
                     <MainPanel
+                        dictionary={this.props.dictionary}
                         mode={this.state.mode}
                         selectionMode={this.state.selectionMode}
                         selectedCategoryName={this.state.selectedCategoryName}
                         selectedCategoryCount={this.state.selectedCategoryCount}
                         numWeeksBefore={this.state.numWeeksBefore}>
 
-                        <div style={{height:'68vh', overflowY:'auto', overflowX:'hidden'}}>
+                        <div style={{height:'75vh', overflowY:'auto', overflowX:'hidden'}}>
                                 {itemsListInstance}
                         </div>
 

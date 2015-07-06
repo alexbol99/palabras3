@@ -5,14 +5,14 @@ define(['components/menu'],
     function (Menu) {
         var MainPanel = React.createClass({
             render: function () {
-                var selectedTitle = this.props.selectionMode == "all" ?
-                    "All new words in last " + this.props.numWeeksBefore + " weeks" :
-                    this.props.selectedCategoryName;
+                var selectedTitle = this.props.dictionary.get('name').substr(0,23) + ' > ';
+                selectedTitle += this.props.selectionMode == "all" ?
+                    this.props.numWeeksBefore + " weeks" : this.props.selectedCategoryName.substr(0,15);
 
                 var header = (
-                    <div>
+                    <h6>
                         {selectedTitle}   <ReactBootstrap.Badge>{this.props.selectedCategoryCount}</ReactBootstrap.Badge>
-                    </div>
+                    </h6>
                 );
 
                 const panelInstance = (
@@ -26,6 +26,7 @@ define(['components/menu'],
 
         return MainPanel;
     });
+/* "All new words in last " + */
 /*
 <div className="text-right" >
     <ReactBootstrap.Button bsStyle='primary' bsSize='medium' onClick={this.sort}>

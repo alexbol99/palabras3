@@ -25,25 +25,34 @@ define([],
 
                     var bsStyle = 'info';
 
+                    var dictionaryInstance = (
+                        <h4 id={dictionary.id} onClick={this.props.startQuiz}>{dictionary.get('name')}</h4>
+                    );
+
                     var buttonSettingsInstance = (
-                        <span id={dictionary.id} onClick={this.props.editSettings}>
+                        <span id={dictionary.id} onClick={this.props.onEditSettingsClicked}>
                             <ReactBootstrap.Glyphicon glyph='cog' title="settings" style={{fontSize: "1.4em"}} />
                         </span>
                     );
 
-                    var dictionaryInstance = (
-                        <h4 id={dictionary.id} onClick={this.props.startQuiz}>{dictionary.get('name')}</h4>
+                    var buttonShareInstance = (
+                        <span id={dictionary.id} onClick={this.props.onShareDictionaryClicked}>
+                            <ReactBootstrap.Glyphicon glyph='share' title="settings" style={{fontSize: "1.4em"}} />
+                        </span>
                     );
 
                     return (
                         <ReactBootstrap.ListGroupItem bsStyle={bsStyle} key={dictionary.cid} >
                             <ReactBootstrap.Grid>
                                 <ReactBootstrap.Row className='show-grid' id={dictionary.id} >
-                                    <ReactBootstrap.Col xs={10} md={10}>
+                                    <ReactBootstrap.Col xs={8} md={8}>
                                         {dictionaryInstance}
                                     </ReactBootstrap.Col>
                                     <ReactBootstrap.Col xs={2} md={2}>
                                         {buttonSettingsInstance}
+                                    </ReactBootstrap.Col>
+                                    <ReactBootstrap.Col xs={2} md={2}>
+                                        {buttonShareInstance}
                                     </ReactBootstrap.Col>
                                 </ReactBootstrap.Row>
                             </ReactBootstrap.Grid>

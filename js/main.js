@@ -5,6 +5,7 @@ require.config({
     /*urlArgs: "bust=" + (new Date()).getTime()*/
 });
 require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
+        'models/share',
         'jsx!views/loginView', 'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettingsView',
         'models/quizItem', 'models/category', 'models/dictionary',
         'collections/categories','collections/quizItems', 'collections/catlist',
@@ -16,7 +17,7 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
         'jsx!components/dictionariesList',
         'jsx!components/dictionarySettings',
         'jsx!components/fbLogin'],
-    function (fb, app, quiz, dictionaries, LoginView, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
+    function (fb, app, quiz, dictionaries, Share, LoginView, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
 
@@ -27,14 +28,15 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
 
             routes: {
                 "": 'home',
-                'logout'                                  : 'logOut',                        // #logOut
-                'dictionaries'                            : 'dictionariesList',              // #dictionaries
-                'dictionaries/:dictionaryId'              : 'dictionarySettings',            // #dictionaries/Class_Alberto_Ru - settings
-                'categories/:dictionary'                  : 'categories',                    // #categories/Class_Alberto_ru
-                'quiz/:dictionary'                        : 'quizDefault',                   // #quiz/Class_Alberto_ru
-                'quiz/all/:dictionary/(:numWeeksBefore)'  : 'quizAll',                       // #quiz/all/Class_Alberto_ru/2
-                'quiz/selected/:dictionary/(:category)'   : 'quizSelected',                  // #quiz/selected/Class_Alberto_ru/verbos regulares
-                '*default'                                : 'defaultRoute'
+                'logout'                                    : 'logOut',                        // #logOut
+                'dictionaries'                              : 'dictionariesList',              // #dictionaries
+                'dictionaries/:dictionaryId'                : 'dictionarySettings',            // #dictionaries/zqJ2qURY8o - settings
+                'share/:dictionaryId'                       : 'dictionaryShare',               // #dictionaries/share/zqJ2qURY8o
+                'categories/:dictionaryId'                  : 'categories',                    // #categories/zqJ2qURY8o
+                'quiz/:dictionaryId'                        : 'quizDefault',                   // #quiz/zqJ2qURY8o
+                'quiz/all/:dictionaryId/(:numWeeksBefore)'  : 'quizAll',                       // #quiz/all/zqJ2qURY8o/2
+                'quiz/selected/:dictionaryId/(:category)'   : 'quizSelected',                  // #quiz/selected/zqJ2qURY8o/verbos regulares
+                '*default'                                  : 'defaultRoute'
             },
 
             home: function() {
@@ -51,6 +53,20 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
             dictionariesList: function() {
                 fb.once("authenticated", function() {
                     var dictionariesView = new DictionariesView();
+                }, this);
+                fb.auth();
+            },
+            /* request to shared dictionary, save and redirect */
+            dictionaryShare: function(dictionaryId) {
+                fb.once("authenticated", function() {
+                    dictionaries.find(dictionaryId).then(function (dictionary) {
+                        var share = new Share();
+                        share.set({
+                            user: fb.currentUser(),
+                            dictionary: dictionary
+                        });
+                        Share.prototype.saveUnique(share);   // will cause redirect after save
+                    });
                 }, this);
                 fb.auth();
             },
