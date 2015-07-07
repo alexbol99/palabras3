@@ -48,16 +48,13 @@ define([],
                 var currentUser = Parse.User.current();
                 if (currentUser) {
                     this.trigger("authenticated");
-                    // do stuff with the user
                 }
                 else {
+                    this.off('fbInitialized');
+                    this.once('fbInitialized', function() {
+                        self.trigger("raiseLoginPopup");
+                    }, this);
                     this.initFacebook();
-                    //if (this.get('initialized')) {
-                    //    self.trigger("fbInitialized");
-                    //}
-                    //else {
-                    //    this.initFacebook();
-                    //}
                 }
             },
             login: function() {

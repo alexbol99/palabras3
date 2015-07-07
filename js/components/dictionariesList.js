@@ -80,18 +80,18 @@ define([],
                                 </ReactBootstrap.Col>
 
                                 <ReactBootstrap.Col xs={6} md={6}>
-                                    {this.state.name}
+                                    <h5>{this.state.name}</h5>
                                 </ReactBootstrap.Col>
 
                                 <ReactBootstrap.Col xs={3} md={3}>
-                                    <ReactBootstrap.Button bsStyle='default' bsSize='small' title="Logout" onClick={this.props.onLogOutClicked}>Log out</ReactBootstrap.Button>
+                                    <ReactBootstrap.Button bsStyle='default' bsSize='small' title="Logout" href="#logout">Log out</ReactBootstrap.Button>
                                 </ReactBootstrap.Col>
 
                             </ReactBootstrap.Row>
                         </ReactBootstrap.Grid>
 
                         <ReactBootstrap.Panel header={'My dictionaries'} bsSize='large' bsStyle='warning'>
-                            <div className='modal-body' style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
+                            <div className='modal-body' style={{height:'64vh', overflowY:'auto', overflowX:'hidden'}}>
                                 <ReactBootstrap.ListGroup>
                                     {list}
                                 </ReactBootstrap.ListGroup>

@@ -21,6 +21,10 @@ define(['models/fb'],
                 share.destroy();
             },
             saveUnique: function(share) {
+                // do not add to shared is dictionary crated by current user
+                if (fb.currentUser() && fb.currentUser() == share.get('dictionary').get('createdBy'))
+                    return;
+
                 var query = new Parse.Query(Share)
                     .equalTo('user', share.get('user'))
                     .equalTo('dictionary', share.get('dictionary'));

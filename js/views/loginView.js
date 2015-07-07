@@ -8,7 +8,7 @@ define(['models/fb', 'components/fbLogin'],
         var LoginView = Backbone.View.extend({
             initialize: function () {
                 self = this;
-                fb.once('fbInitialized', this.render, this);
+                fb.on('raiseLoginPopup', this.render, this);
             },
             fbLogin: function() {
                 fb.login();
@@ -35,61 +35,3 @@ define(['models/fb', 'components/fbLogin'],
         });
         return new LoginView();
     });
-
-/*
- <div id="fb-login">
- <FBLoginComponent
- needLogIn={true}
- onLoginButtonClicked={this.fbLogin}
- />
- </div>
-
- ,
- goOn: function() {
- //var currentUser = Parse.User.current();
- //if (currentUser) {
- //    var id = currentUser.get("authData").facebook.id;
- //    FB.api('/' + id, function (response) {
- //        // console.log(response);
- //        console.log("hello, " + response.name);
- //    });
- //    // do stuff with the user
- //}
- },
-function FacebookLogIn() {
-    var currentUser = null; //Parse.User.current();
-
-    if (currentUser) {
-        goOn();
-    }
-    else {
-        Parse.FacebookUtils.logIn("user_friends", {
-            success: function(user) {
-                if (!user.existed()) {
-                    // welcome new user
-                    alert("welcome new user!");
-                } else {
-                    // welcome existing user
-                    alert("welcome back!");
-                }
-                goOn();
-            },
-            error: function(user, error) {
-                alert("User cancelled the Facebook login or did not fully authorize.");
-            }
-        });
-    }
-}
-
-function goOn() {
-    var currentUser = Parse.User.current();
-    if (currentUser) {
-        var id = currentUser.get("authData").facebook.id;
-        FB.api('/' + id, function(response) {
-            // console.log(response);
-            alert("hello, " + response.name);
-        });
-        // do stuff with the user
-    }
-}
-*/

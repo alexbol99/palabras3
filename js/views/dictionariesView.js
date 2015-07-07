@@ -9,11 +9,11 @@ define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!compo
                 dictionaries.on("sync", this.render, this);
                 dictionaries.sync();
             },
-            logOut: function() {
-                // fb.logout();
-                var link = '#logout';
-                window.location.href = link;
-            },
+            //logOut: function() {
+            //    // fb.logout();
+            //    var link = '#logout';
+            //    window.location.href = link;
+            //},
             addNewDictionary: function (event) {
                 var dictionary = Dictionary.prototype.createEmptyDictionary();
                 // set createdBy user attribute
@@ -51,7 +51,6 @@ define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!compo
                         onEditSettingsClicked={this.editSettings}
                         onShareDictionaryClicked={this.shareDictionary}
                         addNewDictionary={this.addNewDictionary}
-                        onLogOutClicked={this.logOut}
                         observe={fb}
                     />
                 );
