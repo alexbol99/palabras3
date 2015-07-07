@@ -7,18 +7,27 @@ define([],
         var DictionariesListComponent = React.createClass({
             getInitialState: function() {
                 return {
-                    // dictionaries: dictionaries
+                    fb: null,
+                    name: "",
+                    picture: ""
                 }
             },
             componentDidMount: function() {
-                //dictionaries.off();
-                //dictionaries.on("sync", function() {
-                //    this.setState({
-                //        dictionaries: dictionaries
-                //    });
-                //}, this);
+                var fb = this.props.observe;
+                this.setState({
+                    fb: fb,
+                    name: fb.get("name"),
+                    picture: fb.get("picture")
+                },function() {
+                        this.state.fb.on("change:name change:picture", function () {
+                            this.setState({
+                                name: this.state.fb.get("name"),
+                                picture: this.state.fb.get("picture")
+                            })
+                        }, this);
+                    }
+                );
             },
-
             render() {
                 var list = this.props.dictionaries.map(function (dictionary) {
                     dictionary = dictionary.get('dictionary') || dictionary;
@@ -62,7 +71,25 @@ define([],
 
                 return (
                     <ReactBootstrap.Panel bsSize='large' bsStyle='warning'>
-                        <ReactBootstrap.Button bsStyle='default' bsSize='small' title="Logout" onClick={this.props.onLogOutClicked}>Log out</ReactBootstrap.Button>
+
+                        <ReactBootstrap.Grid>
+                            <ReactBootstrap.Row className='show-grid'>
+
+                                <ReactBootstrap.Col xs={3} md={3}>
+                                    <img src={this.state.picture} title="userpic" alt="userpic" className="img-circle"/>
+                                </ReactBootstrap.Col>
+
+                                <ReactBootstrap.Col xs={6} md={6}>
+                                    {this.state.name}
+                                </ReactBootstrap.Col>
+
+                                <ReactBootstrap.Col xs={3} md={3}>
+                                    <ReactBootstrap.Button bsStyle='default' bsSize='small' title="Logout" onClick={this.props.onLogOutClicked}>Log out</ReactBootstrap.Button>
+                                </ReactBootstrap.Col>
+
+                            </ReactBootstrap.Row>
+                        </ReactBootstrap.Grid>
+
                         <ReactBootstrap.Panel header={'My dictionaries'} bsSize='large' bsStyle='warning'>
                             <div className='modal-body' style={{height:'72vh', overflowY:'auto', overflowX:'hidden'}}>
                                 <ReactBootstrap.ListGroup>

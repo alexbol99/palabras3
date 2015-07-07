@@ -14,8 +14,12 @@ define(['collections/dictionaries', 'models/quizItem', 'models/category'],
                 }, false);
             },
             setDictionary: function(dictionary) {
-                QuizItem.prototype.className = dictionary.id;             // "Class_Alberto_Ru";
-                Category.prototype.className = dictionary.id + "_Cat";    // "Class_Alberto_Ru" + "_Cat";
+                var pref = '';
+                if (dictionary.id.charAt(0) >= '0' && dictionary.id.charAt(0) <= '9') {
+                    pref = 'a';
+                }
+                QuizItem.prototype.className = pref + dictionary.id;             // "Class_Alberto_Ru";
+                Category.prototype.className = pref + dictionary.id + "_Cat";    // "Class_Alberto_Ru" + "_Cat";
                 // this.set("currentDictionaryName", dictionary.get('name'));
                 this.set("currentDictionary", dictionary);
             },

@@ -43,6 +43,7 @@ define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!compo
                 fb.share(event.currentTarget.id);
             },
             render: function () {
+                fb.getNameAndPicture();       /* this will trigger "change" event that will be processed in component */
                 var dictionariesManagerComponentInstance = (
                     <DictionariesListComponent
                         dictionaries={dictionaries}
@@ -51,6 +52,7 @@ define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!compo
                         onShareDictionaryClicked={this.shareDictionary}
                         addNewDictionary={this.addNewDictionary}
                         onLogOutClicked={this.logOut}
+                        observe={fb}
                     />
                 );
                 React.render(dictionariesManagerComponentInstance, document.getElementById("page-main"));

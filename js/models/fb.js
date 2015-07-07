@@ -6,7 +6,9 @@ define([],
         var self;
         var FBModel = Backbone.Model.extend({
             defaults: {
-                initialized: false
+                initialized: false,
+                name: "",
+                picture: ""
             },
             initialize: function () {
                 self = this;
@@ -46,11 +48,6 @@ define([],
                 var currentUser = Parse.User.current();
                 if (currentUser) {
                     this.trigger("authenticated");
-                    // this.set('id', currentUser.get("authData").facebook.id);
-                    // FB.api('/' + id, function (response) {
-                        // console.log(response);
-                       // console.log("hello, " + response.name);
-                    // });
                     // do stuff with the user
                 }
                 else {
@@ -79,7 +76,7 @@ define([],
             getId: function() {
                 var currentUser = Parse.User.current();
                 if (currentUser) {
-                    this.set('id', currentUser.get("authData").facebook.id);
+                    return currentUser.get("authData").facebook.id;
                 }
             },
             currentUser: function() {
@@ -94,6 +91,20 @@ define([],
                         name: "Share this",
                         href: window.location.protocol + '//' + window.location.host + window.location.pathname + '#share/' + directoryId
                     }, function (response) {  });
+                }, this);
+                this.initFacebook();
+            },
+            getNameAndPicture: function() {
+                this.off('fbInitialized');
+                this.once('fbInitialized', function() {
+                    var id = self.getId();
+                    FB.api('/' + id + '?fields=name, picture', function (response) {
+                        console.log(response);
+                        self.set({
+                            "name": response.name,
+                            "picture": response.picture.data.url
+                        });
+                    });
                 }, this);
                 this.initFacebook();
             }
