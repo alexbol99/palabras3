@@ -21,7 +21,7 @@ define(['models/fb'],
                 share.destroy();
             },
             saveUnique: function(share) {
-                // do not add to shared is dictionary crated by current user
+                // do not add to shared is dictionary created by current user
                 if (fb.currentUser() && fb.currentUser() == share.get('dictionary').get('createdBy'))
                     return;
 

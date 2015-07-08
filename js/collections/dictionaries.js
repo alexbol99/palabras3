@@ -1,8 +1,8 @@
 /**
  * Created by Owner on 6/19/15.
  */
-define(['models/dictionary'],
-    function (Dictionary) {
+define(['models/dictionary', 'models/share'],
+    function (Dictionary, Share) {
         var self;
         var Dictionaries = Parse.Collection.extend({
             model: "Dictionaries",
@@ -24,7 +24,7 @@ define(['models/dictionary'],
                     .include('language2')
                     .include('createdBy');
 
-                var sharedWithMeQuery = new Parse.Query('Share')
+                var sharedWithMeQuery = new Parse.Query(Share)
                     .equalTo("user", user)
                     .include("dictionary")
                     .select("dictionary");
@@ -32,14 +32,15 @@ define(['models/dictionary'],
                 this.reset();
 
                 this.query.find(function (resp) {
-                    console.log(resp);
                     self.add(resp);
                 }).then(
                     function() {
                         return  sharedWithMeQuery.find(function (respArr) {
                             respArr.forEach(function (resp) {
-                                console.log(resp.get('dictionary'));
-                                self.add(resp.get('dictionary'));
+                                var dictionary = resp.get('dictionary');
+                                if (!self.get(dictionary)) {
+                                    self.add(dictionary);
+                                }
                             });
 
                             self.trigger('sync');
@@ -70,6 +71,20 @@ define(['models/dictionary'],
                 //newDictionaries.add(dictionary, {at: 0});
                 //return dictionary;
                 this.add(dictionary);
+            },
+            deleteDictionary(dictionary) {
+                // destroy dictionary itself
+                dictionary.destroy();
+
+                // destroy all share records related to this dictionary
+                var sharedQuery = new Parse.Query(Share)
+                    .equalTo("dictionary", dictionary)
+
+                sharedQuery.find().then(function( respArr ) {
+                    respArr.forEach(function (share) {
+                        share.destroy();
+                    });
+                })
             }
         });
 

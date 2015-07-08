@@ -20,9 +20,6 @@ define(['collections/languages'],
             },
             createEmptyDictionary: function() {
                 return new Dictionary();
-            },
-            deleteDictionary(dictionary) {
-                dictionary.destroy();
             }
         });
         return Dictionary;

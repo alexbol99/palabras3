@@ -36,7 +36,7 @@ define(['models/app', 'models/dictionary', 'collections/dictionaries', 'collecti
                 thisView.dictionary.save();
             },
             deleteDictionary: function() {
-                Dictionary.prototype.deleteDictionary(thisView.dictionary);
+                dictionaries.deleteDictionary(thisView.dictionary);
                 thisView.hidePopup();
             },
             render: function() {

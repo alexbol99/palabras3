@@ -27,7 +27,6 @@ define([],
                         });
 
                         // Run code after the Facebook SDK is loaded.
-                        // FacebookLogIn();
                         self.set('initialized', true);
                         self.trigger("fbInitialized");
                     };
@@ -45,17 +44,32 @@ define([],
                 }
             },
             auth: function() {
-                var currentUser = Parse.User.current();
-                if (currentUser) {
-                    this.trigger("authenticated");
-                }
-                else {
-                    this.off('fbInitialized');
-                    this.once('fbInitialized', function() {
-                        self.trigger("raiseLoginPopup");
-                    }, this);
-                    this.initFacebook();
-                }
+                this.off('fbInitialized');
+                this.once('fbInitialized', function() {
+                    // Run code after the Facebook SDK is loaded.
+                    FB.getLoginStatus(function(response) {
+                        var currentUser = Parse.User.current();
+                        if (response.status === 'connected' && currentUser) {
+                            self.trigger("authenticated");     // Logged into your app and Facebook.
+                            // testAPI();
+                        }
+                        else {
+                            if (response.status === 'not_authorized') {
+                                self.trigger("raiseLoginPopup");
+                                // The person is logged into Facebook, but not your app.
+                                //document.getElementById('status').innerHTML = 'Please log ' +
+                                //'into this app.';
+                            } else {
+                                self.trigger("raiseLoginPopup");
+                                // The person is not logged into Facebook, so we're not sure if
+                                // they are logged into this app or not.
+                                //document.getElementById('status').innerHTML = 'Please log ' +
+                                //'into Facebook.';
+                            }
+                        }
+                    });
+                }, this);
+                this.initFacebook();
             },
             login: function() {
                 Parse.FacebookUtils.logIn("user_friends", {
@@ -80,30 +94,21 @@ define([],
                 return Parse.User.current();
             },
             share: function(directoryId) {
-                this.off('fbInitialized');
-                this.once('fbInitialized', function() {
-                    FB.ui({
-                        method: 'share',
-                        description: "Your description",
-                        name: "Share this",
-                        href: window.location.protocol + '//' + window.location.host + window.location.pathname + '#share/' + directoryId
-                    }, function (response) {  });
-                }, this);
-                this.initFacebook();
+                FB.ui({
+                    method: 'share',
+                    description: "Your description",
+                    name: "Share this",
+                    href: window.location.protocol + '//' + window.location.host + window.location.pathname + '#share/' + directoryId
+                }, function (response) {  });
             },
             getNameAndPicture: function() {
-                this.off('fbInitialized');
-                this.once('fbInitialized', function() {
-                    var id = self.getId();
-                    FB.api('/' + id + '?fields=name, picture', function (response) {
-                        console.log(response);
-                        self.set({
-                            "name": response.name,
-                            "picture": response.picture.data.url
-                        });
+                var id = self.getId();
+                FB.api('/' + id + '?fields=name, picture', function (response) {
+                    self.set({
+                        "name": response.name,
+                        "picture": response.picture.data.url
                     });
-                }, this);
-                this.initFacebook();
+                });
             }
         });
         return new FBModel();
