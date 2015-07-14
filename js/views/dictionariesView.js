@@ -1,7 +1,7 @@
 /**
  * Created by Owner on 6/19/15.
  */
-define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'jsx!components/dictionariesList'],
+define(['models/fb', 'models/dictionary', 'collections/dictionaries', 'components/dictionariesList'],
     function (fb, Dictionary, dictionaries, DictionariesListComponent) {
         var DictionariesView = Backbone.View.extend({
             initialize: function () {
