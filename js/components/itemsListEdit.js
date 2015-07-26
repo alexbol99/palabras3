@@ -89,7 +89,7 @@ define(['components/confirmPopup'],
                     );
 
                     var categorySelectInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
-                        <ReactBootstrap.Col xs={2} md={2}>
+                        <ReactBootstrap.Col xs={3} md={3}>
                         <ReactBootstrap.Input type='select' bsSize="small" defaultValue={item.get("category")}  ref={item.id} id={item.id}
                             onChange={this.props.onCategoryChanged} onClick={this.props.onCategoryChanged} >
                             {options}
@@ -100,23 +100,23 @@ define(['components/confirmPopup'],
                         </ReactBootstrap.Col>
                     ) : null;
 
-                    var buttonRemoveInstance = (item.id == this.props.selectedItemId && !this.props.editSelectedItem) ? (
-                        <ReactBootstrap.Col xs={4} md={4}>
+                    var buttonRemoveInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? (
+                        <ReactBootstrap.Col xs={1} md={1}>
                             <span id={item.id}>
                                 <ReactBootstrap.Glyphicon glyph='trash' title="delete item" onClick={self.raiseConfirmDeletePopup} />
                             </span>
                         </ReactBootstrap.Col>
                     ) : null;
 
-                    var buttonSayItInstance = (item.id == this.props.selectedItemId) ? null : (
-                        <ReactBootstrap.Col xs={1} md={1}>
+                    var buttonSayItInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? null : (
+                        <ReactBootstrap.Col xs={2} md={2}>
                             <span bsSize='small' id={item.id} title="say it" onClick={this.props.onClickSayItButton}>
                                 <ReactBootstrap.Glyphicon glyph='volume-up' />
                             </span>
                         </ReactBootstrap.Col>
                     );
-                    var buttonGlobeInstance = (item.id == this.props.selectedItemId) ? null : (
-                        <ReactBootstrap.Col xs={1} md={1}>
+                    var buttonGlobeInstance = (item.id == this.props.selectedItemId && this.props.editSelectedItem) ? null : (
+                        <ReactBootstrap.Col xs={2} md={2}>
                             <span bsSize='small' id={item.id} title="more info ..." onClick={this.props.onClickGlobeButton}>
                                 <ReactBootstrap.Glyphicon glyph='globe' />
                             </span>

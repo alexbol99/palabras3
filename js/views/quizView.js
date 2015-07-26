@@ -139,9 +139,11 @@ define(['models/app',
                         selectionMode={this.state.selectionMode}
                         selectedCategoryName={this.state.selectedCategoryName}
                         selectedCategoryCount={this.state.selectedCategoryCount}
-                        numWeeksBefore={this.state.numWeeksBefore}>
+                        numWeeksBefore={this.state.numWeeksBefore}
+                        onSortItemsButtonClicked={this.sortItems}
+                    >
 
-                        <div style={{height:'75vh', overflowY:'auto', overflowX:'hidden'}}>
+                        <div style={{height:'69vh', overflowY:'auto', overflowX:'hidden'}}>
                                 {itemsListInstance}
                         </div>
 
@@ -263,6 +265,12 @@ define(['models/app',
 
             // Items list logic in "Edit" mode
             // -------------------------------------
+
+            // Header: sort items
+            sortItems: function(event) {
+                var language = event.currentTarget.id;
+                quiz.sortItems(language);
+            },
 
             // Toggle item selection. Selected item can be edited or deleted
             toggleSelectedItemId: function(event) {

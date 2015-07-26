@@ -197,14 +197,15 @@ define(['models/app', 'models/quizItem', 'models/category',
                     item.updateParse();
                 }
             },
-            sortItems: function() {    // meanwhile not in use
+            sortItems: function(language) {
                 // update comparator function
-                var lang = app.get("currentDictionary").get("language1").get("name");
+                // var lang = app.get("currentDictionary").get("language1").get("name");
                 this.get("quizItems").comparator = function(model) {
-                    return model.get(lang);          // 'spanish');
+                    return model.get(language);          // 'spanish');
                 };
                 // call the sort method
                 this.get("quizItems").sort();
+                this.trigger("ready");
             },
             updateSelectedCategoryCounter: function() {
                 var selectedCategoryName = this.get("selectedCategory");
