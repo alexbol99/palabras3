@@ -22,18 +22,21 @@ define(['components/menu'],
 
                 var listHeaderLangColWidth = this.props.mode == 'Edit' ? 3 : 6;
 
+                var sortItemsLeftButtonOpacity = this.props.itemsSortedLeft ? 1.0 : 0.2;
+                var sortItemsRightButtonOpacity = this.props.itemsSortedRight ? 1.0 : 0.2;
+
                 var listHeaderSortLeftButtonInstance = this.props.mode == 'Edit' ? (
                     <ReactBootstrap.Col xs={1} md={1} style={{marginTop: '8px'}}>
-                        <span id={langLeft} title="sort items" onClick={this.props.onSortItemsButtonClicked}>
-                            <ReactBootstrap.Glyphicon glyph='sort-by-alphabet' title="sort A-Z" />
+                        <span id={langLeft} title="sort items" onClick={this.props.onSortItemsLeftButtonClicked}>
+                            <ReactBootstrap.Glyphicon glyph='triangle-bottom' style={{opacity:sortItemsLeftButtonOpacity}} />
                         </span>
                     </ReactBootstrap.Col>
                 ) : null;
 
                 var listHeaderSortRightButtonInstance = this.props.mode == 'Edit' ? (
                     <ReactBootstrap.Col xs={1} md={1} style={{marginTop: '8px'}}>
-                        <span id={langRight} title="sort items" onClick={this.props.onSortItemsButtonClicked}>
-                            <ReactBootstrap.Glyphicon glyph='sort-by-alphabet' title="sort A-Z" />
+                        <span id={langRight} title="sort items" onClick={this.props.onSortItemsRightButtonClicked}>
+                            <ReactBootstrap.Glyphicon glyph='triangle-bottom' style={{opacity:sortItemsRightButtonOpacity}} />
                         </span>
                     </ReactBootstrap.Col>
                 ) : null;

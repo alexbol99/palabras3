@@ -32,7 +32,9 @@ define(['models/app',
                     selectedRightItemId: undefined,
                     editSelectedItem: false,
                     maxItemsToPlay: (window.orientation == undefined || window.orientation == 0) ? 8 : 4,
-                    autoPlayStarted: false
+                    autoPlayStarted: false,
+                    itemsSortedLeft: true,
+                    itemsSortedRight: false
                 }
             },
             componentDidMount: function() {
@@ -53,7 +55,9 @@ define(['models/app',
                     selectedLeftItemId: undefined,
                     selectedRightItemId: undefined,
                     sound: quiz.get("sound"),
-                    mode: quiz.get("mode")
+                    mode: quiz.get("mode"),
+                    itemsSortedLeft: true,
+                    itemsSortedRight: false
                 });
 
                 // Observe future changes of the quiz model
@@ -72,7 +76,9 @@ define(['models/app',
                         quizItemsLeft: quizItemsLeft,
                         quizItemsRight: quizItemsRight,
                         selectedLeftItemId: undefined,
-                        selectedRightItemId: undefined
+                        selectedRightItemId: undefined,
+                        itemsSortedLeft: true,
+                        itemsSortedRight: false
                     });
                 }, this);
             },
@@ -140,7 +146,10 @@ define(['models/app',
                         selectedCategoryName={this.state.selectedCategoryName}
                         selectedCategoryCount={this.state.selectedCategoryCount}
                         numWeeksBefore={this.state.numWeeksBefore}
-                        onSortItemsButtonClicked={this.sortItems}
+                        itemsSortedLeft={this.state.itemsSortedLeft}
+                        itemsSortedRight={this.state.itemsSortedRight}
+                        onSortItemsLeftButtonClicked={this.sortItemsLeft}
+                        onSortItemsRightButtonClicked={this.sortItemsRight}
                     >
 
                         <div style={{height:'69vh', overflowY:'auto', overflowX:'hidden'}}>
@@ -267,9 +276,21 @@ define(['models/app',
             // -------------------------------------
 
             // Header: sort items
-            sortItems: function(event) {
+            sortItemsLeft: function(event) {
                 var language = event.currentTarget.id;
                 quiz.sortItems(language);
+                this.setState({
+                    itemsSortedLeft: true,
+                    itemsSortedRight: false
+                })
+            },
+            sortItemsRight: function(event) {
+                var language = event.currentTarget.id;
+                quiz.sortItems(language);
+                this.setState({
+                    itemsSortedLeft: false,
+                    itemsSortedRight: true
+                })
             },
 
             // Toggle item selection. Selected item can be edited or deleted
