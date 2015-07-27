@@ -6,17 +6,17 @@ require.config({
 });
 require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
         'models/share',
-        'jsx!views/loginView', 'jsx!views/categoriesView', 'jsx!views/quizView', 'jsx!views/dictionariesView', 'jsx!views/dictionarySettingsView',
+        'views/loginView', 'views/categoriesView', 'views/quizView', 'views/dictionariesView', 'views/dictionarySettingsView',
         'models/quizItem', 'models/category', 'models/dictionary',
         'collections/categories','collections/quizItems', 'collections/catlist',
         'collections/languages',
-        'jsx!components/confirmPopup',
-        'jsx!components/quizToolbar', 'jsx!components/itemsListEdit', 'jsx!components/itemsListPlay',
-        'jsx!components/itemsFilterPopup', 'jsx!components/infoPopup',
-        'jsx!components/mainPanel', 'jsx!components/menu',
-        'jsx!components/dictionariesList',
-        'jsx!components/dictionarySettings',
-        'jsx!components/fbLogin'],
+        'components/confirmPopup',
+        'components/quizToolbar', 'components/itemsListEdit', 'components/itemsListPlay',
+        'components/itemsFilterPopup', 'components/infoPopup',
+        'components/mainPanel', 'components/menu',
+        'components/dictionariesList',
+        'components/dictionarySettings',
+        'components/fbLogin'],
     function (fb, app, quiz, dictionaries, Share, LoginView, CategoriesView, QuizView, DictionariesView, DictionarySettingsView) {
 
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");

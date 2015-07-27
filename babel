@@ -1,0 +1,2 @@
+babel ./components -d D:/Dropbox/Dropbox/Public/palabras3_dist/js/components
+babel ./views -d D:/Dropbox/Dropbox/Public/palabras3_dist/js/views
