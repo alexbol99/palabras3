@@ -60,42 +60,40 @@ define(['../components/confirmPopup'],
                     <ReactBootstrap.Modal {...this.props} bsStyle='primary' title="Dictionary settings" animation={true} onRequestHide={this.props.hidePopup}>
                         {confirmDeletePopupInstance}
                         <div className='modal-body'>
-                            <ReactBootstrap.Input bsSize="large" type="text" label="Name" defaultValue={this.props.dictionary.get('name')}  name='name'
-                                autocomplete="off" autocorrect="off" autocapitalize="off" onChange={this.props.onDictionaryNameChanged} />
 
-                            <ReactBootstrap.Input bsSize="large" type='select' label='Language 1' defaultValue={languageDefault1} name='language1'
-                                onChange={this.props.onLanguage1Selected}>
-                                {options}
-                            </ReactBootstrap.Input>
+                                <ReactBootstrap.Input bsSize="large" type="text" label="Name" defaultValue={this.props.dictionary.get('name')}  name='name'
+                                    autocomplete="off" autocorrect="off" autocapitalize="off" onChange={this.props.onDictionaryNameChanged} />
 
-                            <ReactBootstrap.Input bsSize="large" type='select' label='Language 2' defaultValue={languageDefault2} name='language2'
-                                onChange={this.props.onLanguage2Selected}>
-                                {options}
-                            </ReactBootstrap.Input>
+                                <ReactBootstrap.Input bsSize="large" type='select' label='Language 1' defaultValue={languageDefault1} name='language1'
+                                    onChange={this.props.onLanguage1Selected}>
+                                    {options}
+                                </ReactBootstrap.Input>
 
-                            <ReactBootstrap.ButtonGroup style={{width:"100%"}}>
-                                <ReactBootstrap.Button bsStyle='default' bsSize='large' block title="Edit categories" style={{textAlign:"left"}} href={linkToCategories}>
-                                    <ReactBootstrap.Glyphicon glyph='list-alt' style={{fontSize: "1em"}} />
+                                <ReactBootstrap.Input bsSize="large" type='select' label='Language 2' defaultValue={languageDefault2} name='language2'
+                                    onChange={this.props.onLanguage2Selected}>
+                                    {options}
+                                </ReactBootstrap.Input>
+
+                                <ReactBootstrap.ButtonGroup style={{width:"100%"}}>
+                                    <ReactBootstrap.Button bsStyle='default' bsSize='large' block title="Edit categories" style={{textAlign:"left"}} href={linkToCategories}>
+                                        <ReactBootstrap.Glyphicon glyph='list-alt' style={{fontSize: "1em"}} />
+                                    &nbsp;&nbsp;
+                                        Edit categories ...
+                                    </ReactBootstrap.Button>
+                                </ReactBootstrap.ButtonGroup>
+
+
+                            <br />
+                            <br />
+                            <br />
+
+                            <ReactBootstrap.Panel header="Dangerous operation">
+                                <ReactBootstrap.Button bsStyle='warning' bsSize='large' block title="Delete this dictionary" style={{textAlign:"left"}} onClick={this.raiseConfirmDeletePopup} >
+                                    <ReactBootstrap.Glyphicon glyph='trash' style={{fontSize: "1em"}} />
                                 &nbsp;&nbsp;
-                                    Edit categories ...
+                                    Delete this dictionary
                                 </ReactBootstrap.Button>
-                            </ReactBootstrap.ButtonGroup>
-
-                            <ReactBootstrap.ButtonGroup style={{width:"100%"}}>
-                                <ReactBootstrap.Button bsStyle='link' bsSize='large' block title="Go to dictionary" style={{textAlign:"left"}} href={linkToQuiz}>
-                                    <ReactBootstrap.Glyphicon glyph='education' style={{fontSize: "1em"}} />
-                                &nbsp;&nbsp;
-                                    Go to dictionary
-                                </ReactBootstrap.Button>
-                            </ReactBootstrap.ButtonGroup>
-
-
-                            <ReactBootstrap.Button bsStyle='danger' bsSize='large' block title="Delete this dictionary" style={{textAlign:"left"}} onClick={this.raiseConfirmDeletePopup} >
-                                <ReactBootstrap.Glyphicon glyph='trash' style={{fontSize: "1em"}} />
-                            &nbsp;&nbsp;
-                                Delete this dictionary
-                            </ReactBootstrap.Button>
-
+                            </ReactBootstrap.Panel>
 
                         </div>
                         <div className='modal-footer'>
@@ -108,3 +106,13 @@ define(['../components/confirmPopup'],
 
         return DictionarySettings;
     });
+
+//<ReactBootstrap.ButtonGroup style={{width:"100%"}}>
+//    <ReactBootstrap.Button bsStyle='link' bsSize='large' block title="Go to dictionary" style={{textAlign:"left"}} href={linkToQuiz}>
+//        <ReactBootstrap.Glyphicon glyph='education' style={{fontSize: "1em"}} />
+//    &nbsp;&nbsp;
+//        Go to dictionary
+//    </ReactBootstrap.Button>
+//</ReactBootstrap.ButtonGroup>
+//
+//
