@@ -115,7 +115,32 @@
     <script src="js/lib/react-bootstrap.min.js"></script>
 
     <script>
+        var _gIsFBLoaded = false;
+
         Parse.initialize("nNSG5uA8wGI1tWe4kaPqX3pFFplhc0nV5UlyDj8H", "IDxfUbmW9AIn7iej2PAC7FtDAO1KvSdPuqP18iyu");
+
+        window.fbAsyncInit = function () {
+            Parse.FacebookUtils.init({
+                appId: '398066583702762',
+                cookie: true,  // enable cookies to allow Parse to access the session
+                xfbml: false, // initialize Facebook social plugins on the page - do not check for plugin, not using them
+                version: 'v2.3' // point to the latest Facebook Graph API version
+            });
+
+            _gIsFBLoaded = true;
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
     </script>
     <script data-main="js/main" src="js/lib/require.js"></script>
 
