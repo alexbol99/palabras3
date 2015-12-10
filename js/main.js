@@ -95,7 +95,7 @@ require(['models/fb','models/app','models/quiz', 'collections/dictionaries',
                         /* temporary: start in "all" mode, do not keep category in storage */
                         quiz.set({
                             selectionMode: "all",
-                            numWeeksBefore: 2
+                            numWeeksBefore: 50
                         });
                         // quiz.restoreState();
                         var quizView = new QuizView();

@@ -18,7 +18,7 @@ define(['components/itemsFilterPopup', 'components/infoPopup'],
 
                             <ReactBootstrap.ButtonGroup>
                                 <ReactBootstrap.Button bsStyle='default' bsSize='large' onClick={this.props.onButtonPlayClicked}>
-                                    Play
+                                    Learn
                                 </ReactBootstrap.Button>
                             </ReactBootstrap.ButtonGroup>
 

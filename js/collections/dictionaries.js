@@ -19,10 +19,11 @@ define(['models/dictionary', 'models/share'],
                 var user = Parse.User.current();
 
                 this.query = new Parse.Query(Dictionary)
-                    .equalTo("createdBy", user)
                     .include('language1')
                     .include('language2')
                     .include('createdBy');
+
+                /*.equalTo("createdBy", user)*/
 
                 var sharedWithMeQuery = new Parse.Query(Share)
                     .equalTo("user", user)

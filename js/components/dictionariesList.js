@@ -43,25 +43,22 @@ define([],
                             <ReactBootstrap.Glyphicon glyph='cog' title="settings" style={{fontSize: "1.4em"}} />
                         </span>
                     );
-
+/*
                     var buttonShareInstance = (
                         <span id={dictionary.id} onClick={this.props.onShareDictionaryClicked}>
                             <ReactBootstrap.Glyphicon glyph='share' title="settings" style={{fontSize: "1.4em"}} />
                         </span>
                     );
-
+*/
                     return (
                         <ReactBootstrap.ListGroupItem bsStyle={bsStyle} key={dictionary.cid} >
                             <ReactBootstrap.Grid>
                                 <ReactBootstrap.Row className='show-grid' id={dictionary.id} >
-                                    <ReactBootstrap.Col xs={8} md={8}>
+                                    <ReactBootstrap.Col xs={9} md={9}>
                                         {dictionaryInstance}
                                     </ReactBootstrap.Col>
-                                    <ReactBootstrap.Col xs={2} md={2}>
+                                    <ReactBootstrap.Col xs={3} md={3}>
                                         {buttonSettingsInstance}
-                                    </ReactBootstrap.Col>
-                                    <ReactBootstrap.Col xs={2} md={2}>
-                                        {buttonShareInstance}
                                     </ReactBootstrap.Col>
                                 </ReactBootstrap.Row>
                             </ReactBootstrap.Grid>
@@ -115,3 +112,8 @@ define([],
         return DictionariesListComponent;
     });
 
+/*
+<ReactBootstrap.Col xs={2} md={2}>
+                                        {buttonShareInstance}
+</ReactBootstrap.Col>
+*/
